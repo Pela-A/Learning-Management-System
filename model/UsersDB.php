@@ -21,7 +21,16 @@ class UserDB {
     }
 
     public function getAllUsers() {
+        $results = [];
+        $userTable = $this->userData;
 
+        $sqlString = $userTable->prepare("SELECT customerId, firstName, lastName, email, phone, gender, isAdmin FROM photousers ORDER BY lastName");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
     }
 }
 
