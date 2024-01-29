@@ -32,6 +32,21 @@ class UserDB {
 
         return $results;
     }
+    public function login($user, $pass){
+        global $db;
+        
+        $result = [];
+        $stmt = $db->prepare("SELECT * FROM Users WHERE Username=:user AND Password=:pass");
+        $stmt->bindValue(':user', $user);
+        $stmt->bindValue(':pass', $pass);
+       
+        if ( $stmt->execute() && $stmt->rowCount() > 0 ) {
+             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                        
+         }
+         
+        return ($result);
+    }
 }
 
 ?>
