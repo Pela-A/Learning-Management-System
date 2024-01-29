@@ -1,17 +1,18 @@
 <?php
-include __DIR__ . '/model/UsersDB.php';
+include __DIR__ . '/../model/UsersDB.php';
     $error = "";
     if (isset($_POST['login'])) {
-        $username = filter_input(INPUT_POST, 'username');
-        $password = filter_input(INPUT_POST, 'password');
+        $user = new UserDB();
+        $user->username = filter_input(INPUT_POST, 'username');
+        $user->password = filter_input(INPUT_POST, 'password');
 
-        $admin = login($username, $password);
+        $admin = $user->login($user->username, $user->password);
 
         if(count($admin)>0){
             echo 'HELLO';
             session_start();
             $_SESSION['user']=$username;
-            header('Location: viewBooks.php');
+            header('Location: ../private/test.php');
         }else{
             session_unset(); 
             $error = "Incorrect Username or Password!";
@@ -19,8 +20,21 @@ include __DIR__ . '/model/UsersDB.php';
 
     }
     else{
-        $username = '';
-        $password = '';
+        $user = new UserDB();
+        $user->username = '';
+        $user->password = '';
+    }
+
+    if (isset($_POST['create'])){
+        //validate input information using either built in php stuff or regEx for now we assume everything is normal
+
+
+        //after submitting the create form, if everything is valid we must create a new organization using the inputted info
+
+    }
+
+    if(isset($_POST['join'])){
+
     }
 
 ?>
@@ -35,8 +49,9 @@ include __DIR__ . '/model/UsersDB.php';
     <title>Home Page</title>
 </head>
 <body>
+    <h2>Login Form</h2>
     <form name="login_form" method="post">
-        <h2>Admin Login</h2>
+        
         
         <!--FORM-->
 
@@ -47,7 +62,7 @@ include __DIR__ . '/model/UsersDB.php';
                     <label>Username:</label>
                 </div>
                 <div>
-                    <input type="text" name="username" value="<?= $username; ?>" />
+                    <input type="text" name="username" value="<?= $user->username; ?>" />
                 </div>
             </div>
         </div>
@@ -59,7 +74,7 @@ include __DIR__ . '/model/UsersDB.php';
                     <label>Password:</label>
                 </div>
                 <div>
-                    <input type="password" name="password" value="<?= $password; ?>" />
+                    <input type="password" name="password" value="<?= $user->password; ?>" />
                 </div>
             </div>
         </div>
@@ -88,6 +103,135 @@ include __DIR__ . '/model/UsersDB.php';
         <?php endif; ?>
 
         
+    </form>
+
+    <h2>Create Organization Form</h2>
+    <form name="create_org_form" method="post">
+            <h3>Enter Your Information</h3>
+
+            <div class="row">
+                <label>First Name:</label>
+                <input type="text" name="firstName">
+            </div>
+
+            <div class="row">
+                <label>Last Name:</label>
+                <input type="text" name="lastName">
+            </div>
+
+            <div class="row">
+                <label>Phone Number:</label>
+                <input type="text" name="phoneNum">
+            </div>
+            
+            <div class="row">
+                <label>Birthday:</label>
+                <input type="date" name="birthday">
+            </div>
+            
+            <div class="row">
+                <label>Gender:</label>
+                <input type="radio" value="1" name="gender"> Male
+                <input type="radio" value="0" name="gender"> Female
+                <br />
+            </div>
+            
+            <div class="row">
+                <label>Create Username:</label>
+                <input type="text" name="newUser">
+            </div>
+            
+            <div class="row">
+                <label>Create Password:</label>
+                <input type="text" name="newPass">
+            </div>
+            
+            <h3>Enter Organization Information</h3>
+
+            <div class="row">
+                <label>Organization Name</label>
+                <input type="text" name="createOrgName">
+            </div>
+            
+            <div class="row">
+                <label>Address</label>
+                <input type="text" name="address">
+            </div>
+            
+            <div class="row">
+                <label>City</label>
+                <input type="text" name="city">
+            </div>
+            
+            <div class="row">
+                <label>State</label>
+                <input type="text" name="state">
+            </div>
+            
+            <div class="row">
+                <label>Zip Code</label>
+                <input type="text" name="zipCode">
+            </div>
+            
+            <div class="row">
+                <input type="submit" name="create" value="Create Organization">
+            </div>
+            
+            
+
+    </form>
+
+    <h2>Join Organization Form</h2>
+    <form name="join_org_form" method="post">
+        <h3>Enter Your Information</h3>
+
+        <div class="row">
+            <label>First Name:</label>
+            <input type="text" name="firstName">
+        </div>
+
+        <div class="row">
+            <label>Last Name:</label>
+            <input type="text" name="lastName">
+        </div>
+
+        <div class="row">
+            <label>Phone Number:</label>
+            <input type="text" name="phoneNum">
+        </div>
+
+        <div class="row">
+            <label>Birthday:</label>
+            <input type="date" name="birthday">
+        </div>
+
+        <div class="row">
+            <label>Gender:</label>
+            <input type="radio" value="1" name="gender"> Male
+            <input type="radio" value="0" name="gender"> Female
+            <br />
+        </div>
+
+        <div class="row">
+            <label>Create Username:</label>
+            <input type="text" name="newUser">
+        </div>
+
+        <div class="row">
+            <label>Create Password:</label>
+            <input type="text" name="newPass">
+        </div>
+
+        <div class="row">
+            <label>Enter Organization Code</label>
+            <input type="text" name="orgCode">
+        </div>
+
+        <div class="row">
+            <input type="submit" name="join" value="Join Organization">
+        </div>
+
+
     </form>
 </body>
 </html>

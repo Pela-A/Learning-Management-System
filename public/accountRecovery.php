@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Login Successful!</h1>
+    <h1>Yo</h1>
+    <!--This will contain code with email functionality to allow a user to reset their username/password-->
 </body>
 </html>
