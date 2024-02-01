@@ -11,7 +11,7 @@ function binarySearch($arr, $target) {
         // Check if the target value is found at the middle index
         if ($arr[$mid] === $target) {
             echo("found");
-            return 0;
+            return true;
         }
        // If the target is greater, ignore the left half
        if ($arr[$mid] < $target) {
@@ -24,7 +24,7 @@ function binarySearch($arr, $target) {
     }
     // Target value not found in the array
     echo("target not found");
-    return -1;
+    return false;
 }
 
     $error = "";
@@ -101,7 +101,7 @@ function binarySearch($arr, $target) {
 
             //search for random string using binary search
             //check at end if another loop needs to happen. if we return zero that means we found that org code in db.
-        } while (binarySearch($codes, $randomString) == 0);
+        } while (binarySearch($codes, $randomString));
 
         $orgArray = array('orgName' => $orgName, 'orgAddress' => $address, 'orgCity' => $city, 'orgState' => $state, 'orgZip' => $zipCode, 'orgCode' => $randomString );
         $organization = new OrganizationDB($orgArray);
