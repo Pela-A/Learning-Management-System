@@ -12,6 +12,7 @@
     echo $randomString;
     echo (strlen($randomString));
 
+
 ?>
 
 <!DOCTYPE html>

@@ -1,4 +1,5 @@
 <?php
+//includes at top
 include __DIR__ . '/../model/UsersDB.php';
 include __DIR__ . '/../model/OrganizationsDB.php';
 
@@ -10,80 +11,169 @@ function binarySearch($arr, $target) {
         $mid = floor(($left + $right) / 2);
         // Check if the target value is found at the middle index
         if ($arr[$mid] === $target) {
-            echo("found");
             return true;
         }
-       // If the target is greater, ignore the left half
-       if ($arr[$mid] < $target) {
-          $left = $mid + 1;
-       }
-       // If the target is smaller, ignore the right half
-       else {
-          $right = $mid - 1;
-       }
+        // If the target is greater, ignore the left half
+        if ($arr[$mid] < $target) {
+            $left = $mid + 1;
+        }
+        // If the target is smaller, ignore the right half
+        else {
+            $right = $mid - 1;
+        }
     }
     // Target value not found in the array
-    echo("target not found");
     return false;
 }
 
+
+function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass){
     $error = "";
-    if (isset($_POST['login'])) {
-        //no need to validate input
-        $userArray = array('username' => filter_input(INPUT_POST, 'username'), 'password' => filter_input(INPUT_POST, 'password') );
-        $user = new UserDB($userArray);
-
-        
+    //RegExpressions****
 
 
-        $admin = $user->login();
+    //mark true if finds characters not included
+    $pattern1 = "/[^A-Za-z-]+/";
 
-        if(count($admin)>0){
-            echo 'HELLO';
-            session_start();
-            $_SESSION['user']=$username;
-            header('Location: ../private/test.php');
-        }else{
-            session_unset(); 
-            $error = "Incorrect Username or Password!";
-        }
+    //mark true if string contains 10 numbers only
+    $pattern2 = "/[0-9]{10}/";
 
+    //mark true if valid email parameters
+    $pattern3 = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
+
+    //first name check
+    if(preg_match($pattern1, $firstName)){
+        $error .= "<li>First name must not contain special characters or numbers!</li>";
     }
-    else{
-        $userArray = array('username' => '', 'password' => '');
-        $user = new UserDB($userArray);
+    elseif($firstName == ""){
+        $error .= "<li>Please Enter a First Name!</li>";
     }
 
-    if (isset($_POST['create'])){
+    //last name check
+    if(preg_match($pattern1, $lastName)){
+        $error .= "<li>Last name must not contain special characters or numbers!</li>";
+    }
+    elseif($lastName == ""){
+        $error .= "<li>Please Enter a Last Name!</li>";
+    }
 
-        //validate input information using either built in php stuff or regEx for now we assume everything is normal
+    //phoneNum check
+    if(!preg_match($pattern2, $phoneNum)){
+        $error .= "<li>Invalid phone number!</li>";
+    }
+
+    //email check
+
+    if(!preg_match($pattern3, $email)){
+        $error .= "<li>Invalid Email!</li>";
+    }
+    elseif($email == ""){
+        $error .= "<li>Please enter an email.</li>";
+    }
+
+    //birthdate check
+
+    $currentDate = date('Y-m-d');
+    if($birthdate > $currentDate || $birthdate ==""){
+        $error.="<li>Please provide a valid birthdate!</li>";
+    }
+
+    //Gender check
+    if($gender==""){
+        $error .= "<li>Please provide a Gender!</li>";
+    }
+
+    //username check
+    $testUser = new UserDB();
+    $testUsernames = $testUser->getAllUsername();
+    if(binarySearch($testUsernames, $newUser)){
+        $error .= "<li>Username is already in use!</li>";
+    }
+    elseif(strlen($newUser) < 8){
+        $error .= "<li>Username must be at least 8 characters long!</li>";
+    }
+
+    //password check
+    if(strlen($newPass < 8)){
+        $error .= "<li>Password must be at least 8 characters long!</li>";
+    }
+
+    return($error);
+
+
+}
+
+
+
+//START OF FORMS CODE#*****************************************************
+//initialize error variable
+$error = "";
+//logging in form post
+//__________________________________________________________________________________________________________
+if (isset($_POST['login'])) {
+    //no need to validate input
+    $userArray = array('username' => filter_input(INPUT_POST, 'username'), 'password' => filter_input(INPUT_POST, 'password') );
+    $user = new UserDB($userArray);
+
+    //array result of logging in
+    $admin = $user->login();
+
+    var_dump($admin);
+    //if a result was found redirect
+    if(count($admin)>0){
+        //start session with user object stored in session variable
+        session_start();
         
+        //currently storing entire user in session variable !!!!!!!!!!!!!!!!!!!
+        $_SESSION['userID']=$admin['userID'];
         
-        //account information
-        $firstName = filter_input(INPUT_POST, 'firstName');
-        $lastName = filter_input(INPUT_POST, 'lastName');
-        $phoneNum = filter_input(INPUT_POST, 'phoneNum');
-        $birthday = filter_input(INPUT_POST, 'birthday');
-        $gender = filter_input(INPUT_POST, 'gender');
-        $newUser = filter_input(INPUT_POST, 'newUser');
-        $newPass = filter_input(INPUT_POST, 'newPass');
+        header('Location: ../private/test.php');
+    }else{
+        //unset session variables and give error
+        session_unset(); 
+        $error = "Incorrect Username or Password!";
+    }
 
-        //org information
-        $orgName = filter_input(INPUT_POST, 'orgName');
-        $address = filter_input(INPUT_POST, 'address');
-        $city = filter_input(INPUT_POST, 'city');
-        $state = filter_input(INPUT_POST, 'state');
-        $zipCode = filter_input(INPUT_POST, 'zipCode');
+}
+else{
+    $userArray = array('username' => '', 'password' => '');
+    $user = new UserDB($userArray);
+}
 
+//creating org
+//____________________________________________________________________________________________________________________________________________
+if (isset($_POST['create'])){
 
-        //after submitting the create form, if everything is valid we must create a new organization using the inputted info. then user and assign the orgID.
-        //_________________________
-        //creation of user object in database
+    //validate input information using either built in php stuff or regEx for now we assume everything is normal.
+    
+    //account information
+    $firstName = filter_input(INPUT_POST, 'firstName');
+    $lastName = filter_input(INPUT_POST, 'lastName');
+    $phoneNum = filter_input(INPUT_POST, 'phoneNum');
+    $email = filter_input(INPUT_POST, 'email');
+    $birthdate = filter_input(INPUT_POST, 'birthdate');
+    $gender = filter_input(INPUT_POST, 'gender');
+    $newUser = filter_input(INPUT_POST, 'newUser');
+    $newPass = filter_input(INPUT_POST, 'newPass');
 
+    $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
+    
+    //org information
+    $orgName = filter_input(INPUT_POST, 'orgName');
+    $address = filter_input(INPUT_POST, 'address');
+    $city = filter_input(INPUT_POST, 'city');
+    $state = filter_input(INPUT_POST, 'state');
+    $zipCode = filter_input(INPUT_POST, 'zipCode');
 
+    if($orgName == ""){
+        $error .= "<li>Please enter an organization name!";
+    }
 
+    //ASK SCOTT ABOUT THE ABILITY TO USE AN API FOR SELECTING ADDRESS, CITY, STATE, ZIPCODE ***********************
 
-        //creation of org
+    //If no errors, create organization and assign user to Org as OrgAdmin
+    if($error == ""){
+        
 
         
         //we want to create orgCodes until the code is not already in the database
@@ -106,27 +196,86 @@ function binarySearch($arr, $target) {
         $orgArray = array('orgName' => $orgName, 'orgAddress' => $address, 'orgCity' => $city, 'orgState' => $state, 'orgZip' => $zipCode, 'orgCode' => $randomString );
         $organization = new OrganizationDB($orgArray);
 
-        echo($randomString);
-        echo('this worked');
-        //$organization->addOrganization();
 
         //code here to create organization.
 
-        $organization->addOrganization();
+        //newID represents last inserted record (created organization)
+        //#### ASK SCOTT IF IT SOMEHOW RETURNS ZERO WHAT TO DO.
+        $newID = $organization->createOrganization();
 
-        
+        //create USER Object and add to data base
+        $makeUser = new UserDB(array('orgID'=>$newID, 'firstName' => $firstName, 'lastName' => $lastName, 'phoneNumber' => $phoneNum, 'email' => $email, 'birthdate' => $birthdate, 'gender' => $gender, 'letterDate' => date('Y-m-d'), 'username' => $newUser, 'password' => $newPass, 'isOrgAdmin' => 1, 'isVerified' => 1));
+
+        session_start();
+        $_SESSION['userID']=$makeUser->createUser();
 
         //redirect to landing page
+    
+        header('Location: ../private/landingPage.php');
+
+    }
+
+//if trying to join organization.
+//______________________________________________________________________________________________________________________________________   
+}elseif(isset($_POST['join'])){
+
+    //account information
+    $firstName = filter_input(INPUT_POST, 'firstName');
+    $lastName = filter_input(INPUT_POST, 'lastName');
+    $phoneNum = filter_input(INPUT_POST, 'phoneNum');
+    $email = filter_input(INPUT_POST, 'email');
+    $birthdate = filter_input(INPUT_POST, 'birthdate');
+    $gender = filter_input(INPUT_POST, 'gender');
+    $newUser = filter_input(INPUT_POST, 'newUser');
+    $newPass = filter_input(INPUT_POST, 'newPass');
+
+    $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
+
+    $enterOrgCode = filter_input(INPUT_POST, 'orgCode');
+
+
+    echo("got here");
+    $tempObj = new OrganizationDB(array('orgCode' => $enterOrgCode));
+    if(binarySearch($tempObj->getAllOrgCodes(), $enterOrgCode)){
+        $joinID = $tempObj -> getOrgID();
+        var_dump ($joinID);
+        $makeUser = new UserDB(array('orgID'=>$joinID, 'firstName' => $firstName, 'lastName' => $lastName, 'phoneNumber' => $phoneNum, 'email' => $email, 'birthdate' => $birthdate, 'gender' => $gender, 'letterDate' => date('Y-m-d'), 'username' => $newUser, 'password' => $newPass, 'isOrgAdmin' => 0, 'isVerified' => 0));
         session_start();
-        $_SESSION['user']=$username;
+        $_SESSION['userID']=$makeUser->createUser();
+
+        //redirect to landing page
+    
         header('Location: ../private/landingPage.php');
     }
-
-    //if trying to join organization.
-    if(isset($_POST['join'])){
-
+    else{
+        $error .= "<li>There is no organization with that Code!";
     }
+    
+    //if the org code is in the database we should join the user on that orgID
+    //this means we must grab the orgID
+    
 
+
+//first time loading to site
+}else{
+
+    $firstName = "";
+    $lastName = "";
+    $phoneNum = "";
+    $email = "";
+    $birthdate = "";
+    $gender = "";
+    $newUser = "";
+    $newPass = "";
+
+    $orgName = "";
+    $address = "";
+    $city = "";
+    $state = "";
+    $zipCode = "";
+    $enterOrgCode = "";
+}
+    
 ?>
 
 
@@ -201,66 +350,71 @@ function binarySearch($arr, $target) {
 
             <div class="row">
                 <label>First Name:</label>
-                <input type="text" name="firstName">
+                <input type="text" name="firstName" value="<?=$firstName?>">
             </div>
 
             <div class="row">
                 <label>Last Name:</label>
-                <input type="text" name="lastName">
+                <input type="text" name="lastName" value="<?=$lastName?>">
             </div>
 
             <div class="row">
                 <label>Phone Number:</label>
-                <input type="text" name="phoneNum">
+                <input type="text" name="phoneNum" value="<?=$phoneNum?>">
+            </div>
+
+            <div class="row">
+                <label>Email:</label>
+                <input type="text" name="email" value="<?=$email?>">
             </div>
             
             <div class="row">
                 <label>Birthday:</label>
-                <input type="date" name="birthday">
+                <input type="date" name="birthdate" value="<?=$birthdate?>">
             </div>
             
             <div class="row">
                 <label>Gender:</label>
-                <input type="radio" value="1" name="gender"> Male
-                <input type="radio" value="0" name="gender"> Female
+                <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
+                <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
                 <br />
             </div>
             
             <div class="row">
                 <label>Create Username:</label>
-                <input type="text" name="newUser">
+                <input type="text" name="newUser" value="<?=$newUser?>">
             </div>
             
             <div class="row">
                 <label>Create Password:</label>
-                <input type="text" name="newPass">
+                <input type="text" name="newPass" value="<?=$newPass?>">
             </div>
             
             <h3>Enter Organization Information</h3>
 
             <div class="row">
                 <label>Organization Name</label>
-                <input type="text" name="orgName">
+                <input type="text" name="orgName" value="<?=$orgName?>">
             </div>
             
             <div class="row">
                 <label>Address</label>
-                <input type="text" name="address">
+                <input type="text" name="address" value="<?=$address?>">
             </div>
             
             <div class="row">
                 <label>City</label>
-                <input type="text" name="city">
+                <input type="text" name="city" value="<?=$city?>">
             </div>
             
             <div class="row">
                 <label>State</label>
-                <input type="text" name="state">
+                <input type="text" name="state" value="<?=$state?>">
             </div>
             
             <div class="row">
                 <label>Zip Code</label>
-                <input type="text" name="zipCode">
+                <input type="text" name="zipCode" value="<?=$zipCode?>">
             </div>
             
             <div class="row">
@@ -277,44 +431,49 @@ function binarySearch($arr, $target) {
 
         <div class="row">
             <label>First Name:</label>
-            <input type="text" name="firstName">
+            <input type="text" name="firstName" value="<?=$firstName?>">
         </div>
 
         <div class="row">
             <label>Last Name:</label>
-            <input type="text" name="lastName">
+            <input type="text" name="lastName" value="<?=$lastName?>">
         </div>
 
         <div class="row">
             <label>Phone Number:</label>
-            <input type="text" name="phoneNum">
+            <input type="text" name="phoneNum" value="<?=$phoneNum?>">
+        </div>
+
+        <div class="row">
+            <label>Email:</label>
+            <input type="text" name="email" value="<?=$email?>">
         </div>
 
         <div class="row">
             <label>Birthday:</label>
-            <input type="date" name="birthday">
+            <input type="date" name="birthdate" value="<?=$birthdate?>">
         </div>
 
         <div class="row">
             <label>Gender:</label>
-            <input type="radio" value="1" name="gender"> Male
-            <input type="radio" value="0" name="gender"> Female
+            <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
+            <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
             <br />
         </div>
 
         <div class="row">
             <label>Create Username:</label>
-            <input type="text" name="newUser">
+            <input type="text" name="newUser" value="<?=$newUser?>">
         </div>
 
         <div class="row">
             <label>Create Password:</label>
-            <input type="text" name="newPass">
+            <input type="text" name="newPass" value="<?=$newPass?>">
         </div>
 
         <div class="row">
             <label>Enter Organization Code</label>
-            <input type="text" name="orgCode">
+            <input type="text" name="orgCode" value="<?=$enterOrgCode?>">
         </div>
 
         <div class="row">

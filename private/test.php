@@ -1,3 +1,7 @@
+<?php
+    echo(1);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,5 +12,6 @@
 </head>
 <body>
     <h1>Header location works</h1>
+
 </body>
 </html>

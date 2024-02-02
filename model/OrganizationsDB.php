@@ -64,14 +64,54 @@ class OrganizationDB {
         $sqlString = $organizationTable->prepare("SELECT orgCode FROM Organizations ORDER BY orgCode");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+            //FETCH_COLUMN returns just an array of all values in column
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
         }
 
         return $results;
 
     }
+    public function getOrgID (){
+        $results = [];
+        $organizationTable = $this->organizationData;
 
-    public function addOrganization() {
+        //never use spaces for column names in mySQL :/
+        $sqlString = $organizationTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString->bindValue(':o', $this->orgCode);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            //FETCH_COLUMN returns just an array of all values in column
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return $results[0];
+    }
+
+    public function createOrganization() {
+
+        $results = 0;
+
+        $organizationTable = $this->organizationData;
+
+        $sqlString = $organizationTable->prepare("INSERT INTO Organizations set orgName = :o, address = :a, city = :c, state = :s, zipcode = :z, orgCode = :oc ");
+
+
+        //bind values
+        $binds = array(
+            ":o" => $this->orgName,
+            ":a" => $this->orgAddress,
+            ":c" => $this->orgCity,
+            ":s" => $this->orgState,
+            ":z" => $this->orgZip,
+            ":oc" => $this->orgCode,
+        );
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$organizationTable->lastInsertId();
+        }
+        
+        return ($results);
 
         
 
