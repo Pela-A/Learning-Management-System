@@ -60,6 +60,7 @@ class UserDB {
     public function getPassword(){
         return $this->password;
     }
+
     
     //function for getting all users **needs to be updated**
 
@@ -78,7 +79,7 @@ class UserDB {
     
     public function createUser(){
 
-        $results = "";
+        $results = 0;
 
         $userTable = $this->userData;
 
@@ -117,7 +118,7 @@ class UserDB {
 
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthdate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified FROM Users Where userID = :UI");
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :UI");
         $sqlString->bindValue(':UI', $userID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){

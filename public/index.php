@@ -26,6 +26,9 @@ function binarySearch($arr, $target) {
     return false;
 }
 
+//[ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
+
+
 
 function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass){
     $error = "";
@@ -127,7 +130,7 @@ if (isset($_POST['login'])) {
         //currently storing entire user in session variable !!!!!!!!!!!!!!!!!!!
         $_SESSION['userID']=$admin['userID'];
         
-        header('Location: ../private/test.php');
+        header('Location: ../private/landingPage.php');
     }else{
         //unset session variables and give error
         session_unset(); 
@@ -164,6 +167,8 @@ if (isset($_POST['create'])){
     $city = filter_input(INPUT_POST, 'city');
     $state = filter_input(INPUT_POST, 'state');
     $zipCode = filter_input(INPUT_POST, 'zipCode');
+
+    $enterOrgCode = "";
 
     if($orgName == ""){
         $error .= "<li>Please enter an organization name!";
@@ -228,6 +233,12 @@ if (isset($_POST['create'])){
     $gender = filter_input(INPUT_POST, 'gender');
     $newUser = filter_input(INPUT_POST, 'newUser');
     $newPass = filter_input(INPUT_POST, 'newPass');
+
+    $orgName = "";
+    $address = "";
+    $city = "";
+    $state = "";
+    $zipCode = "";
 
     $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
 
