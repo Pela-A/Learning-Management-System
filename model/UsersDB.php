@@ -47,7 +47,6 @@ class UserDB {
         }
     }
 
-<<<<<<< Updated upstream
     //getters for Username and Password. Allows us to have sticky text fields
     public function getUsername (){
         return $this->username;
@@ -57,7 +56,6 @@ class UserDB {
     }
 
     //function for getting all users **needs to be updated**
-=======
     public function siteAdminGetAllUsers() {
         $results = [];
         $userTable = $this->userData;
@@ -84,7 +82,6 @@ class UserDB {
         return results;
     }
 
->>>>>>> Stashed changes
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;
@@ -97,7 +94,6 @@ class UserDB {
 
         return $results;
     }
-<<<<<<< Updated upstream
     
     public function createUser(){
 
@@ -177,7 +173,6 @@ class UserDB {
         }
         return $results;
     }
-=======
 
     public function siteAdminAddUser() {
 
@@ -192,7 +187,6 @@ class UserDB {
     }
 
 
->>>>>>> Stashed changes
 }
 
 ?>

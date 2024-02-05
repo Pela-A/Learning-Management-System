@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <?php
 //includes at top
 include __DIR__ . '/../model/UsersDB.php';
@@ -12,8 +11,6 @@ $action = "";
 if(isset($_GET['action'])){
     $action = filter_input(INPUT_GET, 'action');
 }
-
-
 
 //logging in form post
 if (isset($_POST['login'])) {
@@ -47,9 +44,6 @@ if (isset($_POST['login'])) {
 //creating org
 if(isset($_POST['create'])){
 
-    //validate input information using either built in php stuff or regEx for now we assume everything is normal.
-    
-    //account information
     $firstName = filter_input(INPUT_POST, 'firstName');
     $lastName = filter_input(INPUT_POST, 'lastName');
     $phoneNum = filter_input(INPUT_POST, 'phoneNum');
@@ -183,20 +177,13 @@ if(isset($_POST['create'])){
     $zipCode = "";
     $enterOrgCode = "";
 }
-    
-=======
-<?php 
 
-include __DIR__ . '../include/footer.php';
-
->>>>>>> Stashed changes
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<<<<<<< Updated upstream
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
@@ -405,12 +392,6 @@ include __DIR__ . '../include/footer.php';
     <?php endif; ?>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>
-=======
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>(LMS) | Home Page</title>
+
 </head>
 <body>
-    
->>>>>>> Stashed changes
-</body>
-</html>
