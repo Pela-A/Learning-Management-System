@@ -1,5 +1,8 @@
 <?php
 
+include __DIR__ . '/../include/header.php';
+include __DIR__ . '/../include/functions.php';
+
 //start session
 session_start();
 
@@ -56,15 +59,8 @@ $name = $user[0]['firstName'] . " " . $user[0]['lastName'];
     <title>Document</title>
 </head>
 <body>
-    <h1>This will be our landing page</h1>
-
-    <header>
-        <h2><?=$name;?></h2>
-        <img src="profilePhotos/test.jpg" alt="image not found">
-    </header>
-
+    
     <div class="nav">
-
         <h2><?=$landingType;?> Landing Page</h2>
 
         <?php if($user[0]['isSiteAdmin']): ?>
