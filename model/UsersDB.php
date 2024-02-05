@@ -51,8 +51,40 @@ class UserDB {
     public function getUsername (){
         return $this->username;
     }
+
     public function getPassword(){
         return $this->password;
+    }
+
+    public function createUser(){
+
+        $results = 0;
+        $userTable = $this->userData;
+        $sqlString = $userTable->prepare("INSERT INTO Users set orgID = :o, firstName = :f, lastName = :ln, phoneNumber = :pn, email = :e, birthDate = :b, gender = :g, letterDate = :l, username = :u, password = :p, isOrgAdmin = :oa, isVerified = :v ");
+
+        //bind values
+        $binds = array(
+            ":o" => $this->orgID,
+            ":f" => $this->firstName,
+            ":ln" => $this->lastName,
+            ":pn" => $this->phoneNumber,
+            ":e" => $this->email,
+            ":b" => $this->birthdate,
+            ":g" => $this->gender,
+            ":l" => $this->letterDate,
+            ":u" => $this->username,
+            ":p" => $this->password,
+            ":oa" => $this->isOrgAdmin,
+            ":v" => $this->isVerified,
+        );
+
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$userTable->lastInsertId();
+        }
+        
+        return ($results);
     }
 
     //function for getting all users **needs to be updated**
@@ -86,44 +118,13 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, phone, gender, isAdmin FROM photousers ORDER BY lastName");
+        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, phone, gender FROM users ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return $results;
-    }
-    
-    public function createUser(){
-
-        $results = 0;
-        $userTable = $this->userData;
-        $sqlString = $userTable->prepare("INSERT INTO Users set orgID = :o, firstName = :f, lastName = :ln, phoneNumber = :pn, email = :e, birthdate = :b, gender = :g, letterDate = :l, username = :u, password = :p, isOrgAdmin = :oa, isVerified = :v ");
-
-        //bind values
-        $binds = array(
-            ":o" => $this->orgID,
-            ":f" => $this->firstName,
-            ":ln" => $this->lastName,
-            ":pn" => $this->phoneNumber,
-            ":e" => $this->email,
-            ":b" => $this->birthdate,
-            ":g" => $this->gender,
-            ":l" => $this->letterDate,
-            ":u" => $this->username,
-            ":p" => $this->password,
-            ":oa" => $this->isOrgAdmin,
-            ":v" => $this->isVerified,
-        );
-
-
-        //if our SQL statement returns results, populate our results confirmation string
-        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
-            $results = (int)$userTable->lastInsertId();
-        }
-        
-        return ($results);
     }
 
     //function finds one user based on userID

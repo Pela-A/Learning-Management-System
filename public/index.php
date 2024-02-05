@@ -109,7 +109,6 @@ if(isset($_POST['create'])){
         $_SESSION['userID']=$makeUser->createUser();
 
         //redirect to landing page
-    
         header('Location: ../private/landingPage.php');
 
     }
@@ -186,6 +185,10 @@ if(isset($_POST['create'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <title>Home Page</title>
 </head>
 <body>
@@ -251,83 +254,132 @@ if(isset($_POST['create'])){
     <?php elseif($action == 'createOrg'): ?>
         <h2>Create Organization Form</h2>
         <form name="create_org_form" method="post">
-                <h3>Enter Your Information</h3>
+            <h3>Enter Your Information</h3>
 
-                <div class="row">
-                    <label>First Name:</label>
-                    <input type="text" name="firstName" value="<?=$firstName?>">
-                </div>
+            <div class="row">
+                <label>First Name:</label>
+                <input type="text" name="firstName" value="<?=$firstName?>">
+            </div>
 
-                <div class="row">
-                    <label>Last Name:</label>
-                    <input type="text" name="lastName" value="<?=$lastName?>">
-                </div>
+            <div class="row">
+                <label>Last Name:</label>
+                <input type="text" name="lastName" value="<?=$lastName?>">
+            </div>
 
-                <div class="row">
-                    <label>Phone Number:</label>
-                    <input type="text" name="phoneNum" value="<?=$phoneNum?>">
-                </div>
+            <div class="row">
+                <label>Phone Number:</label>
+                <input type="text" name="phoneNum" value="<?=$phoneNum?>">
+            </div>
 
-                <div class="row">
-                    <label>Email:</label>
-                    <input type="text" name="email" value="<?=$email?>">
-                </div>
-                
-                <div class="row">
-                    <label>Birthday:</label>
-                    <input type="date" name="birthdate" value="<?=$birthdate?>">
-                </div>
-                
-                <div class="row">
-                    <label>Gender:</label>
-                    <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
-                    <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
-                    <br />
-                </div>
-                
-                <div class="row">
-                    <label>Create Username:</label>
-                    <input type="text" name="newUser" value="<?=$newUser?>">
-                </div>
-                
-                <div class="row">
-                    <label>Create Password:</label>
-                    <input type="text" name="newPass" value="<?=$newPass?>">
-                </div>
-                
-                <h3>Enter Organization Information</h3>
+            <div class="row">
+                <label>Email:</label>
+                <input type="text" name="email" value="<?=$email?>">
+            </div>
+            
+            <div class="row">
+                <label>Birthday:</label>
+                <input type="date" name="birthdate" value="<?=$birthdate?>">
+            </div>
+            
+            <div class="row">
+                <label>Gender:</label>
+                <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
+                <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
+                <br />
+            </div>
+            
+            <div class="row">
+                <label>Create Username:</label>
+                <input type="text" name="newUser" value="<?=$newUser?>">
+            </div>
+            
+            <div class="row">
+                <label>Create Password:</label>
+                <input type="text" name="newPass" value="<?=$newPass?>">
+            </div>
+            
+            <h3>Enter Organization Information</h3>
 
-                <div class="row">
-                    <label>Organization Name</label>
-                    <input type="text" name="orgName" value="<?=$orgName?>">
-                </div>
-                
-                <div class="row">
-                    <label>Address</label>
-                    <input type="text" name="address" value="<?=$address?>">
-                </div>
-                
-                <div class="row">
-                    <label>City</label>
-                    <input type="text" name="city" value="<?=$city?>">
-                </div>
-                
-                <div class="row">
-                    <label>State</label>
-                    <input type="text" name="state" value="<?=$state?>">
-                </div>
-                
-                <div class="row">
-                    <label>Zip Code</label>
-                    <input type="text" name="zipCode" value="<?=$zipCode?>">
-                </div>
-                
-                <div class="row">
-                    <input type="submit" name="create" value="Create Organization">
-                </div>
-                
-                
-
+            <div class="row">
+                <label>Organization Name</label>
+                <input type="text" name="orgName" value="<?=$orgName?>">
+            </div>
+            
+            <div class="row">
+                <label>Address</label>
+                <input type="text" name="address" value="<?=$address?>">
+            </div>
+            
+            <div class="row">
+                <label>City</label>
+                <input type="text" name="city" value="<?=$city?>">
+            </div>
+            
+            <div class="row">
+                <label>State</label>
+                <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" required>
+                    <option value="">State</option>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <label>Zip Code</label>
+                <input type="text" name="zipCode" value="<?=$zipCode?>">
+            </div>
+            
+            <div class="row">
+                <input type="submit" name="create" value="Create Organization">
+            </div>
         </form>
 
     <?php elseif($action == 'joinOrg'): ?>

@@ -102,12 +102,4 @@ $name = $user[0]['firstName'] . " " . $user[0]['lastName'];
             <p>main content goes here</p>
     </div>
 
-
-
-    <footer>
-
-            <p>Footer Content goes here</p>
-    </footer>
-
-</body>
-</html>
+<?php include __DIR__ . '/../include/footer.php'; ?>
