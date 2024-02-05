@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?php
 //includes at top
 include __DIR__ . '/../model/UsersDB.php';
@@ -183,12 +184,19 @@ if(isset($_POST['create'])){
     $enterOrgCode = "";
 }
     
+=======
+<?php 
+
+include __DIR__ . '../include/footer.php';
+
+>>>>>>> Stashed changes
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+<<<<<<< Updated upstream
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
@@ -397,5 +405,12 @@ if(isset($_POST['create'])){
     <?php endif; ?>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(LMS) | Home Page</title>
+</head>
+<body>
+    
+>>>>>>> Stashed changes
 </body>
 </html>

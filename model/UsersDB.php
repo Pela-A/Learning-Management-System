@@ -47,6 +47,7 @@ class UserDB {
         }
     }
 
+<<<<<<< Updated upstream
     //getters for Username and Password. Allows us to have sticky text fields
     public function getUsername (){
         return $this->username;
@@ -56,11 +57,39 @@ class UserDB {
     }
 
     //function for getting all users **needs to be updated**
+=======
+    public function siteAdminGetAllUsers() {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return results;
+    }
+
+    public function orgAdminGetAllUsers() {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isTrainer, profilePicture, isVerified");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchALL(PDO::FETCH_ASSOC);
+        }
+
+        return results;
+    }
+
+>>>>>>> Stashed changes
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT customerId, firstName, lastName, email, phone, gender, isAdmin FROM photousers ORDER BY lastName");
+        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, phone, gender, isAdmin FROM photousers ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -68,6 +97,7 @@ class UserDB {
 
         return $results;
     }
+<<<<<<< Updated upstream
     
     public function createUser(){
 
@@ -147,6 +177,22 @@ class UserDB {
         }
         return $results;
     }
+=======
+
+    public function siteAdminAddUser() {
+
+    }
+
+    public function orgAdminAddUser() {
+
+    }
+
+    public function addUser() {
+
+    }
+
+
+>>>>>>> Stashed changes
 }
 
 ?>
