@@ -23,17 +23,14 @@ class UserDB {
     protected int $isTrainer;
     protected int $isVerified;
     
-
-
-
     //constructor for UserDB class
     public function __construct($params = array()) {
         if ($ini = parse_ini_file('dbconfig.ini')) {
-            $userPDO = new PDO(   "mysql:host=" . $ini['servername'] .
-                                        ";port=" . $ini['port'] .
-                                        ";dbname=" . $ini['dbname'],
-                                        $ini['username'],
-                                        $ini['password']);
+            $userPDO = new PDO( "mysql:host=" . $ini['servername'] .
+                                ";port=" . $ini['port'] .
+                                ";dbname=" . $ini['dbname'],
+                                $ini['username'],
+                                $ini['password']);
             
             $userPDO->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $userPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -48,9 +45,6 @@ class UserDB {
         foreach ($params as $key => $value) {
             $this->{$key} = $value;
         }
-
-
-
     }
 
     //getters for Username and Password. Allows us to have sticky text fields
@@ -61,9 +55,7 @@ class UserDB {
         return $this->password;
     }
 
-    
     //function for getting all users **needs to be updated**
-
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;
@@ -80,11 +72,8 @@ class UserDB {
     public function createUser(){
 
         $results = 0;
-
         $userTable = $this->userData;
-
         $sqlString = $userTable->prepare("INSERT INTO Users set orgID = :o, firstName = :f, lastName = :ln, phoneNumber = :pn, email = :e, birthdate = :b, gender = :g, letterDate = :l, username = :u, password = :p, isOrgAdmin = :oa, isVerified = :v ");
-
 
         //bind values
         $binds = array(
@@ -115,7 +104,6 @@ class UserDB {
     public function getUser($userID){
         
         $results = [];
-
         $userTable = $this->userData;
 
         $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :UI");
@@ -142,7 +130,6 @@ class UserDB {
         }
 
         return $results;
-
     }
 
     //added function for logging in
@@ -154,11 +141,10 @@ class UserDB {
         $stmt = $this->userData->prepare("SELECT userID, Username, Password FROM Users WHERE Username=:user AND Password=:pass");
         $stmt->bindValue(':user', $this->username);
         $stmt->bindValue(':pass', $this->password);
-       
+
         if ( $stmt->execute() && $stmt->rowCount() > 0 ) {
-             $results = $stmt->fetch(PDO::FETCH_ASSOC);            
+            $results = $stmt->fetch(PDO::FETCH_ASSOC);            
         }
-         
         return $results;
     }
 }

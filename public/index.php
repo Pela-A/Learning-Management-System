@@ -2,117 +2,19 @@
 //includes at top
 include __DIR__ . '/../model/UsersDB.php';
 include __DIR__ . '/../model/OrganizationsDB.php';
+include __DIR__ . '/../include/functions.php';
 
-//binary search algorithm fastest if given a sorted array.
-function binarySearch($arr, $target) {
-    $left = 0;
-    $right = count($arr) - 1;
-    while ($left <= $right) {
-        $mid = floor(($left + $right) / 2);
-        // Check if the target value is found at the middle index
-        if ($arr[$mid] === $target) {
-            return true;
-        }
-        // If the target is greater, ignore the left half
-        if ($arr[$mid] < $target) {
-            $left = $mid + 1;
-        }
-        // If the target is smaller, ignore the right half
-        else {
-            $right = $mid - 1;
-        }
-    }
-    // Target value not found in the array
-    return false;
-}
-
-//[ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
-
-
-
-function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass){
-    $error = "";
-    //RegExpressions****
-
-
-    //mark true if finds characters not included
-    $pattern1 = "/[^A-Za-z-]+/";
-
-    //mark true if string contains 10 numbers only
-    $pattern2 = "/[0-9]{10}/";
-
-    //mark true if valid email parameters
-    $pattern3 = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
-
-    //first name check
-    if(preg_match($pattern1, $firstName)){
-        $error .= "<li>First name must not contain special characters or numbers!</li>";
-    }
-    elseif($firstName == ""){
-        $error .= "<li>Please Enter a First Name!</li>";
-    }
-
-    //last name check
-    if(preg_match($pattern1, $lastName)){
-        $error .= "<li>Last name must not contain special characters or numbers!</li>";
-    }
-    elseif($lastName == ""){
-        $error .= "<li>Please Enter a Last Name!</li>";
-    }
-
-    //phoneNum check
-    if(!preg_match($pattern2, $phoneNum)){
-        $error .= "<li>Invalid phone number!</li>";
-    }
-
-    //email check
-
-    if(!preg_match($pattern3, $email)){
-        $error .= "<li>Invalid Email!</li>";
-    }
-    elseif($email == ""){
-        $error .= "<li>Please enter an email.</li>";
-    }
-
-    //birthdate check
-
-    $currentDate = date('Y-m-d');
-    if($birthdate > $currentDate || $birthdate ==""){
-        $error.="<li>Please provide a valid birthdate!</li>";
-    }
-
-    //Gender check
-    if($gender==""){
-        $error .= "<li>Please provide a Gender!</li>";
-    }
-
-    //username check
-    $testUser = new UserDB();
-    $testUsernames = $testUser->getAllUsername();
-    if(binarySearch($testUsernames, $newUser)){
-        $error .= "<li>Username is already in use!</li>";
-    }
-    elseif(strlen($newUser) < 8){
-        $error .= "<li>Username must be at least 8 characters long!</li>";
-    }
-
-    //password check
-    if(strlen($newPass < 8)){
-        $error .= "<li>Password must be at least 8 characters long!</li>";
-    }
-
-    return($error);
-
-
-}
-
-
-
-//START OF FORMS CODE#*****************************************************
 //initialize error variable
 $error = "";
+$action = "";
+
+if(isset($_GET['action'])){
+    $action = filter_input(INPUT_GET, 'action');
+}
+
+
+
 //logging in form post
-//__________________________________________________________________________________________________________
 if (isset($_POST['login'])) {
     //no need to validate input
     $userArray = array('username' => filter_input(INPUT_POST, 'username'), 'password' => filter_input(INPUT_POST, 'password') );
@@ -137,15 +39,12 @@ if (isset($_POST['login'])) {
         $error = "Incorrect Username or Password!";
     }
 
-}
-else{
+}else{
     $userArray = array('username' => '', 'password' => '');
     $user = new UserDB($userArray);
 }
-
 //creating org
-//____________________________________________________________________________________________________________________________________________
-if (isset($_POST['create'])){
+if(isset($_POST['create'])){
 
     //validate input information using either built in php stuff or regEx for now we assume everything is normal.
     
@@ -221,7 +120,6 @@ if (isset($_POST['create'])){
     }
 
 //if trying to join organization.
-//______________________________________________________________________________________________________________________________________   
 }elseif(isset($_POST['join'])){
 
     //account information
@@ -269,7 +167,6 @@ if (isset($_POST['create'])){
 
 //first time loading to site
 }else{
-
     $firstName = "";
     $lastName = "";
     $phoneNum = "";
@@ -278,7 +175,6 @@ if (isset($_POST['create'])){
     $gender = "";
     $newUser = "";
     $newPass = "";
-
     $orgName = "";
     $address = "";
     $city = "";
@@ -289,7 +185,6 @@ if (isset($_POST['create'])){
     
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -299,64 +194,150 @@ if (isset($_POST['create'])){
     <title>Home Page</title>
 </head>
 <body>
-    <h2>Login Form</h2>
-    <form name="login_form" method="post">
-        
-        
-        <!--FORM-->
 
-        <div class="row justify-content-center">
+    <?php if($action == ''): ?>
+        <h2>Login Form</h2>
+        <form name="login_form" method="post">
+            <!--FORM-->
 
-            <div class="col-sm text-center">
-                <div class="label">
-                    <label>Username:</label>
-                </div>
-                <div>
-                    <input type="text" name="username" value="<?= $user->getUsername(); ?>" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-
-            <div class="col-sm text-center">
-                <div class="label">
-                    <label>Password:</label>
-                </div>
-                <div>
-                    <input type="password" name="password" value="<?= $user->getPassword(); ?>" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-
-            <div class="col-sm text-center">
-                <div>
-                    &nbsp;
-                </div>
-                <div>
-                    <input type="submit" name="login" value="Login" />
-                </div>
-            </div>
-        </div>
-
-        <?php if($error != ""):?>
             <div class="row justify-content-center">
 
                 <div class="col-sm text-center">
-                    <div class="error">
-                        <?php echo($error); ?>
+                    <div class="label">
+                        <label>Username:</label>
+                    </div>
+                    <div>
+                        <input type="text" name="username" value="<?= $user->getUsername(); ?>" />
                     </div>
                 </div>
             </div>
-        <?php endif; ?>
 
-        
-    </form>
+            <div class="row justify-content-center">
 
-    <h2>Create Organization Form</h2>
-    <form name="create_org_form" method="post">
+                <div class="col-sm text-center">
+                    <div class="label">
+                        <label>Password:</label>
+                    </div>
+                    <div>
+                        <input type="password" name="password" value="<?= $user->getPassword(); ?>" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+
+                <div class="col-sm text-center">
+                    <div>
+                        &nbsp;
+                    </div>
+                    <div>
+                        <input type="submit" name="login" value="Login" />
+                    </div>
+                </div>
+            </div>
+
+            <?php if($error != ""):?>
+                <div class="row justify-content-center">
+
+                    <div class="col-sm text-center">
+                        <div class="error">
+                            <?php echo($error); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            
+        </form>
+
+        <a href="index.php?action=createOrg">Register Organization</a>
+        <a href="index.php?action=joinOrg">Join Organization</a>
+
+    <?php elseif($action == 'createOrg'): ?>
+        <h2>Create Organization Form</h2>
+        <form name="create_org_form" method="post">
+                <h3>Enter Your Information</h3>
+
+                <div class="row">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="<?=$firstName?>">
+                </div>
+
+                <div class="row">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="<?=$lastName?>">
+                </div>
+
+                <div class="row">
+                    <label>Phone Number:</label>
+                    <input type="text" name="phoneNum" value="<?=$phoneNum?>">
+                </div>
+
+                <div class="row">
+                    <label>Email:</label>
+                    <input type="text" name="email" value="<?=$email?>">
+                </div>
+                
+                <div class="row">
+                    <label>Birthday:</label>
+                    <input type="date" name="birthdate" value="<?=$birthdate?>">
+                </div>
+                
+                <div class="row">
+                    <label>Gender:</label>
+                    <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
+                    <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
+                    <br />
+                </div>
+                
+                <div class="row">
+                    <label>Create Username:</label>
+                    <input type="text" name="newUser" value="<?=$newUser?>">
+                </div>
+                
+                <div class="row">
+                    <label>Create Password:</label>
+                    <input type="text" name="newPass" value="<?=$newPass?>">
+                </div>
+                
+                <h3>Enter Organization Information</h3>
+
+                <div class="row">
+                    <label>Organization Name</label>
+                    <input type="text" name="orgName" value="<?=$orgName?>">
+                </div>
+                
+                <div class="row">
+                    <label>Address</label>
+                    <input type="text" name="address" value="<?=$address?>">
+                </div>
+                
+                <div class="row">
+                    <label>City</label>
+                    <input type="text" name="city" value="<?=$city?>">
+                </div>
+                
+                <div class="row">
+                    <label>State</label>
+                    <input type="text" name="state" value="<?=$state?>">
+                </div>
+                
+                <div class="row">
+                    <label>Zip Code</label>
+                    <input type="text" name="zipCode" value="<?=$zipCode?>">
+                </div>
+                
+                <div class="row">
+                    <input type="submit" name="create" value="Create Organization">
+                </div>
+                
+                
+
+        </form>
+
+    <?php elseif($action == 'joinOrg'): ?>
+        <h2>Join Organization Form</h2>
+        <form name="join_org_form" method="post">
             <h3>Enter Your Information</h3>
 
             <div class="row">
@@ -378,120 +359,43 @@ if (isset($_POST['create'])){
                 <label>Email:</label>
                 <input type="text" name="email" value="<?=$email?>">
             </div>
-            
+
             <div class="row">
                 <label>Birthday:</label>
                 <input type="date" name="birthdate" value="<?=$birthdate?>">
             </div>
-            
+
             <div class="row">
                 <label>Gender:</label>
                 <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
                 <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
                 <br />
             </div>
-            
+
             <div class="row">
                 <label>Create Username:</label>
                 <input type="text" name="newUser" value="<?=$newUser?>">
             </div>
-            
+
             <div class="row">
                 <label>Create Password:</label>
                 <input type="text" name="newPass" value="<?=$newPass?>">
             </div>
-            
-            <h3>Enter Organization Information</h3>
 
             <div class="row">
-                <label>Organization Name</label>
-                <input type="text" name="orgName" value="<?=$orgName?>">
+                <label>Enter Organization Code</label>
+                <input type="text" name="orgCode" value="<?=$enterOrgCode?>">
             </div>
-            
+
             <div class="row">
-                <label>Address</label>
-                <input type="text" name="address" value="<?=$address?>">
+                <input type="submit" name="join" value="Join Organization">
             </div>
-            
-            <div class="row">
-                <label>City</label>
-                <input type="text" name="city" value="<?=$city?>">
-            </div>
-            
-            <div class="row">
-                <label>State</label>
-                <input type="text" name="state" value="<?=$state?>">
-            </div>
-            
-            <div class="row">
-                <label>Zip Code</label>
-                <input type="text" name="zipCode" value="<?=$zipCode?>">
-            </div>
-            
-            <div class="row">
-                <input type="submit" name="create" value="Create Organization">
-            </div>
-            
-            
-
-    </form>
-
-    <h2>Join Organization Form</h2>
-    <form name="join_org_form" method="post">
-        <h3>Enter Your Information</h3>
-
-        <div class="row">
-            <label>First Name:</label>
-            <input type="text" name="firstName" value="<?=$firstName?>">
-        </div>
-
-        <div class="row">
-            <label>Last Name:</label>
-            <input type="text" name="lastName" value="<?=$lastName?>">
-        </div>
-
-        <div class="row">
-            <label>Phone Number:</label>
-            <input type="text" name="phoneNum" value="<?=$phoneNum?>">
-        </div>
-
-        <div class="row">
-            <label>Email:</label>
-            <input type="text" name="email" value="<?=$email?>">
-        </div>
-
-        <div class="row">
-            <label>Birthday:</label>
-            <input type="date" name="birthdate" value="<?=$birthdate?>">
-        </div>
-
-        <div class="row">
-            <label>Gender:</label>
-            <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
-            <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
-            <br />
-        </div>
-
-        <div class="row">
-            <label>Create Username:</label>
-            <input type="text" name="newUser" value="<?=$newUser?>">
-        </div>
-
-        <div class="row">
-            <label>Create Password:</label>
-            <input type="text" name="newPass" value="<?=$newPass?>">
-        </div>
-
-        <div class="row">
-            <label>Enter Organization Code</label>
-            <input type="text" name="orgCode" value="<?=$enterOrgCode?>">
-        </div>
-
-        <div class="row">
-            <input type="submit" name="join" value="Join Organization">
-        </div>
 
 
-    </form>
+        </form>
+
+    <?php endif; ?>
+
+<?php include __DIR__ . '/../include/footer.php'; ?>
 </body>
 </html>
