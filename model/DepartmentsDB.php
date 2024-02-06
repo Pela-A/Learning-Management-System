@@ -25,19 +25,8 @@ class DepartmentDB {
         
     }
 
-    public function siteAdminGetAllDepartments() {
-        $results = [];
-        $departmentTable = $this->departmentData;
-
-        $sqlString = $departmentTable->prepare("SELECT * FROM departments");
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-    public function orgAdminGetAllDepartments($orgID) {
+    //viewer method
+    public function getAllDepartments($orgID) {
 
         $results = [];
         $departmentTable = $this->departmentData;
@@ -53,9 +42,10 @@ class DepartmentDB {
         return $results;
     }
 
+    //create department method
     public function createDep($orgID, $depName, $depEmail){
 
-        $results = 0;
+        $results = "";
         $departmentTable = $this->departmentData;
         $sqlString = $departmentTable->prepare("INSERT INTO departments set orgID = :o, depName = :n, depEmail = :e");
 
@@ -69,12 +59,13 @@ class DepartmentDB {
 
         //if our SQL statement returns results, populate our results confirmation string
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
-            $results = (int)$departmentTable->lastInsertId();
+            $results = "New Department Added";
         }
         
         return ($results);
     }
 
+    //edit department method
     public function editDep($depID, $depName, $depEmail){
 
         $results = "";
@@ -98,12 +89,13 @@ class DepartmentDB {
         return ($results);
     }
 
+    //delete department method
     public function deleteDep($depID){
 
         $results = "Data was not deleted";
 
         $departmentTable = $this->departmentData;
-        $sqlString = $departmentTable->prepare("DELETE FROM Departments WHERE departmentID=:id")
+        $sqlString = $departmentTable->prepare("DELETE FROM Departments WHERE departmentID=:id");
         
         
         $sqlString->bindValue(':id', $depID);
@@ -115,12 +107,13 @@ class DepartmentDB {
         return ($results);
     }
 
+    //delete department bridge method
     public function deleteDepBridge($depID){
 
         $results = "Data was not deleted";
 
         $departmentTable = $this->departmentData;
-        $sqlString = $departmentTable->prepare("DELETE FROM DepUsersBridge WHERE departmentID=:id")
+        $sqlString = $departmentTable->prepare("DELETE FROM DepUsersBridge WHERE departmentID=:id");
         
         
         $sqlString->bindValue(':id', $depID);
