@@ -3,28 +3,8 @@
 class UserDB {
     private $userData;
     
-    protected string $username;
-    protected string $password;
-
-    protected int $userID;
-    protected int $orgID;
-
-    protected string $firstName;
-    protected string $lastName;
-    protected string $letterDate;
-    protected string $email;
-    protected string $birthdate;
-    protected string $phoneNumber;
-    protected string $gender;
-    protected string $profilePicture;
-
-    protected int $isOrgAdmin;
-    protected int $isSiteAdmin;
-    protected int $isTrainer;
-    protected int $isVerified;
-    
     //constructor for UserDB class
-    public function __construct($params = array()) {
+    public function __construct() {
         if ($ini = parse_ini_file('dbconfig.ini')) {
             $userPDO = new PDO( "mysql:host=" . $ini['servername'] .
                                 ";port=" . $ini['port'] .
@@ -39,21 +19,6 @@ class UserDB {
         } else {
             throw new Exception("<h2>Creation of database object failed!</h2>", 0, null);
         }
-
-        //loops through params array and assigns appropriate values for this instance of object
-        //constructor gets dynamic input
-        foreach ($params as $key => $value) {
-            $this->{$key} = $value;
-        }
-    }
-
-    //getters for Username and Password. Allows us to have sticky text fields
-    public function getUsername (){
-        return $this->username;
-    }
-
-    public function getPassword(){
-        return $this->password;
     }
 
     public function createUser(){
@@ -160,18 +125,21 @@ class UserDB {
     }
 
     //added function for logging in
-    public function login(){
+    public function login($username, $password){
         
         $results = [];
-        //i grabbed the userData variable to allow use of prepare statements.
-        //statement here connects to database and checks that the password is valid
-        $stmt = $this->userData->prepare("SELECT userID, Username, Password FROM Users WHERE Username=:user AND Password=:pass");
-        $stmt->bindValue(':user', $this->username);
-        $stmt->bindValue(':pass', $this->password);
+        $userTable = $this->userData;
+
+        $stmt = $userTable->prepare("SELECT * FROM users WHERE username=:user AND password=:pass");
+        $stmt->bindValue(':user', $username);
+        $stmt->bindValue(':pass', $password);
 
         if ( $stmt->execute() && $stmt->rowCount() > 0 ) {
             $results = $stmt->fetch(PDO::FETCH_ASSOC);            
+        } else {
+            $results = "No Results Found";
         }
+
         return $results;
     }
 
