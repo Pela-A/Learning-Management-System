@@ -34,6 +34,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/header.css">
+    <link rel="stylesheet" href="../assets/css/aside.css">
 
     <title>Document</title>
 </head>
@@ -51,8 +52,8 @@
                 
                 <a class="nav-link mx-2 active dropdown-toggle" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</a>
                 <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
-                    <a class="dropdown-item" href="accountSettings.php">Account Settings</a>
-                    <a class="dropdown-item" href="">Change Password</a>
+                    <a class="dropdown-item" href="userAccount.php">Account Settings</a>
+                    <a class="dropdown-item" href="userAccount.php?action=changePassword">Change Password</a>
                     <a class="dropdown-item" href="logout.php">Sign out</a>
                 </div>
             </li>
