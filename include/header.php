@@ -1,4 +1,29 @@
-<?php  ?>
+<?php 
+
+    include __DIR__ . '/../include/functions.php';
+
+    session_start();
+
+    //Redirects to Home Page if session variable does not exist
+    if(!isset($_SESSION['userID'])){
+        header('Location: logout.php');
+    }
+
+    //Establishes landingType Session variable dependant on admin status
+    if($_SESSION['isSiteAdmin'] == True){
+        $_SESSION['landingType'] = "Website Admin";
+    } elseif($_SESSION['isOrgAdmin'] == True) {
+        $_SESSION['landingType'] = "Organization Admin";
+    } elseif ($_SESSION['isTrainer'] == True) {
+        $_SESSION['landingType'] = "Training Manager";
+    } else {
+        $_SESSION['landingType'] = 'General';
+    }
+
+    //Concatenates name variables into fullname
+    $_SESSION['fullName'] = $_SESSION['firstName'] . " " . $_SESSION['lastName'];
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +58,7 @@
             </li>
         </ul>
 
-        <p><?=$_SESSION['firstName'] ?></p>
+    <p><?=$_SESSION['firstName']; ?></p>
         
         <img src="" alt="">
         

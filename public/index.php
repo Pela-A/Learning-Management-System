@@ -21,11 +21,15 @@
             $userDB = new UserDB();
             $userData = $userDB->login($username, $password);
 
+            //var_dump($userData);
+
+            session_start();
+
             $_SESSION['userID']=$userData['userID'];
             $_SESSION['orgID']=$userData['orgID'];
             $_SESSION['firstName']=$userData['firstName'];
             $_SESSION['lastName']=$userData['lastName'];
-            $_SESSION['profilePicture'];
+            //$_SESSION['profilePicture'];
 
             if($userData['isSiteAdmin'] == 1){
                 $_SESSION['isSiteAdmin'] = True;
@@ -50,6 +54,8 @@
                 session_destroy();
                 header('Location: index.php?action=notVerified');
             }
+
+            var_dump($_SESSION);
                 
             header('Location: ../private/landingPage.php');
         } catch (Exception $error) {
