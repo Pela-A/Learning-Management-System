@@ -35,20 +35,101 @@ class DepartmentDB {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return results;
+        return $results;
     }
-    public function orgAdminGetAllDepartments() {
+    public function orgAdminGetAllDepartments($orgID) {
 
         $results = [];
-        $userTable = $this->userData;
+        $departmentTable = $this->departmentData;
 
-        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified");
+        $sqlString = $departmentTable->prepare("SELECT depName, depEmail, WHERE orgID = :o");
+
+        $sqlString->bindValue(':o', $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return results;
+        return $results;
+    }
+
+    public function createDep($orgID, $depName, $depEmail){
+
+        $results = 0;
+        $departmentTable = $this->departmentData;
+        $sqlString = $departmentTable->prepare("INSERT INTO departments set orgID = :o, depName = :n, depEmail = :e");
+
+        //bind values
+        $binds = array(
+            ":o" => $orgID,
+            ":n" => $depName,
+            ":e" => $depEmail
+        );
+
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$departmentTable->lastInsertId();
+        }
+        
+        return ($results);
+    }
+
+    public function editDep($depID, $depName, $depEmail){
+
+        $results = "";
+
+        $departmentTable = $this->departmentData;
+        $sqlString = $departmentTable->prepare("UPDATE departments set depName = :n, depEmail = :e WHERE departmentID = :d");
+
+
+        $binds = array(
+            ":d" => $depID,
+            ":n" => $depName,
+            ":e" => $depEmail
+        );
+        
+        
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = 'Data Updated';
+        }
+        
+        return ($results);
+    }
+
+    public function deleteDep($depID){
+
+        $results = "Data was not deleted";
+
+        $departmentTable = $this->departmentData;
+        $sqlString = $departmentTable->prepare("DELETE FROM Departments WHERE departmentID=:id")
+        
+        
+        $sqlString->bindValue(':id', $depID);
+            
+        if ($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = 'Data Deleted';
+        }
+        
+        return ($results);
+    }
+
+    public function deleteDepBridge($depID){
+
+        $results = "Data was not deleted";
+
+        $departmentTable = $this->departmentData;
+        $sqlString = $departmentTable->prepare("DELETE FROM DepUsersBridge WHERE departmentID=:id")
+        
+        
+        $sqlString->bindValue(':id', $depID);
+            
+        if ($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = 'Data Deleted';
+        }
+        
+        return ($results);
     }
 }
 
