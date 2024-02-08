@@ -21,6 +21,7 @@ class UserDB {
         }
     }
 
+    //
     public function createUser(){
 
         $results = 0;
@@ -57,7 +58,7 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified");
+        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified FROM users ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -66,11 +67,12 @@ class UserDB {
         return $results;
     }
 
+    //
     public function orgAdminGetAllUsers() {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isTrainer, profilePicture, isVerified");
+        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isTrainer, profilePicture, isVerified FROM users ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchALL(PDO::FETCH_ASSOC);
@@ -79,6 +81,7 @@ class UserDB {
         return $results;
     }
 
+    //
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;

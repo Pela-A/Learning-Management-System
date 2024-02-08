@@ -1,9 +1,6 @@
 <?php
 
     include __DIR__ . '/../include/header.php';
-
-
-
     include __DIR__ . '/../model/DepartmentsDB.php';
 
     function verifyDepartmentInformation($name, $email){
@@ -26,8 +23,6 @@
         return($error);
     }
 
-
-
     //initialize error
     $error= '';
 
@@ -47,10 +42,6 @@
         $departments = $depObj->getAllDepartments($_SESSION['orgID']);
         //USING ORG ID SESSION ATM
     }
-
-
-
-
 
     //Form functionality for creating editing or deleting a department
     if(isset($_POST['create'])){
@@ -77,8 +68,6 @@
         $error = verifyDepartmentInformation($name, $email);
 
         if($error ==''){
-
-            
             $depObj->editDep($depID, $depName, $depEmail);
         }
         //edit department information
@@ -95,11 +84,8 @@
     }
     else{
         $name = "";
-
         $email = "";
-
     }
-
 ?>
 
 <!DOCTYPE html>
@@ -125,9 +111,6 @@
 
         <?php if($action==''):?>
 
-        
-
-        
         <a href="departments.php?action=Create">Create New Department</a>
         
 
@@ -143,7 +126,6 @@
 
             <tbody>
 
-
             <?php foreach ($departments as $d):?>
                 <tr>
                     <td><?= $d['orgID']; ?></td>
@@ -158,17 +140,6 @@
             </tbody>
         </table>
 
-
-
-
-
-
-
-
-
-        
-
-        
         
         <?php else:?>
         <h2><?=$action; ?> Department</h2>

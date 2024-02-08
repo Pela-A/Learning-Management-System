@@ -1,16 +1,16 @@
 <?php 
 
-    
+    //
 
 ?>
 
     <aside>
-        <h2><?=$_SESSION['landingType'];?> Landing Page</h2>
+        <h2>Landing Page</h2>
 
         <?php if($_SESSION['isSiteAdmin']): ?>
             <ul>
                 <li><a href="organizations.php">View Organizations</a></li>
-                <li><a href="userAccount.php">View User Accounts</a></li>
+                <li><a href="userAccount.php?action=Viewer">View User Accounts</a></li>
             </ul>
         <?php endif; ?>
 
