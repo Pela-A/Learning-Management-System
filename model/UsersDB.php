@@ -63,7 +63,7 @@ class UserDB {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return results;
+        return $results;
     }
 
     public function orgAdminGetAllUsers() {
@@ -76,7 +76,7 @@ class UserDB {
             $results = $sqlString->fetchALL(PDO::FETCH_ASSOC);
         }
 
-        return results;
+        return $results;
     }
 
     public function getAllUsers() {
