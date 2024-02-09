@@ -25,15 +25,30 @@ class DepartmentDB {
         
     }
 
+    public function getDepartment($depID){
+
+        $results = [];
+        $departmentTable = $this->departmentData;
+
+        $sqlString = $departmentTable->prepare("SELECT depName, depEmail FROM Departments Where departmentID = :d");
+        $sqlString->bindValue(':d', $depID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
     //viewer method
     public function getAllDepartments($orgID) {
 
         $results = [];
         $departmentTable = $this->departmentData;
 
-        $sqlString = $departmentTable->prepare("SELECT depName, depEmail, WHERE orgID = :o");
+        $sqlString = $departmentTable->prepare("SELECT * FROM Departments WHERE orgID = :org");
 
-        $sqlString->bindValue(':o', $orgID);
+        $sqlString->bindValue(":org", $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
