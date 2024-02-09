@@ -4,7 +4,7 @@
 
 ?>
 
-    <aside>
+    <aside style="background-color: lightgrey;">
         <h2>Landing Page</h2>
 
         <?php if($_SESSION['isSiteAdmin']): ?>

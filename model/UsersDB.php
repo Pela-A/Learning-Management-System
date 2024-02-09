@@ -21,7 +21,6 @@ class UserDB {
         }
     }
 
-    //
     public function createUser(){
 
         $results = 0;
@@ -53,75 +52,27 @@ class UserDB {
         return ($results);
     }
 
-    //function for getting all users **needs to be updated**
-    public function siteAdminGetAllUsers() {
-        $results = [];
-        $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isSiteAdmin, isTrainer, profilePicture, isVerified FROM users ORDER BY lastName");
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    //
-    public function orgAdminGetAllUsers() {
-        $results = [];
-        $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("SELECT userID, orgID, firstName, lastName, letterDate, email, birthDate, phoneNumber, gender, username, password, isOrgAdmin, isTrainer, profilePicture, isVerified FROM users ORDER BY lastName");
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchALL(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    //
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT userID, firstName, lastName, email, phone, gender FROM users ORDER BY lastName");
+        $sqlString = $userTable->prepare("SELECT * FROM users ORDER BY lastName");
 
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return $results;
     }
 
-    //function finds one user based on userID
     public function getUser($userID){
-        
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :UI");
-        $sqlString->bindValue(':UI', $userID);
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = $userID");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    //used for validation of username being unique
-    public function getAllUsername(){
-
-        $results = [];
-        $userTable = $this->userData;
-
-        //never use spaces for column names in mySQL :/
-        $sqlString = $userTable->prepare("SELECT username FROM users ORDER BY username");
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
-            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
         }
 
         return $results;
@@ -145,19 +96,6 @@ class UserDB {
 
         return $results;
     }
-
-    public function siteAdminAddUser() {
-
-    }
-
-    public function orgAdminAddUser() {
-
-    }
-
-    public function addUser() {
-
-    }
-
 
 }
 
