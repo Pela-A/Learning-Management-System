@@ -1,39 +1,39 @@
 <?php 
 
 class OrganizationDB {
-    private $organizationData;
+    private $orgData;
 
-    //creating protected variables for class that will be instantiated in the construct
-    protected $orgID;
-    protected $orgName;
-    protected $orgAddress;
-    protected $orgCity;
-    protected $orgState;
-    protected $orgZip;
-    protected $orgCode;
-
-    public function __construct($params = array()) {
+    public function __construct() {
         if ($ini = parse_ini_file('dbconfig.ini')) {
-            $organizationPDO = new PDO(   "mysql:host=" . $ini['servername'] .
+            $orgPDO = new PDO( "mysql:host=" . $ini['servername'] .
                                         ";port=" . $ini['port'] .
                                         ";dbname=" . $ini['dbname'],
                                         $ini['username'],
                                         $ini['password']);
             
-            $organizationPDO->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $organizationPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $orgPDO->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $orgPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $this->organizationData = $organizationPDO;
+            $this->orgData = $orgPDO;
 
             //planning to make it so that protected variables above are given info from construct function input.
         } else {
             throw new Exception("<h2>Creation of database object failed!</h2>", 0, null);
         }
+    }
 
-        //dynamically grabs appropriate information for object.
-        foreach ($params as $key => $value) {
-            $this->{$key} = $value;
+    public function getOrganization($orgID) {
+        $results = [];
+        $orgTable = $this->orgData;
+
+        $sqlString = $orgTable->prepare("SELECT * FROM organizations Where orgID = :orgID");
+        $sqlString->bindValue(':orgID', $orgID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        return $results;
     }
 
     public function getAllOrganizations() {

@@ -10,6 +10,7 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
+    if(isset($_POST[]));
 ?>
 
 <!DOCTYPE html>
@@ -117,9 +118,8 @@
                 </table>
 
             <?php endif; ?>
-        <?php endif; ?>
         
-        <?php if($action == 'personalSettings'): 
+        <?php elseif($action == 'personalSettings'): 
             $account = $user->getUser($_SESSION['userID']);
             if($_SESSION['isSiteAdmin']): ?>
 
@@ -170,9 +170,9 @@
             <?php else: ?>
 
             <?php endif; ?>
-        <?php endif; ?>
 
-        <?php if($action == 'ChangePassword'): ?>
+
+        <?php elseif($action == 'ChangePassword'): ?>
         <?php endif; ?>
 
     </div>

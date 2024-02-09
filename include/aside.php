@@ -5,7 +5,7 @@
 ?>
 
     <aside style="background-color: lightgrey;">
-        <h2>Landing Page</h2>
+        <h2><?= $_SESSION['firstName']; ?></h2>
 
         <?php if($_SESSION['isSiteAdmin']): ?>
             <ul>
@@ -19,7 +19,7 @@
         <?php endif; ?>
 
         <?php if($_SESSION['isTrainer']): ?>
-            <h3>Training Manager Control Panel</h3>
+            <h3>Training Manager</h3>
             <ul>
                 <li><a href="trainingValidation.php">User Training Validator</a></li>
                 <li><a href="trainingModules.php?action=Create">Create New Training Module</a></li>

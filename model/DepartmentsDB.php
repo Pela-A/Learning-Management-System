@@ -46,9 +46,8 @@ class DepartmentDB {
         $results = [];
         $departmentTable = $this->departmentData;
 
-        $sqlString = $departmentTable->prepare("SELECT * FROM Departments WHERE orgID = :org");
-
-        $sqlString->bindValue(":org", $orgID);
+        $sqlString = $departmentTable->prepare("SELECT * FROM Departments WHERE orgID = :orgID ORDER BY depName");
+        $sqlString->bindValue(':orgID', $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);

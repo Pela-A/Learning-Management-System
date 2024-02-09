@@ -16,7 +16,7 @@ header, footer {
 }
 
 aside {
-    padding-right: 100px;
+    min-width: 400px;
 }
   
 footer {

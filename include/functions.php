@@ -137,4 +137,24 @@
 
         return($error);
     }
+
+    function verifyDepartmentInformation($name, $email){
+        $error = '';
+        $pattern1 = "/[^A-Za-z-]+/";
+        $pattern3 = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
+        if(preg_match($pattern1,$name)){
+            $error .= "<li>Department Name must not contain special characters or numbers!</li>";
+        }
+        elseif($name == ""){
+            $error .= "<li>Please Enter a Department Name!</li>";
+        }
+
+        if(!preg_match($pattern3, $email)){
+            $error .= "<li>Invalid Department Email!</li>";
+        }
+        elseif($email == ""){
+            $error .= "<li>Please enter an Department Dmail.</li>";
+        }
+        return($error);
+    }
 ?>
