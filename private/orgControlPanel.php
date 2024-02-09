@@ -2,6 +2,8 @@
 
     include __DIR__ . '/../include/header.php';
 
+    echo('testing');
+    echo($_SESSION['orgID']);
 ?>
 
 <!DOCTYPE html>

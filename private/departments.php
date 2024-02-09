@@ -29,23 +29,9 @@
     //initialize departments object
     $depObj = new departmentDB();
 
-    //initialize action variable
-    $action ='';
-
-    //decides whether the form will be creating or editing. otherwise we are pulling data for view
-    if(isset($_GET['action'])){
-        $action = filter_input(INPUT_GET, 'action');
-        if($action == "Edit"){
-            $depID = filter_input(INPUT_GET, 'depID');
-        }
-    }else{
-        $departments = $depObj->getAllDepartments($_SESSION['orgID']);
-        //USING ORG ID SESSION ATM
-    }
-
     //Form functionality for creating editing or deleting a department
     if(isset($_POST['create'])){
-        echo("Create button clicked");
+        
         $name = filter_input(INPUT_POST, 'name');
         $email = filter_input(INPUT_POST, 'email');
         $orgID = filter_input(INPUT_POST, 'orgID');
@@ -60,7 +46,7 @@
 
     }
     elseif(isset($_POST['edit'])){
-        echo("Delete button clicked");
+        
         $name = filter_input(INPUT_POST, 'name');
         $email = filter_input(INPUT_POST, 'email');
         $depID = filter_input(INPUT_POST, 'depID');
@@ -68,13 +54,13 @@
         $error = verifyDepartmentInformation($name, $email);
 
         if($error ==''){
-            $depObj->editDep($depID, $depName, $depEmail);
+            $depObj->editDep($depID, $name, $email);
         }
         //edit department information
 
     }
     elseif(isset($_POST['delete'])){
-        echo("Delete button clicked");
+        
         $depID = filter_input(INPUT_POST, 'depID');
         
         //delete department and any userBridge entries with that depID
@@ -82,9 +68,24 @@
         $depObj->deleteDep($depID);
         $depObj->deleteDepBridge($depID);
     }
-    else{
-        $name = "";
-        $email = "";
+
+    //initialize action variable
+    $action ='';
+
+    //decides whether the form will be creating or editing. otherwise we are pulling data for view
+    if(isset($_GET['action'])){
+        $action = filter_input(INPUT_GET, 'action');
+        if($action == "Edit"){
+            $depID = filter_input(INPUT_GET, 'depID');
+            $depart = $depObj->getDepartment($depID);
+            $name = $depart[0]['depName'];
+            $email = $depart[0]['depEmail'];
+        }
+    }else{
+        $orgID = $_SESSION['orgID'];
+        
+        $departments = $depObj->getAllDepartments($orgID);
+        //USING ORG ID SESSION ATM
     }
 ?>
 
@@ -131,8 +132,8 @@
                     <td><?= $d['orgID']; ?></td>
                     <td><?= $d['departmentID']; ?></td>
                     <td><?= $d['depName']; ?></td>
-                    <td><?= $b['depEmail']; ?></td>
-                    <td><a href="editDepartment.php?action=Edit&depID=<?= $d['depID']?>">Edit</a></td>
+                    <td><?= $d['depEmail']; ?></td>
+                    <td><a href="departments.php?action=Edit&depID=<?= $d['departmentID']?>">Edit</a></td>
                     <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                 </tr>
             <?php endforeach; ?>
