@@ -5,20 +5,46 @@ body {
     min-height: 100vh;
   }
   
-.mainContent {
-    flex: 1; /* This makes the main content area stretch vertically */
-    display: flex;
-}
-  
 header, footer {
     position: absolute;
     width: 100%;
 }
 
 aside {
-    min-width: 400px;
+    padding: 20px; 
+    min-width: 300px;
+}
+
+aside ul {
+    list-style-type: none;
+    line-height: 30px;
+    padding: 0px;
+}
+
+aside a:link, a:active, a:visited {
+    text-decoration: none;
+    color:rgb(114, 114, 114);
+    padding-block: 8px;
+    margin: 10px;
+}
+
+aside li:hover {
+    background-color: rgb(114, 114, 114);
+}
+
+aside a:hover {
+    color: white;
 }
   
 footer {
     bottom: 0;
+}
+
+.mainContent {
+    flex: 1; /* This makes the main content area stretch vertically */
+    display: flex;
+}
+
+.pageContent {
+    padding: 20px;
 }
