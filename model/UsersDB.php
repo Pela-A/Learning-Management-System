@@ -21,7 +21,7 @@ class UserDB {
         }
     }
 
-    public function createUser(){
+    public function createUser($orgID,$firstName,$lastName,$phoneNumber,$email,$birthdate,$gender,$letterDate,$username,$password,$isOrgAdmin,$isVerified){
 
         $results = 0;
         $userTable = $this->userData;
@@ -29,18 +29,18 @@ class UserDB {
 
         //bind values
         $binds = array(
-            ":o" => $this->orgID,
-            ":f" => $this->firstName,
-            ":ln" => $this->lastName,
-            ":pn" => $this->phoneNumber,
-            ":e" => $this->email,
-            ":b" => $this->birthdate,
-            ":g" => $this->gender,
-            ":l" => $this->letterDate,
-            ":u" => $this->username,
-            ":p" => $this->password,
-            ":oa" => $this->isOrgAdmin,
-            ":v" => $this->isVerified,
+            ":o" => $orgID,
+            ":f" => $firstName,
+            ":ln" => $lastName,
+            ":pn" => $phoneNumber,
+            ":e" => $email,
+            ":b" => $birthdate,
+            ":g" => $gender,
+            ":l" => $letterDate,
+            ":u" => $username,
+            ":p" => $password,
+            ":oa" => $isOrgAdmin,
+            ":v" => $isVerified,
         );
 
 
@@ -72,7 +72,9 @@ class UserDB {
         $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = $userID");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+            //fetch expects one record and gives it as a singular assoc array
+            //fetch all possible to have multiple records pulled (multiple assoc array)
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
         }
 
         return $results;
@@ -95,6 +97,23 @@ class UserDB {
         }
 
         return $results;
+    }
+
+    //used to check if a entered new username in user creation is already in the database (UNIQUE USERNAME VALIDATION)
+    public function getAllUsername(){
+
+        $results = [];
+        $userTable = $this->userData;
+
+        //never use spaces for column names in mySQL :/
+        $sqlString = $userTable->prepare("SELECT username FROM users ORDER BY username");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return $results;
+
     }
 
 }

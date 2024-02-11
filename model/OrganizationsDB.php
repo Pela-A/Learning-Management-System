@@ -43,7 +43,7 @@ class OrganizationDB {
 
         //prepare our SQL statement
 
-        $organizationTable = $this->organizationData;
+        $organizationTable = $this->orgData;
         $sqlString = $organizationTale->prepare("SELECT orgID, orgName, address, city, state, zipCode FROM Organizations ORDER BY orgName");
 
         //if our SQL statement returns results, populate our result array
@@ -58,7 +58,7 @@ class OrganizationDB {
 
     public function getAllOrgCodes (){
         $results = [];
-        $organizationTable = $this->organizationData;
+        $organizationTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
         $sqlString = $organizationTable->prepare("SELECT orgCode FROM Organizations ORDER BY orgCode");
@@ -74,7 +74,7 @@ class OrganizationDB {
     
     public function getOrgID (){
         $results = [];
-        $organizationTable = $this->organizationData;
+        $organizationTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
         $sqlString = $organizationTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
@@ -88,23 +88,23 @@ class OrganizationDB {
         return $results[0];
     }
 
-    public function createOrganization() {
+    public function createOrganization($orgName,$orgAddress,$orgCity,$orgState,$orgZip,$orgCode) {
 
         $results = 0;
 
-        $organizationTable = $this->organizationData;
+        $organizationTable = $this->orgData;
 
         $sqlString = $organizationTable->prepare("INSERT INTO Organizations set orgName = :o, address = :a, city = :c, state = :s, zipcode = :z, orgCode = :oc ");
 
 
         //bind values
         $binds = array(
-            ":o" => $this->orgName,
-            ":a" => $this->orgAddress,
-            ":c" => $this->orgCity,
-            ":s" => $this->orgState,
-            ":z" => $this->orgZip,
-            ":oc" => $this->orgCode,
+            ":o" => $orgName,
+            ":a" => $orgAddress,
+            ":c" => $orgCity,
+            ":s" => $orgState,
+            ":z" => $orgZip,
+            ":oc" => $orgCode,
         );
 
         //if our SQL statement returns results, populate our results confirmation string
