@@ -37,20 +37,13 @@ class OrganizationDB {
     }
 
     public function getAllOrganizations() {
-
-        //initialize results
         $results = [];
+        $orgTable = $this->orgData;
 
-        //prepare our SQL statement
+        $sqlString = $orgTable->prepare("SELECT * FROM organizations ORDER BY orgName");
 
-        $organizationTable = $this->organizationData;
-        $sqlString = $organizationTale->prepare("SELECT orgID, orgName, address, city, state, zipCode FROM Organizations ORDER BY orgName");
-
-        //if our SQL statement returns results, populate our result array
-
-        if ( $stmt->execute() && $stmt->rowCount() > 0){
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        if ( $sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return ($results);
@@ -58,10 +51,10 @@ class OrganizationDB {
 
     public function getAllOrgCodes (){
         $results = [];
-        $organizationTable = $this->organizationData;
+        $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $organizationTable->prepare("SELECT orgCode FROM Organizations ORDER BY orgCode");
+        $sqlString = $orgTable->prepare("SELECT orgCode FROM organizations ORDER BY orgCode");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             //FETCH_COLUMN returns just an array of all values in column
@@ -74,10 +67,10 @@ class OrganizationDB {
     
     public function getOrgID (){
         $results = [];
-        $organizationTable = $this->organizationData;
+        $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $organizationTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString = $orgTable->prepare("SELECT orgID FROM organizations WHERE orgCode = :o");
         $sqlString->bindValue(':o', $this->orgCode);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
@@ -92,9 +85,9 @@ class OrganizationDB {
 
         $results = 0;
 
-        $organizationTable = $this->organizationData;
+        $orgTable = $this->orgData;
 
-        $sqlString = $organizationTable->prepare("INSERT INTO Organizations set orgName = :o, address = :a, city = :c, state = :s, zipcode = :z, orgCode = :oc ");
+        $sqlString = $orgTable->prepare("INSERT INTO Organizations set orgName = :o, address = :a, city = :c, state = :s, zipcode = :z, orgCode = :oc ");
 
 
         //bind values
@@ -109,7 +102,7 @@ class OrganizationDB {
 
         //if our SQL statement returns results, populate our results confirmation string
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
-            $results = (int)$organizationTable->lastInsertId();
+            $results = (int)$orgTable->lastInsertId();
         }
         
         return ($results);

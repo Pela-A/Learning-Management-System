@@ -9,9 +9,6 @@
     $depObj = new DepartmentDB();
     $orgObj = new OrganizationDB();
 
-    //var_dump($depObj);
-    //var_dump($orgObj);
-
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
