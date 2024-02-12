@@ -37,30 +37,21 @@
         return $compressedImageData;
     }
 
-    //binary search algorithm fastest if given a sorted array.
-    function binarySearch($arr, $target) {
-        $left = 0;
-        $right = count($arr) - 1;
-        while ($left <= $right) {
-            $mid = floor(($left + $right) / 2);
-            // Check if the target value is found at the middle index
-            if ($arr[$mid] === $target) {
-                return true;
-            }
-            // If the target is greater, ignore the left half
-            if ($arr[$mid] < $target) {
-                $left = $mid + 1;
-            }
-            // If the target is smaller, ignore the right half
-            else {
-                $right = $mid - 1;
-            }
+    function linear_search($arr, $target) {
+        for ($i = 0; $i < count($arr); $i++) {
+     
+           // If a match is found, return true.
+           if ($arr[$i] === $target) {
+              return true;
+           }
         }
-        // Target value not found in the array
+     
+        // No match was found, hence return false.
         return false;
-    }
+     }
+    
 
-    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass){
+    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass){
         $error = "";
         //RegExpressions****
 
@@ -119,7 +110,7 @@
         //username check
         $testUser = new UserDB();
         $testUsernames = $testUser->getAllUsername();
-        if(binarySearch($testUsernames, $newUser)){
+        if(linear_search($testUsernames, $newUser)){
             $error .= "<li>Username is already in use!</li>";
         }
         elseif(strlen($newUser) < 8){
@@ -129,6 +120,10 @@
         //password check
         if(strlen($newPass < 8)){
             $error .= "<li>Password must be at least 8 characters long!</li>";
+        }
+
+        if($confirmPass != $newPass){
+            $error .= "<li>Password and Confirm Password must be the same!</li>";
         }
 
         return($error);

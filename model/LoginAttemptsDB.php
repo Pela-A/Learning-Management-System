@@ -21,7 +21,16 @@ class LoginDB {
     }
 
     public function getAllLogins() {
+        $results = [];
+        $loginTable = $this->loginData;
 
+        $sqlString = $loginTable->prepare("SELECT * FROM logginattempts");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
     }
 }
 

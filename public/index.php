@@ -61,10 +61,13 @@
                     session_unset();
                     session_destroy();
                     header('Location: index.php?action=notVerified');
+                }else{
+                    $ip = getenv("REMOTE_ADDR");
+                    header('Location: ../private/landingPage.php');
                 }
 
                     
-                //header('Location: ../private/landingPage.php');
+                
             }else{
                 session_unset(); 
                 $error = "Incorrect Username or Password!";
@@ -86,8 +89,9 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
+        $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass, $confirmPass);
         
         //org information
         $orgName = filter_input(INPUT_POST, 'orgName');
@@ -137,7 +141,7 @@
 
                 //search for random string using binary search
                 //check at end if another loop needs to happen. if we return zero that means we found that org code in db.
-            } while (binarySearch($codes, $randomString));
+            } while (linear_Search($codes, $randomString));
 
 
             //create organization object
@@ -194,40 +198,36 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
+        $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass);
+        
         $orgName = "";
         $address = "";
         $city = "";
         $state = "";
         $zipCode = "";
 
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
-
         $enterOrgCode = filter_input(INPUT_POST, 'orgCode');
 
-
-        echo("got here");
-        $tempObj = new OrganizationDB(array('orgCode' => $enterOrgCode));
-        if(binarySearch($tempObj->getAllOrgCodes(), $enterOrgCode)){
-            $joinID = $tempObj -> getOrgID();
-            var_dump ($joinID);
-            $makeUser = new UserDB(array('orgID'=>$joinID, 'firstName' => $firstName, 'lastName' => $lastName, 'phoneNumber' => $phoneNum, 'email' => $email, 'birthdate' => $birthdate, 'gender' => $gender, 'letterDate' => date('Y-m-d'), 'username' => $newUser, 'password' => $newPass, 'isOrgAdmin' => 0, 'isVerified' => 0));
-            session_start();
-            $_SESSION['userID']=$makeUser->createUser();
-
-            //redirect to landing page
+        $orgObj = new OrganizationDB();
+        $code = $orgObj->getAllOrgCodes();
         
-            header('Location: ../private/landingPage.php');
+        if($error == ""){
+            if(linear_Search($code, $enterOrgCode)){
+                $joinID = $orgObj -> getOrgID($enterOrgCode);
+                $makeUser = new UserDB();
+                
+                $makeUser->createUser($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+
+            
+                header('Location: index.php?action=notVerified');
+            }
+            else{
+                $error .= "<li>There is no organization with that Code!";
+            }
         }
-        else{
-            $error .= "<li>There is no organization with that Code!";
-        }
         
-        //if the org code is in the database we should join the user on that orgID
-        //this means we must grab the orgID
-        
-
-
     //first time loading to site
     }else{
         $username = "";
@@ -240,12 +240,37 @@
         $gender = "";
         $newUser = "";
         $newPass = "";
+        $confirmPass = "";
         $orgName = "";
         $address = "";
         $city = "";
         $state = "";
         $zipCode = "";
         $enterOrgCode = "";
+
+        function get_client_ip()
+        {
+            $ipaddress = '';
+            if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+            } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else if (isset($_SERVER['HTTP_X_FORWARDED'])) {
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+            } else if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+                $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+            } else if (isset($_SERVER['HTTP_FORWARDED'])) {
+                $ipaddress = $_SERVER['HTTP_FORWARDED'];
+            } else if (isset($_SERVER['REMOTE_ADDR'])) {
+                $ipaddress = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $ipaddress = 'UNKNOWN';
+            }
+
+            return $ipaddress;
+        }
+        $PublicIP = get_client_ip();
+        
     }
 
 ?>
@@ -266,7 +291,7 @@
     <div class="container">
 
         <div class="row">
-            <h2>Welcome to 'AT LMS'</h2>
+            <h2>Welcome to 'ATLAS'</h2>
 
 
         </div>
@@ -283,6 +308,17 @@
 
         <?php if($action == ''): ?>
             <h2>Login Form</h2>
+
+            <?php if($error != ""):?>
+                <div class="row">
+
+                    <div class="col-sm">
+                        <div class="error">
+                            <?php echo($error); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <form name="login_form" method="post" class="px-4 py-3">
                 <div class="form-group">
@@ -307,6 +343,17 @@
             <h2>Create Organization Form</h2>
             <form name="create_org_form" method="post">
                 <h3>Enter Your Information</h3>
+
+                <?php if($error != ""):?>
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <div class="error">
+                                <?php echo($error); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <div class="row">
                     <label>First Name:</label>
@@ -348,6 +395,11 @@
                 <div class="row">
                     <label>Create Password:</label>
                     <input type="text" name="newPass" value="<?=$newPass?>">
+                </div>
+
+                <div class="row">
+                    <label>Confirm Password:</label>
+                    <input type="text" name="confirmPass" value="<?=$confirmPass?>">
                 </div>
                 
                 <h3>Enter Organization Information</h3>
@@ -439,6 +491,17 @@
             <form name="join_org_form" method="post">
                 <h3>Enter Your Information</h3>
 
+                <?php if($error != ""):?>
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <div class="error">
+                                <?php echo($error); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="row">
                     <label>First Name:</label>
                     <input type="text" name="firstName" value="<?=$firstName?>">
@@ -466,8 +529,8 @@
 
                 <div class="row">
                     <label>Gender:</label>
-                    <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
-                    <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
+                    <input type="radio" value="1" name="gender" <?php if($gender=="1") echo('checked');?>> Male
+                    <input type="radio" value="0" name="gender"<?php if($gender=="0") echo('checked');?>> Female
                     <br />
                 </div>
 
@@ -479,6 +542,11 @@
                 <div class="row">
                     <label>Create Password:</label>
                     <input type="text" name="newPass" value="<?=$newPass?>">
+                </div>
+
+                <div class="row">
+                    <label>Confirm Password:</label>
+                    <input type="text" name="confirmPass" value="<?=$confirmPass?>">
                 </div>
 
                 <div class="row">
