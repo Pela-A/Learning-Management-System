@@ -113,6 +113,15 @@ class OrganizationDB {
 
 
     }
+
+    public function updateOrganization() {
+
+    }
+    
+    public function deleteOrganization() {
+
+    }
+    
 }
 
 ?>

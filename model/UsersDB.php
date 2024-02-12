@@ -25,7 +25,9 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM users ORDER BY lastName");
+        $sqlString = $userTable->prepare("SELECT * FROM (users
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +40,12 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :userID");
+        $sqlString = $userTable->prepare("SELECT * FROM (((Users 
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            INNER JOIN depusersbridge on users.userID = depusersbridge.userID)
+                                            INNER JOIN departments on depusersbridge.depID = departments.depID)
+                                            Where userID = :userID");
+
         $sqlString->bindValue(':userID', $userID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
@@ -48,15 +55,16 @@ class UserDB {
         return $results;
     }
 
-    public function siteAdminCreateUser($orgID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture, $isSiteAdmin, $isOrgAdmin, $isTrainer){
+    public function siteAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture, $isSiteAdmin, $isOrgAdmin, $isTrainer){
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, depID = :d, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
 
         //bind values
         $binds = array(
             ":o" => $orgID,
+            ":d" => $depID,
             ":f" => $firstName,
             ":ln" => $lastName,
             ":e" => $email,
@@ -231,7 +239,7 @@ class UserDB {
         }
     }
 
-    public function searchUsers($firstName, $lastName, $gender, $department, $jobCode, $isSiteAdmin, $isOrgAdmin, $isTrainer) {
+    public function searchUsers($firstName, $lastName, $gender, $organization, $isSiteAdmin, $isOrgAdmin, $isTrainer) {
         $results = [];
         $userTable = $this->userData;
 
@@ -253,14 +261,9 @@ class UserDB {
             $binds['gender'] = '%'.$gender.'%';
         }
 
-        if ($department != '') {
-            $sqlString .= " AND department LIKE :department";
-            $binds['department'] = '%'.$department.'%';
-        }
-
-        if ($jobCode != '') {
-            $sqlString .= " AND jobCode LIKE :jobCode";
-            $binds['jobCode'] = '%'.$jobCode.'%';
+        if ($organization != '') {
+            $sqlString .= " AND organization LIKE :organization";
+            $binds['organization'] = '%'.$organization.'%';
         }
 
         if ($isSiteAdmin != '') {
