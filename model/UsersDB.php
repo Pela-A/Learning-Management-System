@@ -21,76 +21,8 @@ class UserDB {
         }
     }
 
-    public function getAllUsers() {
-        $results = [];
-        $userTable = $this->userData;
+    public function createUser($orgID,$firstName,$lastName,$phoneNumber,$email,$birthdate,$gender,$letterDate,$username,$password,$isOrgAdmin,$isVerified){
 
-        $sqlString = $userTable->prepare("SELECT * FROM (users
-                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
-                                            ORDER BY lastName");
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    public function getUser($userID){
-        $results = [];
-        $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("SELECT * FROM (((users 
-                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
-                                            INNER JOIN depusersbridge on users.userID = depusersbridge.userID)
-                                            INNER JOIN departments on depusersbridge.depID = departments.depID)
-                                            Where users.userID = :userID");
-
-        $sqlString->bindValue(':userID', $userID);
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
-            //fetch expects one record and gives it as a singular assoc array
-            //fetch all possible to have multiple records pulled (multiple assoc array)
-            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    public function siteAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture, $isSiteAdmin, $isOrgAdmin, $isTrainer){
-        $results = 0;
-        $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, depID = :d, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
-
-        //bind values
-        $binds = array(
-            ":o" => $orgID,
-            ":d" => $depID,
-            ":f" => $firstName,
-            ":ln" => $lastName,
-            ":e" => $email,
-            ":b" => $birthdate,
-            ":pn" => $phoneNumber,
-            ":g" => $gender,
-            ":u" => "ATLAS_" . setUsername($firstName, $lastName, $birthDate),
-            ":pass" => $password,
-            ":siteAdmin" => $isSiteAdmin,
-            ":orgAdmin" => $isOrgAdmin,
-            ":trainer" => $isTrainer,
-            ":pp" => '\assets\images\Default_pfp.svg.png'
-        );
-
-
-        //if our SQL statement returns results, populate our results confirmation string
-        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
-            $results = (int)$userTable->lastInsertId();
-        }
-        
-        return ($results);
-    }
-
-    public function orgAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer){
         $results = 0;
         $userTable = $this->userData;
 
@@ -227,6 +159,13 @@ class UserDB {
 
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
             $results = "User Updated Successfully";
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
+        $sqlString->bindValue(':u', $userID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            //fetch expects one record and gives it as a singular assoc array
+            //fetch all possible to have multiple records pulled (multiple assoc array)
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
         }
 
         return $results;
@@ -314,74 +253,40 @@ class UserDB {
         return $results;
     }
 
-    public function getProfilePicture($userID) {
+    //used to check if a entered new username in user creation is already in the database (UNIQUE USERNAME VALIDATION)
+    public function getAllUsername(){
 
-    }
-
-    public function getUsername($userID){
-
-    }
-
-    public function getPassword($userID){
-
-    }
-
-    public function setUsername($firstName, $lastName, $birthDate) {
-        $firstInitial = substr($firstName, 0, 1);
-
-        $birthYear = date('Y', strtotime($birthDate));
-        
-        $username = $firstInitial . $lastName . $birthYear;
-
-        return $username;
-    }
-
-    public function changePassword($userID, $password) {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET password = sha1(:pass) WHERE userID = :id");
+        //never use spaces for column names in mySQL :/
+        $sqlString = $userTable->prepare("SELECT username FROM users ORDER BY username");
 
-        $boundParams = array(
-            ":id" =>$userID,
-            ":pass" =>$password
-        );
-
-        if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
-            $results = "User Updated Successfully";
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
         }
 
         return $results;
+
     }
 
-    public function validatePassword($password) {
-        // Password length should be between 8 and 20 characters
-        if (strlen($password) < 8 || strlen($password) > 20) {
-            return false;
+    public function getUserID($username){
+        $results = [];
+        $userTable = $this->userData;
+
+        //never use spaces for column names in mySQL :/
+        $sqlString = $userTable->prepare("SELECT userID FROM users WHERE username = :u");
+        $sqlString->bindValue(':u',$username);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
         }
 
-        // Password should contain at least one uppercase letter
-        if (!preg_match('/[A-Z]/', $password)) {
-            return false;
-        }
+        return $results[0];
 
-        // Password should contain at least one lowercase letter
-        if (!preg_match('/[a-z]/', $password)) {
-            return false;
-        }
 
-        // Password should contain at least one digit
-        if (!preg_match('/[0-9]/', $password)) {
-            return false;
-        }
-
-        // Password should contain at least one special character
-        if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
-            return false;
-        }
-
-        return true;
     }
+
 }
 
 ?>

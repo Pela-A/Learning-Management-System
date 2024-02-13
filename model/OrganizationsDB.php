@@ -65,13 +65,13 @@ class OrganizationDB {
 
     }
     
-    public function getOrgID (){
+    public function getOrgID ($orgCode){
         $results = [];
         $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $orgTable->prepare("SELECT orgID FROM organizations WHERE orgCode = :o");
-        $sqlString->bindValue(':o', $this->orgCode);
+        $sqlString = $organizationTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString->bindValue(':o', $orgCode);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             //FETCH_COLUMN returns just an array of all values in column
