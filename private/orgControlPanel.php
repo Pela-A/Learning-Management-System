@@ -26,11 +26,10 @@
         <div id="controlPanel" class="content">
             <h3>Organization Control Panel</h3>
             <ul>
-                <li><a href="userAccount.php">User Manager</a></li>
-                <li><a href="departments.php">Department Manager</a></li>
-                <li><a href="jobCodes.php">Job Code Manager</a></li>
-                <li><a href="organizations.php">Organization Manager</a></li>
-                <li><a href="loginAttempts.php">Login Attempts Manager</a></li>
+                <li><a href="userAccount.php?action=Viewer">User Manager</a></li>
+                <li><a href="departments.php?action=Viewer">Department Manager</a></li>
+                <li><a href="organizations.php?action=Viewer">Organization Manager</a></li>
+                <li><a href="loginAttempts.php?action=Viewer">Login Attempts Manager</a></li>
                 <li><a href="userAccount.php?action=validateUser">Validiate New Users</a></li>
             </ul>
         </div>
