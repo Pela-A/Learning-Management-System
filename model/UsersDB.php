@@ -40,11 +40,11 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM (((Users 
+        $sqlString = $userTable->prepare("SELECT * FROM (((users 
                                             INNER JOIN organizations ON users.orgID = organizations.orgID)
                                             INNER JOIN depusersbridge on users.userID = depusersbridge.userID)
                                             INNER JOIN departments on depusersbridge.depID = departments.depID)
-                                            Where userID = :userID");
+                                            Where users.userID = :userID");
 
         $sqlString->bindValue(':userID', $userID);
 
@@ -88,11 +88,11 @@ class UserDB {
         return ($results);
     }
 
-    public function orgAdminCreateUser($orgID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture){
+    public function orgAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer){
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = 1, profilePicture = :pp, isVerified = 1");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
 
         //bind values
         $binds = array(
@@ -100,11 +100,13 @@ class UserDB {
             ":f" => $firstName,
             ":ln" => $lastName,
             ":e" => $email,
-            ":b" => $birthdate,
+            ":b" => $birthDate,
             ":pn" => $phoneNumber,
             ":g" => $gender,
-            ":u" => setUsername($firstName, $lastName, $birthDate),
+            ":u" => $this->setUsername($firstName, $lastName, $birthDate),
             ":pass" => $password,
+            ":org" => $isOrgAdmin,
+            ":tr" => $isTrainer,
             ":pp" => '\assets\images\Default_pfp.svg.png',
         );
 
@@ -157,14 +159,14 @@ class UserDB {
             ":id" =>$userID,
             ":first" =>$firstName,
             ":last" =>$lastName,
-            ":letter" => $letterDate,
+            ":letter" =>$letterDate,
             ":email" =>$email,
             ":birth" =>$birthDate,
             ":phone" =>$phoneNumber,
             ":gender" =>$gender,
             ":username" =>$username,
-            ":OrgAdmin" => $isOrgAdmin,
-            ":SiteAdmin" => $isSiteAdmin,
+            ":OrgAdmin" =>$isOrgAdmin,
+            ":SiteAdmin" =>$isSiteAdmin,
             ":Trainer" => $isTrainer,
             ":ProPic" =>$profilePicture,
         );
@@ -186,13 +188,13 @@ class UserDB {
             ":id" =>$userID,
             ":first" =>$firstName,
             ":last" =>$lastName,
-            ":letter" => $letterDate,
+            ":letter" =>$letterDate,
             ":email" =>$email,
             ":birth" =>$birthDate,
             ":phone" =>$phoneNumber,
             ":gender" =>$gender,
-            ":OrgAdmin" => $isOrgAdmin,
-            ":Trainer" => $isTrainer,
+            ":OrgAdmin" =>$isOrgAdmin,
+            ":Trainer" =>$isTrainer,
             ":ProPic" =>$profilePicture,
         );
 
@@ -203,11 +205,11 @@ class UserDB {
         return $results;
     }
 
-    public function generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $profilePicture){
+    public function generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username, $profilePicture){
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, profilePicture = :ProPic WHERE userID = :id");
+        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, username = :username, profilePicture = :ProPic WHERE userID = :id");
 
         $boundParams = array(
             ":id" =>$userID,
@@ -217,6 +219,7 @@ class UserDB {
             ":birth" =>$birthDate,
             ":phone" =>$phoneNumber,
             ":gender" =>$gender,
+            ":username" =>$username,
             ":ProPic" =>$profilePicture,
         );
 
@@ -243,7 +246,9 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = "SELECT * FROM users WHERE 0=0";
+        $sqlString = "SELECT * FROM users
+                        INNER JOIN organizations ON users.orgID = organizations.orgID
+                        WHERE 1=1";
         $binds = [];
 
         if ($firstName != '') {
@@ -262,7 +267,7 @@ class UserDB {
         }
 
         if ($organization != '') {
-            $sqlString .= " AND organization LIKE :organization";
+            $sqlString .= " AND organizations.orgName LIKE :organization";
             $binds['organization'] = '%'.$organization.'%';
         }
 
@@ -345,6 +350,35 @@ class UserDB {
         }
 
         return $results;
+    }
+
+    public function validatePassword($password) {
+        // Password length should be between 8 and 20 characters
+        if (strlen($password) < 8 || strlen($password) > 20) {
+            return false;
+        }
+
+        // Password should contain at least one uppercase letter
+        if (!preg_match('/[A-Z]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one lowercase letter
+        if (!preg_match('/[a-z]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one digit
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one special character
+        if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
+            return false;
+        }
+
+        return true;
     }
 }
 
