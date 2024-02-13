@@ -70,7 +70,7 @@ class OrganizationDB {
         $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $organizationTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString = $orgTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
         $sqlString->bindValue(':o', $orgCode);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){

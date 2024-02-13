@@ -132,7 +132,7 @@
             //create USER Object and add to data base
             $makeUser = new UserDB();
             $newUserID=$makeUser->createUserFromIndexPage($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
-            $newUserData = $makeUser->getUser($newUserID);
+            $newUserData = $makeUser->getUserFromIndex($newUserID);
 
             //call session set function. then redirect to landing page
             setSessionLogin($newUserData);
@@ -178,21 +178,25 @@
         
 
         //if org code found and no errors for input we create user and send them to not verified. Page
-        if($error == "" && linear_Search($code, $enterOrgCode)){
-            //get orgID to join on
-            $joinID = $orgObj -> getOrgID($enterOrgCode);
-            $makeUser = new UserDB();
+        if(linear_Search($code, $enterOrgCode)){
+
+            if($error == ""){
+                //get orgID to join on
+                $joinID = $orgObj -> getOrgID($enterOrgCode);
+                $makeUser = new UserDB();
         
-            //create new user
-            $newUserID = $makeUser->createUserFromIndexPage($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+                //create new user
+                $newUserID = $makeUser->createUserFromIndexPage($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
 
             
 
-            $loginDB = new LoginDB();
-            $loginDate = date('Y-m-d');
-            $ip = getenv("REMOTE_ADDR");
-            $loginDB->addLoginAttempt($newUserID, $loginDate, 0, $ip);
-            header('Location: index.php?action=notVerified');
+                $loginDB = new LoginDB();
+                $loginDate = date('Y-m-d');
+                $ip = getenv("REMOTE_ADDR");
+                $loginDB->addLoginAttempt($newUserID, $loginDate, 0, $ip);
+                header('Location: index.php?action=notVerified');
+            
+            }
             
         }
         else{

@@ -399,8 +399,14 @@ class UserDB {
         return true;
     }
 
-    //added function for logging in
-    ################# PLEASE DONT CHANGE STUFF HERE AND BELOW WITHOUT MENTIONING IT IT MAKES MERGING A NIGHTMARE SPENT AN HOUR FIXING MERGE
+
+
+
+
+
+
+
+    ################# PLEASE DONT CHANGE STUFF HERE AND BELOW WITHOUT MENTIONING. IT MAKES MERGING A NIGHTMARE SPENT AN HOUR FIXING MERGE
     public function login($username, $password){        
         $results = [];
         $userTable = $this->userData;
@@ -495,6 +501,25 @@ class UserDB {
         
         return ($results);
     }
+
+    public function getUserFromIndex($userID){
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
+        $sqlString->bindValue(':u', $userID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            //fetch expects one record and gives it as a singular assoc array
+            //fetch all possible to have multiple records pulled (multiple assoc array)
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
+    ######### END OF ALEX CODE
+
 
 }
 
