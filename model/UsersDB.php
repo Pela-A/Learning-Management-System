@@ -21,6 +21,7 @@ class UserDB {
         }
     }
 
+    //function to createUser
     public function createUser($orgID,$firstName,$lastName,$phoneNumber,$email,$birthdate,$gender,$letterDate,$username,$password,$isOrgAdmin,$isVerified){
 
         $results = 0;
@@ -51,7 +52,107 @@ class UserDB {
         }
         
         return ($results);
+    }
+    public function getAllUsers() {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT * FROM (users
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            ORDER BY lastName");
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+    public function getUser($userID){
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT * FROM (((users 
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            INNER JOIN depusersbridge on users.userID = depusersbridge.userID)
+                                            INNER JOIN departments on depusersbridge.depID = departments.depID)
+                                            Where users.userID = :userID");
+
+        $sqlString->bindValue(':userID', $userID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            //fetch expects one record and gives it as a singular assoc array
+            //fetch all possible to have multiple records pulled (multiple assoc array)
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
+    public function siteAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture, $isSiteAdmin, $isOrgAdmin, $isTrainer){
+        $results = 0;
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, depID = :d, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
+
+        //bind values
+        $binds = array(
+            ":o" => $orgID,
+            ":d" => $depID,
+            ":f" => $firstName,
+            ":ln" => $lastName,
+            ":e" => $email,
+            ":b" => $birthdate,
+            ":pn" => $phoneNumber,
+            ":g" => $gender,
+            ":u" => "ATLAS_" . setUsername($firstName, $lastName, $birthDate),
+            ":pass" => $password,
+            ":siteAdmin" => $isSiteAdmin,
+            ":orgAdmin" => $isOrgAdmin,
+            ":trainer" => $isTrainer,
+            ":pp" => '\assets\images\Default_pfp.svg.png'
+        );
+
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$userTable->lastInsertId();
+        }
+        
+        return ($results);
+    }
+
+    public function orgAdminCreateUser($orgID, $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer){
+        $results = 0;
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
+
+        //bind values
+        $binds = array(
+            ":o" => $orgID,
+            ":f" => $firstName,
+            ":ln" => $lastName,
+            ":e" => $email,
+            ":b" => $birthDate,
+            ":pn" => $phoneNumber,
+            ":g" => $gender,
+            ":u" => $this->setUsername($firstName, $lastName, $birthDate),
+            ":pass" => $password,
+            ":org" => $isOrgAdmin,
+            ":tr" => $isTrainer,
+            ":pp" => '\assets\images\Default_pfp.svg.png',
+        );
+
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$userTable->lastInsertId();
+        }
+        
+        return ($results);
     } 
+
+    
 
     public function createGeneralUser($orgID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture){
 
@@ -159,15 +260,8 @@ class UserDB {
 
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
             $results = "User Updated Successfully";
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
-        $sqlString->bindValue(':u', $userID);
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
-            //fetch expects one record and gives it as a singular assoc array
-            //fetch all possible to have multiple records pulled (multiple assoc array)
-            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
         }
-
+        
         return $results;
     }
 
@@ -235,7 +329,78 @@ class UserDB {
         return ($results);
     }
 
+    public function getProfilePicture($userID) {
+
+    }
+
+
+    public function getUsername($userID){
+
+    }
+
+    public function getPassword($userID){
+
+    }
+
+    public function setUsername($firstName, $lastName, $birthDate) {
+        $firstInitial = substr($firstName, 0, 1);
+
+        $birthYear = date('Y', strtotime($birthDate));
+        
+        $username = $firstInitial . $lastName . $birthYear;
+
+        return $username;
+    }
+
+    public function changePassword($userID, $password) {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("UPDATE users SET password = sha1(:pass) WHERE userID = :id");
+
+        $boundParams = array(
+            ":id" =>$userID,
+            ":pass" =>$password
+        );
+
+        if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
+            $results = "User Updated Successfully";
+        }
+
+        return $results;
+    }
+
+    public function validatePassword($password) {
+        // Password length should be between 8 and 20 characters
+        if (strlen($password) < 8 || strlen($password) > 20) {
+            return false;
+        }
+
+        // Password should contain at least one uppercase letter
+        if (!preg_match('/[A-Z]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one lowercase letter
+        if (!preg_match('/[a-z]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one digit
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+
+        // Password should contain at least one special character
+        if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
+            return false;
+        }
+
+        return true;
+    }
+
     //added function for logging in
+    ################# PLEASE DONT CHANGE STUFF HERE AND BELOW WITHOUT MENTIONING IT IT MAKES MERGING A NIGHTMARE SPENT AN HOUR FIXING MERGE
     public function login($username, $password){        
         $results = [];
         $userTable = $this->userData;
@@ -253,6 +418,7 @@ class UserDB {
         return $results;
     }
 
+    //login page functionality
     //used to check if a entered new username in user creation is already in the database (UNIQUE USERNAME VALIDATION)
     public function getAllUsername(){
 
@@ -285,6 +451,18 @@ class UserDB {
         return $results[0];
 
 
+    }
+
+
+    public function getUserLogin(){
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
+        $sqlString->bindValue(':u', $userID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            //fetch expects one record and gives it as a singular assoc array
+            //fetch all possible to have multiple records pulled (multiple assoc array)
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
+        }
     }
 
 }
