@@ -32,8 +32,11 @@
         <div class="pageContent">
 
             <?php if($action == 'Viewer'):
-                $users = $user->getAllUsers();
-                if($_SESSION['isSiteAdmin']): ?>
+                
+                if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): 
+                    $users = $user->getAllUsers();
+                ?>
+                   
                     
                     <table class="table table-striped table-hover table-dark">
                         <thead>

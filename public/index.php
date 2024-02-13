@@ -2,6 +2,7 @@
     //includes at top
     include __DIR__ . '/../model/UsersDB.php';
     include __DIR__ . '/../model/OrganizationsDB.php';
+    include __DIR__ . '/../model/LoginAttemptsDB.php';
     include __DIR__ . '/../include/functions.php';
 
     //initialize error variable and action
@@ -9,13 +10,10 @@
     $action = "";
 
     //used to change visible form
-    //  ################### ADD NOT VERIFIED PAGE
+    //################### ADD NOT VERIFIED PAGE
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
-
-
-
 
     //logging in form post
     if (isset($_POST['login'])) {
@@ -31,56 +29,43 @@
             //if results found create session vars and try to redirect
             if($userData != "No Results Found"){
     
-                session_start();
-
-                $_SESSION['userID']=$userData['userID'];
-                $_SESSION['orgID']=$userData['orgID'];
-                $_SESSION['firstName']=$userData['firstName'];
-                $_SESSION['lastName']=$userData['lastName'];
-                //$_SESSION['profilePicture'];
-
-                if($userData['isSiteAdmin'] == 1){
-                    $_SESSION['isSiteAdmin'] = True;
-                } else {
-                    $_SESSION['isSiteAdmin'] = False;
-                }
-
-                if($userData['isOrgAdmin'] == 1){
-                    $_SESSION['isOrgAdmin'] = True;
-                } else {
-                    $_SESSION['isOrgAdmin'] = False;
-                }
-
-                if($userData['isTrainer'] == 1){
-                    $_SESSION['isTrainer'] = True;
-                } else {
-                    $_SESSION['isTrainer'] = False;
-                }
-
+                $loginDB = new LoginDB();
+                $loginDate = date('Y-m-d');
+                $ip = getenv("REMOTE_ADDR");
                 if($userData['isVerified'] == 0){
-                    session_unset();
-                    session_destroy();
+                    //login attempt funct with isSuccessful False (0)
+                    $loginDB->addLoginAttempt($userData['userID'], $loginDate, 0, $ip);
+
+                    //redirect to landing page
                     header('Location: index.php?action=notVerified');
                 }else{
-                    $ip = getenv("REMOTE_ADDR");
-                    header('Location: ../private/landingPage.php');
-                }
+                    //call setSessionLogin
+                    setSessionLogin($userData);
 
-                    
-                
+                    //login attempt funct with isSuccessful True (1)
+                    $loginDB->addLoginAttempt($userData['userID'], $loginDate, 1, $ip);
+
+                    //redirect to landing page
+                    header('Location: ../private/landingPage.php');
+                }   
             }else{
-                session_unset(); 
                 $error = "Incorrect Username or Password!";
+                if(linear_search($userDB->getAllUsername(), $username)){
+                    $loginDate = date('Y-m-d');
+                    $ip = getenv("REMOTE_ADDR");
+                    $loginDB = new LoginDB();
+                    $loginDB->addLoginAttempt($userDB->getUserID($username), $loginDate, 0, $ip);
+                }
             }
             
         } catch (Exception $error) {
             //unset session variables and give error
             echo "<h2>" . $error->getMessage() . "</h2>";
-            session_unset(); 
         }
     //Create organization
     }elseif(isset($_POST['create'])){
 
+        //post entered user information
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
         $phoneNum = filter_input(INPUT_POST, 'phoneNum');
@@ -91,9 +76,10 @@
         $newPass = filter_input(INPUT_POST, 'newPass');
         $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
+        //verifyUserInformation
         $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass, $confirmPass);
         
-        //org information
+        //post entered org information
         $orgName = filter_input(INPUT_POST, 'orgName');
         $address = filter_input(INPUT_POST, 'address');
         $city = filter_input(INPUT_POST, 'city');
@@ -112,20 +98,14 @@
             $error .= "<li>Please enter an organization city!";
         }
 
-        
+        //zipcode verification
         $zipPattern = "/^[0-9]{5}$/";
         if(!preg_match($zipPattern, $zipCode)){
             $error .= "<li>Please enter a five digit zipcode for your organization!";
         }
         
-
-        //ASK SCOTT ABOUT THE ABILITY TO USE AN API FOR SELECTING ADDRESS, CITY, STATE, ZIPCODE ***********************
-
         //If no errors, create organization and assign user to Org as OrgAdmin
         if($error == ""){
-            
-
-            
             //we want to create orgCodes until the code is not already in the database
             //this means we need to pull all orgCodes and compare the newly created to them all
             $tempObj = new OrganizationDB();
@@ -138,18 +118,14 @@
                 for ($i = 0; $i < 20; $i++) {
                     $randomString .= $characters[random_int(0, $charactersLength - 1)];
                 }
-
-                //search for random string using binary search
-                //check at end if another loop needs to happen. if we return zero that means we found that org code in db.
+                //search for random string using linear search
+                //check at end if another loop needs to happen. if we return zero that means we found that org code in db
             } while (linear_Search($codes, $randomString));
-
 
             //create organization object
             $organization = new OrganizationDB();
 
-
-            //code here to create organization.
-
+            //code here to create organization
             //newID represents last inserted record (created organization)
             $newID = $organization->createOrganization($orgName,$address,$city,$state,$zipCode,$randomString);
 
@@ -157,30 +133,17 @@
             $makeUser = new UserDB();
             $newUserID=$makeUser->createUser($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
             $newUserData = $makeUser->getUser($newUserID);
-            session_start();
-            $_SESSION['userID']=$newUserData['userID'];
-            $_SESSION['orgID']=$newUserData['orgID'];
-            $_SESSION['firstName']=$newUserData['firstName'];
-            $_SESSION['lastName']=$newUserData['lastName'];
 
-            if($newUserData['isSiteAdmin'] == 1){
-                $_SESSION['isSiteAdmin'] = True;
-            } else {
-                $_SESSION['isSiteAdmin'] = False;
-            }
+            //call session set function. then redirect to landing page
+            setSessionLogin($newUserData);
 
-            if($newUserData['isOrgAdmin'] == 1){
-                $_SESSION['isOrgAdmin'] = True;
-            } else {
-                $_SESSION['isOrgAdmin'] = False;
-            }
+            //log their loginAttempt
+            $loginDB = new LoginDB();
+            $loginDate = date('Y-m-d');
+            $ip = getenv("REMOTE_ADDR");
+            $loginDB->addLoginAttempt($newUserData['userID'], $loginDate, 1, $ip);
 
-            if($newUserData['isTrainer'] == 1){
-                $_SESSION['isTrainer'] = True;
-            } else {
-                $_SESSION['isTrainer'] = False;
-            }
-
+            
             //redirect to landing page
             header('Location: ../private/landingPage.php');
 
@@ -213,22 +176,31 @@
         $orgObj = new OrganizationDB();
         $code = $orgObj->getAllOrgCodes();
         
-        if($error == ""){
-            if(linear_Search($code, $enterOrgCode)){
-                $joinID = $orgObj -> getOrgID($enterOrgCode);
-                $makeUser = new UserDB();
-                
-                $makeUser->createUser($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+
+        //if org code found and no errors for input we create user and send them to not verified. Page
+        if($error == "" && linear_Search($code, $enterOrgCode)){
+            //get orgID to join on
+            $joinID = $orgObj -> getOrgID($enterOrgCode);
+            $makeUser = new UserDB();
+        
+            //create new user
+            $newUserID = $makeUser->createUser($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
 
             
-                header('Location: index.php?action=notVerified');
-            }
-            else{
-                $error .= "<li>There is no organization with that Code!";
-            }
+
+            $loginDB = new LoginDB();
+            $loginDate = date('Y-m-d');
+            $ip = getenv("REMOTE_ADDR");
+            $loginDB->addLoginAttempt($newUserID, $loginDate, 0, $ip);
+            header('Location: index.php?action=notVerified');
+            
+        }
+        else{
+            $error .= "<li>There is no organization with that Code!";
         }
         
-    //first time loading to site
+        
+    //first time loading to site initialize variables for sticky fields in forms
     }else{
         $username = "";
         $password = "";
@@ -248,28 +220,6 @@
         $zipCode = "";
         $enterOrgCode = "";
 
-        function get_client_ip()
-        {
-            $ipaddress = '';
-            if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-                $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-            } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else if (isset($_SERVER['HTTP_X_FORWARDED'])) {
-                $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-            } else if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
-                $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-            } else if (isset($_SERVER['HTTP_FORWARDED'])) {
-                $ipaddress = $_SERVER['HTTP_FORWARDED'];
-            } else if (isset($_SERVER['REMOTE_ADDR'])) {
-                $ipaddress = $_SERVER['REMOTE_ADDR'];
-            } else {
-                $ipaddress = 'UNKNOWN';
-            }
-
-            return $ipaddress;
-        }
-        $PublicIP = get_client_ip();
         
     }
 
@@ -560,6 +510,11 @@
 
 
             </form>
+
+        <?php elseif($action == 'notVerified'): ?>
+            <h2>Your account is current not verified!</h2>
+
+            <p>Please contact your organization administrator!</p>
 
         <?php endif; ?>
         <?php include __DIR__ . '/../include/footer.php'; ?>

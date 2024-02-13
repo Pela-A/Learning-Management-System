@@ -69,7 +69,8 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = $userID");
+        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
+        $sqlString->bindValue(':u', $userID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             //fetch expects one record and gives it as a singular assoc array
@@ -113,6 +114,23 @@ class UserDB {
         }
 
         return $results;
+
+    }
+
+    public function getUserID($username){
+        $results = [];
+        $userTable = $this->userData;
+
+        //never use spaces for column names in mySQL :/
+        $sqlString = $userTable->prepare("SELECT userID FROM users WHERE username = :u");
+        $sqlString->bindValue(':u',$username);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return $results[0];
+
 
     }
 

@@ -129,6 +129,34 @@
         return($error);
     }
 
+    //setting session variables on login/org creation.
+    function setSessionLogin($userData) {
+        session_start();
+        $_SESSION['userID']=$userData['userID'];
+        $_SESSION['orgID']=$userData['orgID'];
+        $_SESSION['firstName']=$userData['firstName'];
+        $_SESSION['lastName']=$userData['lastName'];
+
+        if($userData['isSiteAdmin'] == 1){
+            $_SESSION['isSiteAdmin'] = True;
+        } else {
+            $_SESSION['isSiteAdmin'] = False;
+        }
+
+        if($userData['isOrgAdmin'] == 1){
+            $_SESSION['isOrgAdmin'] = True;
+        } else {
+            $_SESSION['isOrgAdmin'] = False;
+        }
+
+        if($userData['isTrainer'] == 1){
+            $_SESSION['isTrainer'] = True;
+        } else {
+            $_SESSION['isTrainer'] = False;
+        }
+
+    }
+
     function verifyDepartmentInformation($name, $email){
         $error = '';
         $pattern1 = "/[^A-Za-z-]+/";

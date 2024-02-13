@@ -20,11 +20,28 @@ class LoginDB {
         }
     }
 
+    public function getLogin($loginID){
+        $results = [];
+
+        $loginTable = $this->loginData;
+
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts Where loginID = :l");
+        $sqlString->bindValue(':l', $loginID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+
+
+    }
+
     public function getAllLogins() {
         $results = [];
         $loginTable = $this->loginData;
 
-        $sqlString = $loginTable->prepare("SELECT * FROM logginattempts");
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts ORDER BY attemptDate");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -32,6 +49,46 @@ class LoginDB {
 
         return $results;
     }
+
+    public function addLoginAttempt($userID, $attemptDate, $isSuccessful, $ip) {
+        $results = "";
+        $loginTable = $this->loginData;
+
+        $sqlString = $loginTable->prepare("INSERT INTO loginattempts set userID = :u, attemptDate = :a, isSuccessful = :i, ipAddress = :ip");
+
+        $binds = array(
+            ":u" => $userID,
+            ":a" => $attemptDate,
+            ":i" => $isSuccessful,
+            ":ip" => $ip,
+        );
+
+        if($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = "Successful Log";
+        }
+
+        return $results;
+    }
+
+    public function editComments($loginID, $comments){
+        $results = "";
+
+        $loginTable = $this->loginData;
+        $sqlString = $loginTable->prepare("UPDATE loginattempts set comments = :c WHERE loginID = :l");
+
+        $binds = array(
+            ":c" => $comments,
+            ":l" => $loginID
+        );
+        
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = 'Data Updated';
+        }
+        
+        return ($results);
+    }
+
 }
 
 ?>
