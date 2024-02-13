@@ -131,7 +131,7 @@
 
             //create USER Object and add to data base
             $makeUser = new UserDB();
-            $newUserID=$makeUser->createUser($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
+            $newUserID=$makeUser->createUserFromIndexPage($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
             $newUserData = $makeUser->getUser($newUserID);
 
             //call session set function. then redirect to landing page
@@ -184,7 +184,7 @@
             $makeUser = new UserDB();
         
             //create new user
-            $newUserID = $makeUser->createUser($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+            $newUserID = $makeUser->createUserFromIndexPage($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
 
             
 

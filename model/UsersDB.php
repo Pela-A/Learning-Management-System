@@ -465,6 +465,37 @@ class UserDB {
         }
     }
 
+    public function createUserFromIndexPage($orgID,$firstName,$lastName,$phoneNumber,$email,$birthdate,$gender,$letterDate,$username,$password,$isOrgAdmin,$isVerified){
+
+        $results = 0;
+        $userTable = $this->userData;
+        $sqlString = $userTable->prepare("INSERT INTO Users set orgID = :o, firstName = :f, lastName = :ln, phoneNumber = :pn, email = :e, birthDate = :b, gender = :g, letterDate = :l, username = :u, password = :p, isOrgAdmin = :oa, isVerified = :v ");
+
+        //bind values
+        $binds = array(
+            ":o" => $orgID,
+            ":f" => $firstName,
+            ":ln" => $lastName,
+            ":pn" => $phoneNumber,
+            ":e" => $email,
+            ":b" => $birthdate,
+            ":g" => $gender,
+            ":l" => $letterDate,
+            ":u" => $username,
+            ":p" => $password,
+            ":oa" => $isOrgAdmin,
+            ":v" => $isVerified,
+        );
+
+
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = (int)$userTable->lastInsertId();
+        }
+        
+        return ($results);
+    }
+
 }
 
 ?>
