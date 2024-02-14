@@ -11,6 +11,7 @@
             <ul>
                 <li><a href="organizations.php">View Organizations</a></li>
                 <li><a href="userAccount.php?action=Viewer">View User Accounts</a></li>
+                <li><a href="loginAttempts.php?action=Viewer">Login Attempts Manager</a></li>
             </ul>
         <?php endif; ?>
 
@@ -25,6 +26,7 @@
                 <li><a href="trainingModules.php?action=Create">Create New Training Module</a></li>
                 <li><a href="trainingModules.php">Training Modules Viewer</a></li>
                 <li><a href="trainingEntry.php">Training Entry Viewer</a></li>
+                <li><a href="loginAttempts.php?action=Viewer">Login Attempts Manager</a></li>
             </ul>
         <?php endif; ?>
 
@@ -34,6 +36,7 @@
                 <li><a href="trainingEntry.php?action=Create">Log Training Event</a></li>
                 <li><a href="trainingModules.php">Training Modules Viewer</a></li>
                 <li><a href="userTraining.php">View Past Training</a></li>
+                <li><a href="loginAttempts.php?action=Viewer">Login Attempts Manager</a></li>
             </ul>
         <?php endif; ?>
 

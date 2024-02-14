@@ -20,6 +20,7 @@ class LoginDB {
         }
     }
 
+    //used for editing comments
     public function getLogin($loginID){
         $results = [];
 
@@ -37,6 +38,7 @@ class LoginDB {
 
     }
 
+    //gets all logins at initial load of page
     public function getAllLogins() {
         $results = [];
         $loginTable = $this->loginData;
@@ -49,6 +51,70 @@ class LoginDB {
 
         return $results;
     }
+
+    //used for getting all personal logins on initial load of page
+    public function getAllPersonalLogins($userID){
+        $results = [];
+        $loginTable = $this->loginData;
+
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts WHERE userID = :u ORDER BY attemptDate");
+        $sqlString->bindValue(':u', $userID);
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+
+
+    }
+
+    //used for getting all logins in an organization
+    public function getAllOrgLogins($orgID){
+        $results = [];
+        $loginTable = $this->loginData;
+
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts INNER JOIN Users ON loginattempts.userID = users.userID WHERE orgID = :o ORDER BY attemptDate");
+        $sqlString->bindValue(':o', $orgID);
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
+    public function searchLogins($attemptDate, $userID, $orgID) {
+        $results = [];
+        $loginTable = $this->loginData;
+
+        $sqlString = "SELECT * FROM loginattempts INNER JOIN users ON loginattempts.userID = users.userID WHERE 1=1 ";
+        $binds = [];
+
+        if ($attemptDate != '') {
+            $sqlString .= " AND attemptDate LIKE :a";
+            $binds[':a'] = '%'.$attemptDate.'%';
+        }
+
+        if ($userID != '') {
+            $sqlString .= " AND loginattempts.userID = :u";
+            $binds[':u'] = $userID;
+        }
+        if ($orgID != '') {
+            $sqlString .= " AND orgID = :o";
+            $binds[':o'] = $orgID;
+        }
+        echo($userID);
+        echo('got here');
+
+        $sqlString = $loginTable->prepare($sqlString);
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return ($results);
+    }
+
+
+
 
     public function addLoginAttempt($userID, $attemptDate, $isSuccessful, $ip) {
         $results = "";
@@ -88,6 +154,8 @@ class LoginDB {
         
         return ($results);
     }
+
+    
 
 }
 

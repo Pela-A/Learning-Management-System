@@ -67,6 +67,24 @@ class UserDB {
 
         return $results;
     }
+
+    //this function will get all users within a given org id (loginAttempt Function)
+    public function getAllUsersInOrg($orgID){
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT * FROM users WHERE orgID = :o");
+        $sqlString->bindValue(":o", $orgID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+
+
+
+    }
     public function getUser($userID){
         $results = [];
         $userTable = $this->userData;
