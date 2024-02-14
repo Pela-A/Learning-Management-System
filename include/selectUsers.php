@@ -5,23 +5,25 @@ $userObj = new userDB();
 
 // Fetch options based on the selected category_id
 $organization_id = $_POST['organization_id'];
+echo('got to this page');
+echo($organization_id);
 
+$results = $userObj->getAllUsersInOrg($organization_id);
+var_dump($results);
+for($i=0; $i< count($results); $i++){
+    $options[i] = $results[i]['userID']
+    echo($i);
+}
+/*
 
-$results = $userObj->get
-$sql = "SELECT id, name FROM options WHERE category_id = $category_id";
-$result = $conn->query($sql);
-
-$options = array();
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+if (count($results) > 0) {
+    while($row = $results) {
         $options[] = $row;
     }
 }
 
-echo json_encode($options);
+json_encode($options);*/
 
-$conn->close();
-
+die();
 
 ?>

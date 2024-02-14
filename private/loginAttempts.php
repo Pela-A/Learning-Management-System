@@ -147,9 +147,6 @@
                         <div>
                             <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="userID" id='option_select'>
                                 <option value="">Select User</option>
-                                <?php foreach($users as $u): ?>
-                                    <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
-                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -173,21 +170,26 @@
                 $(document).ready(function(){
                     $('#organization_select').change(function(){
                         var organization_id = $(this).val();
-                        
+                        console.log("got here");
                         $.ajax({
-                            url: 'get_options.php',
+                            url: '../include/selectUsers.php',
                             type: 'post',
-                            data: {category_id: category_id},
+                            data: {organization_id: organization_id},
                             dataType: 'json',
                             success:function(response){
                                 var len = response.length;
                                 $("#option_select").empty();
                                 for( var i = 0; i<len; i++){
-                                    var id = response[i]['id'];
-                                    var name = response[i]['name'];
-                                    $("#option_select").append("<option value='"+id+"'>"+name+"</option>");
+                                    var id = response[i]['userID'];
+                                    //var name = response[i]['name'];
+                                    $("#option_select").append("<option value='" +id+ "'></option>");
                                 }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                                // Handle errors if needed
                             }
+                            
                         });
                     });
                 });
