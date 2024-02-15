@@ -65,13 +65,13 @@ class OrganizationDB {
 
     }
     
-    public function getOrgID (){
+    public function getOrgID ($orgCode){
         $results = [];
         $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $orgTable->prepare("SELECT orgID FROM organizations WHERE orgCode = :o");
-        $sqlString->bindValue(':o', $this->orgCode);
+        $sqlString = $orgTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString->bindValue(':o', $orgCode);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             //FETCH_COLUMN returns just an array of all values in column
@@ -81,7 +81,7 @@ class OrganizationDB {
         return $results[0];
     }
 
-    public function createOrganization() {
+    public function createOrganization($orgName,$orgAddress,$orgCity,$orgState,$orgZip,$orgCode) {
 
         $results = 0;
 
@@ -92,12 +92,12 @@ class OrganizationDB {
 
         //bind values
         $binds = array(
-            ":o" => $this->orgName,
-            ":a" => $this->orgAddress,
-            ":c" => $this->orgCity,
-            ":s" => $this->orgState,
-            ":z" => $this->orgZip,
-            ":oc" => $this->orgCode,
+            ":o" => $orgName,
+            ":a" => $orgAddress,
+            ":c" => $orgCity,
+            ":s" => $orgState,
+            ":z" => $orgZip,
+            ":oc" => $orgCode,
         );
 
         //if our SQL statement returns results, populate our results confirmation string

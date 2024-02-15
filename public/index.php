@@ -2,72 +2,70 @@
     //includes at top
     include __DIR__ . '/../model/UsersDB.php';
     include __DIR__ . '/../model/OrganizationsDB.php';
+    include __DIR__ . '/../model/LoginAttemptsDB.php';
     include __DIR__ . '/../include/functions.php';
 
-    //initialize error variable
+    //initialize error variable and action
     $error = "";
     $action = "";
 
+    //used to change visible form
+    //################### ADD NOT VERIFIED PAGE
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
 
     //logging in form post
     if (isset($_POST['login'])) {
+    
         $username = filter_input(INPUT_POST, 'username'); 
         $password = filter_input(INPUT_POST, 'password');
 
         try {
+            //create user object
             $userDB = new UserDB();
             $userData = $userDB->login($username, $password);
 
-            //var_dump($userData);
+            //if results found create session vars and try to redirect
+            if($userData != "No Results Found"){
+    
+                $loginDB = new LoginDB();
+                $loginDate = date('Y-m-d');
+                $ip = getenv("REMOTE_ADDR");
+                if($userData['isVerified'] == 0){
+                    //login attempt funct with isSuccessful False (0)
+                    $loginDB->addLoginAttempt($userData['userID'], $loginDate, 0, $ip);
 
-            session_start();
+                    //redirect to landing page
+                    header('Location: index.php?action=notVerified');
+                }else{
+                    //call setSessionLogin
+                    setSessionLogin($userData);
 
-            $_SESSION['userID']=$userData['userID'];
-            $_SESSION['orgID']=$userData['orgID'];
-            $_SESSION['firstName']=$userData['firstName'];
-            $_SESSION['lastName']=$userData['lastName'];
-            //$_SESSION['profilePicture'];
+                    //login attempt funct with isSuccessful True (1)
+                    $loginDB->addLoginAttempt($userData['userID'], $loginDate, 1, $ip);
 
-            if($userData['isSiteAdmin'] == 1){
-                $_SESSION['isSiteAdmin'] = True;
-            } else {
-                $_SESSION['isSiteAdmin'] = False;
+                    //redirect to landing page
+                    header('Location: ../private/landingPage.php');
+                }   
+            }else{
+                $error = "Incorrect Username or Password!";
+                if(linear_search($userDB->getAllUsername(), $username)){
+                    $loginDate = date('Y-m-d');
+                    $ip = getenv("REMOTE_ADDR");
+                    $loginDB = new LoginDB();
+                    $loginDB->addLoginAttempt($userDB->getUserID($username), $loginDate, 0, $ip);
+                }
             }
-
-            if($userData['isOrgAdmin'] == 1){
-                $_SESSION['isOrgAdmin'] = True;
-            } else {
-                $_SESSION['isOrgAdmin'] = False;
-            }
-
-            if($userData['isTrainer'] == 1){
-                $_SESSION['isTrainer'] = True;
-            } else {
-                $_SESSION['isTrainer'] = False;
-            }
-
-            if($userData['isVerified'] == 0){
-                session_unset();
-                session_destroy();
-                header('Location: index.php?action=notVerified');
-            }
-
-            var_dump($_SESSION);
-                
-            header('Location: ../private/landingPage.php');
+            
         } catch (Exception $error) {
             //unset session variables and give error
             echo "<h2>" . $error->getMessage() . "</h2>";
-            session_unset(); 
         }
-    }
+    //Create organization
+    }elseif(isset($_POST['create'])){
 
-    //creating org
-    if(isset($_POST['create'])){
-
+        //post entered user information
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
         $phoneNum = filter_input(INPUT_POST, 'phoneNum');
@@ -76,10 +74,12 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
+        $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
+        //verifyUserInformation
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass, $confirmPass);
         
-        //org information
+        //post entered org information
         $orgName = filter_input(INPUT_POST, 'orgName');
         $address = filter_input(INPUT_POST, 'address');
         $city = filter_input(INPUT_POST, 'city');
@@ -91,16 +91,23 @@
         if($orgName == ""){
             $error .= "<li>Please enter an organization name!";
         }
+        if($address == ""){
+            $error .= "<li>Please enter an organization address!";
+        }
+        if($city == ""){
+            $error .= "<li>Please enter an organization city!";
+        }
 
-        //ASK SCOTT ABOUT THE ABILITY TO USE AN API FOR SELECTING ADDRESS, CITY, STATE, ZIPCODE ***********************
-
+        //zipcode verification
+        $zipPattern = "/^[0-9]{5}$/";
+        if(!preg_match($zipPattern, $zipCode)){
+            $error .= "<li>Please enter a five digit zipcode for your organization!";
+        }
+        
         //If no errors, create organization and assign user to Org as OrgAdmin
         if($error == ""){
-            
-
-            
             //we want to create orgCodes until the code is not already in the database
-            //this means we need to pull all orgCodes
+            //this means we need to pull all orgCodes and compare the newly created to them all
             $tempObj = new OrganizationDB();
             $codes = $tempObj->getAllOrgCodes();
             do {
@@ -111,27 +118,32 @@
                 for ($i = 0; $i < 20; $i++) {
                     $randomString .= $characters[random_int(0, $charactersLength - 1)];
                 }
+                //search for random string using linear search
+                //check at end if another loop needs to happen. if we return zero that means we found that org code in db
+            } while (linear_Search($codes, $randomString));
 
-                //search for random string using binary search
-                //check at end if another loop needs to happen. if we return zero that means we found that org code in db.
-            } while (binarySearch($codes, $randomString));
+            //create organization object
+            $organization = new OrganizationDB();
 
-            $orgArray = array('orgName' => $orgName, 'orgAddress' => $address, 'orgCity' => $city, 'orgState' => $state, 'orgZip' => $zipCode, 'orgCode' => $randomString );
-            $organization = new OrganizationDB($orgArray);
-
-
-            //code here to create organization.
-
+            //code here to create organization
             //newID represents last inserted record (created organization)
-            //#### ASK SCOTT IF IT SOMEHOW RETURNS ZERO WHAT TO DO.
-            $newID = $organization->createOrganization();
+            $newID = $organization->createOrganization($orgName,$address,$city,$state,$zipCode,$randomString);
 
             //create USER Object and add to data base
-            $makeUser = new UserDB(array('orgID'=>$newID, 'firstName' => $firstName, 'lastName' => $lastName, 'phoneNumber' => $phoneNum, 'email' => $email, 'birthdate' => $birthdate, 'gender' => $gender, 'letterDate' => date('Y-m-d'), 'username' => $newUser, 'password' => $newPass, 'isOrgAdmin' => 1, 'isVerified' => 1));
+            $makeUser = new UserDB();
+            $newUserID=$makeUser->createUserFromIndexPage($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
+            $newUserData = $makeUser->getUserFromIndex($newUserID);
 
-            session_start();
-            $_SESSION['userID']=$makeUser->createUser();
+            //call session set function. then redirect to landing page
+            setSessionLogin($newUserData);
 
+            //log their loginAttempt
+            $loginDB = new LoginDB();
+            $loginDate = date('Y-m-d');
+            $ip = getenv("REMOTE_ADDR");
+            $loginDB->addLoginAttempt($newUserData['userID'], $loginDate, 1, $ip);
+
+            
             //redirect to landing page
             header('Location: ../private/landingPage.php');
 
@@ -149,42 +161,53 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
+        $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass);
+        
         $orgName = "";
         $address = "";
         $city = "";
         $state = "";
         $zipCode = "";
 
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass);
-
         $enterOrgCode = filter_input(INPUT_POST, 'orgCode');
 
-
-        echo("got here");
-        $tempObj = new OrganizationDB(array('orgCode' => $enterOrgCode));
-        if(binarySearch($tempObj->getAllOrgCodes(), $enterOrgCode)){
-            $joinID = $tempObj -> getOrgID();
-            var_dump ($joinID);
-            $makeUser = new UserDB(array('orgID'=>$joinID, 'firstName' => $firstName, 'lastName' => $lastName, 'phoneNumber' => $phoneNum, 'email' => $email, 'birthdate' => $birthdate, 'gender' => $gender, 'letterDate' => date('Y-m-d'), 'username' => $newUser, 'password' => $newPass, 'isOrgAdmin' => 0, 'isVerified' => 0));
-            session_start();
-            $_SESSION['userID']=$makeUser->createUser();
-
-            //redirect to landing page
+        $orgObj = new OrganizationDB();
+        $code = $orgObj->getAllOrgCodes();
         
-            header('Location: ../private/landingPage.php');
+
+        //if org code found and no errors for input we create user and send them to not verified. Page
+        if(linear_Search($code, $enterOrgCode)){
+
+            if($error == ""){
+                //get orgID to join on
+                $joinID = $orgObj -> getOrgID($enterOrgCode);
+                $makeUser = new UserDB();
+        
+                //create new user
+                $newUserID = $makeUser->createUserFromIndexPage($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+
+            
+
+                $loginDB = new LoginDB();
+                $loginDate = date('Y-m-d');
+                $ip = getenv("REMOTE_ADDR");
+                $loginDB->addLoginAttempt($newUserID, $loginDate, 0, $ip);
+                header('Location: index.php?action=notVerified');
+            
+            }
+            
         }
         else{
             $error .= "<li>There is no organization with that Code!";
         }
         
-        //if the org code is in the database we should join the user on that orgID
-        //this means we must grab the orgID
         
-
-
-    //first time loading to site
+    //first time loading to site initialize variables for sticky fields in forms
     }else{
+        $username = "";
+        $password = "";
         $firstName = "";
         $lastName = "";
         $phoneNum = "";
@@ -193,12 +216,15 @@
         $gender = "";
         $newUser = "";
         $newPass = "";
+        $confirmPass = "";
         $orgName = "";
         $address = "";
         $city = "";
         $state = "";
         $zipCode = "";
         $enterOrgCode = "";
+
+        
     }
 
 ?>
@@ -217,17 +243,45 @@
 </head>
 <body>
     <div class="container">
+
+        <div class="row">
+            <h2>Welcome to 'ATLAS'</h2>
+
+
+        </div>
+
+        <div class="row">
+            <p>This is our LMS which organizations can use to manage and track training!</p>
+        </div>
+
+        <div class="row">
+            <img src="" alt="No Image :(">
+        </div>
+
+
+
         <?php if($action == ''): ?>
             <h2>Login Form</h2>
+
+            <?php if($error != ""):?>
+                <div class="row">
+
+                    <div class="col-sm">
+                        <div class="error">
+                            <?php echo($error); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <form name="login_form" method="post" class="px-4 py-3">
                 <div class="form-group">
                     <label>Username</label>
-                    <input name="username" type="text" class="form-control" placeholder="Username">
+                    <input name="username" type="text" class="form-control" placeholder="Username" value="<?=$username?>">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input name="password" type="password" class="form-control" placeholder="Password">
+                    <input name="password" type="password" class="form-control" placeholder="Password" value="<?=$password?>">
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" >
@@ -243,6 +297,17 @@
             <h2>Create Organization Form</h2>
             <form name="create_org_form" method="post">
                 <h3>Enter Your Information</h3>
+
+                <?php if($error != ""):?>
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <div class="error">
+                                <?php echo($error); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <div class="row">
                     <label>First Name:</label>
@@ -271,8 +336,8 @@
                 
                 <div class="row">
                     <label>Gender:</label>
-                    <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
-                    <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
+                    <input type="radio" value="1" name="gender" <?php if($gender==TRUE) echo('checked');?>> Male
+                    <input type="radio" value="0" name="gender"<?php if($gender==FALSE) echo('checked');?>> Female
                     <br />
                 </div>
                 
@@ -284,6 +349,11 @@
                 <div class="row">
                     <label>Create Password:</label>
                     <input type="text" name="newPass" value="<?=$newPass?>">
+                </div>
+
+                <div class="row">
+                    <label>Confirm Password:</label>
+                    <input type="text" name="confirmPass" value="<?=$confirmPass?>">
                 </div>
                 
                 <h3>Enter Organization Information</h3>
@@ -305,7 +375,7 @@
                 
                 <div class="row">
                     <label>State</label>
-                    <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" required>
+                    <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" selected="<?=$state?>" required >
                         <option value="">State</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -375,6 +445,17 @@
             <form name="join_org_form" method="post">
                 <h3>Enter Your Information</h3>
 
+                <?php if($error != ""):?>
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <div class="error">
+                                <?php echo($error); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="row">
                     <label>First Name:</label>
                     <input type="text" name="firstName" value="<?=$firstName?>">
@@ -402,8 +483,8 @@
 
                 <div class="row">
                     <label>Gender:</label>
-                    <input type="radio" value="Male" name="gender" <?php if($gender=="Male") echo('checked');?>> Male
-                    <input type="radio" value="Female" name="gender"<?php if($gender=="Female") echo('checked');?>> Female
+                    <input type="radio" value="1" name="gender" <?php if($gender=="1") echo('checked');?>> Male
+                    <input type="radio" value="0" name="gender"<?php if($gender=="0") echo('checked');?>> Female
                     <br />
                 </div>
 
@@ -418,6 +499,11 @@
                 </div>
 
                 <div class="row">
+                    <label>Confirm Password:</label>
+                    <input type="text" name="confirmPass" value="<?=$confirmPass?>">
+                </div>
+
+                <div class="row">
                     <label>Enter Organization Code</label>
                     <input type="text" name="orgCode" value="<?=$enterOrgCode?>">
                 </div>
@@ -428,6 +514,11 @@
 
 
             </form>
+
+        <?php elseif($action == 'notVerified'): ?>
+            <h2>Your account is current not verified!</h2>
+
+            <p>Please contact your organization administrator!</p>
 
         <?php endif; ?>
         <?php include __DIR__ . '/../include/footer.php'; ?>

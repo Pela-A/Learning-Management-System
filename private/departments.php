@@ -1,6 +1,10 @@
 <?php
 
+
     include __DIR__ . '/../include/header.php';
+    if(!$_SESSION['isSiteAdmin'] && !$_SESSION['isOrgAdmin']){
+        header('Location: ../private/landingPage.php');
+    }
     include __DIR__ . '/../model/DepartmentsDB.php';
     include __DIR__ . '/../model/OrganizationsDB.php';
 
@@ -13,10 +17,10 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
-    $orgID = 50;
+    $orgID = $_SESSION['orgID'];
 
     $organization = $orgObj->getOrganization($orgID);
-    $departments = $depObj->getAllDepartments($orgID);
+    
 
     //Form functionality for creating editing or deleting a department
     if(isset($_POST['create'])){
@@ -29,7 +33,7 @@
         $error = verifyDepartmentInformation($name,$email);
 
         //if valid input create the new department
-        if($error ==''){
+        if($error == ''){
             $depObj->createDep($orgID,$name,$email);
         }
 
@@ -42,7 +46,9 @@
 
         $error = verifyDepartmentInformation($name, $email);
 
-        if($error ==''){
+
+    
+        if($error == ''){
             $depObj->editDep($depID, $name, $email);
         }
         //edit department information
@@ -57,6 +63,19 @@
         $depObj->deleteDep($depID);
         $depObj->deleteDepBridge($depID);
     }
+
+        //siteADMIN
+        //Alexander
+        //AlexanderPela
+
+        //orgADMIN
+        //NewGuy13
+        //Pelaman12
+
+
+        //general USER
+        //JoinUser215125
+        //PelaMan12
 
 
 ?>
@@ -85,27 +104,29 @@
                 <h3><?= $organization[0]['address']. ", " . $organization[0]['city'] . ", " . $organization[0]['state']; ?></h3>
             </div>
 
-            <?php if($action == 'Viewer'): ?>
-                <a href="departments.php?action=Add">Create New Department</a>
+        <?php if($action == 'Viewer'):
+            $departments = $depObj->getAllDepartments($orgID);
+            ?>
+            <a href="departments.php?action=Add">Create New Department</a>
 
-                <table class="table table-bordered text-center col-11">
-                    <thead>
-                        <tr>
-                            <th>Department ID</th>
-                            <th>Organization ID</th>
-                            <th>Department Name</th>
-                            <th>Department Email</th>
-                        </tr>
-                    </thead>
+            <table class="table table-bordered text-center col-11">
+                <thead>
+                    <tr>
+                        <th>Department ID</th>
+                        <th>Department Name</th>
+                        <th>Department Email</th>
+                        <th>Edit Department</th>
+                    </tr>
+                </thead>
 
                     <tbody>
 
                     <?php foreach ($departments as $d):?>
                         <tr>
-                            <td><?= $d['departmentID']; ?></td>
+                            <td><?= $d['depID']; ?></td>
                             <td><?= $d['depName']; ?></td>
                             <td><?= $d['depEmail']; ?></td>
-                            <td><a href="departments.php?action=Edit&depID=<?= $d['departmentID']?>">Edit</a></td>
+                            <td><a href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
                             <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                         </tr>
                     <?php endforeach; ?>
@@ -113,14 +134,15 @@
                     </tbody>
                 </table>
 
-            <?php elseif($action == 'Edit'): 
-                
-                $depID = filter_input(INPUT_GET, 'depID');
-                $depart = $depObj->getDepartment($depID);
-                $name = $depart[0]['depName'];
-                $email = $depart[0]['depEmail']; ?>
+        <?php elseif($action == 'Edit'): 
+            
+            
+            $depID = filter_input(INPUT_GET, 'depID');
+            $depart = $depObj->getDepartment($depID);
+            $name = $depart[0]['depName'];
+            $email = $depart[0]['depEmail']; ?>
 
-                <form method="post" action="departments.php" name="Department_CRUD">
+            <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
 
                     <label>Department Name</label>
                     <input type="text" name="name" value='<?=$name?>'>
@@ -130,28 +152,50 @@
                     <input type="text" name="email" value='<?=$email?>'>
                     </br>
 
-                    <?php if($action == "Create"):?>
+                
+                <input type="hidden" name="depID" value="<?=$depID;?>">
+                <input type="submit" name="edit" value="Edit Department">
 
-                        <input type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
-                        <input type="submit" name="create" value="Create Department">
+                <input type="submit" name="delete" value="Delete Department">
 
-                    <?php elseif($action == "Edit"): ?>
-                        <input type="hidden" name="depID" value="<?=$depID;?>">
-                        <input type="submit" name="edit" value="Edit Department">
-
-                        <input type="submit" name="delete" value="Delete Department">
-
-                    <?php endif; ?>
+                
 
                     
                 </form>
 
-                <a href="departments.php">
-                    <button>Go Back</button>
-                </a>
+            <a href="departments.php?action=Viewer">
+                <button>Go Back</button>
+            </a>
 
-            <?php elseif($action == 'Add'): ?>
-            <?php endif; ?>
+        <?php elseif($action == 'Add'): 
+            $name = "";
+            $email = "";
+
+            
+            
+            ?>
+            <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
+
+                <label>Department Name</label>
+                <input type="text" name="name" value='<?=$name?>'>
+                </br>
+            
+                <label>Department Email</label>
+                <input type="text" name="email" value='<?=$email?>'>
+                </br>
+
+            
+                <input type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
+                <input type="submit" name="create" value="Create Department">
+
+
+                
+            </form>
+
+            <a href="departments.php?action=Viewer">
+                <button>Go Back</button>
+            </a>
+        <?php endif; ?>
 
         </div>
     </div>

@@ -6,7 +6,10 @@
 
     //Redirects to Home Page if session variable does not exist
     if(!isset($_SESSION['userID'])){
-        header('Location: logout.php');
+        echo("why bro");
+        echo($_SESSION['userID']);
+        echo($_SESSION['firstName']);
+        //header('Location: logout.php');
     }
 
     //Establishes landingType Session variable dependant on admin status
