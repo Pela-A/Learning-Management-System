@@ -159,7 +159,7 @@
 
     function verifyDepartmentInformation($name, $email){
         $error = '';
-        $pattern1 = "/[^A-Za-z-]+/";
+        $pattern1 = "/[^a-zA-Z ]+$/";
         $pattern3 = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
         if(preg_match($pattern1,$name)){
             $error .= "<li>Department Name must not contain special characters or numbers!</li>";

@@ -146,7 +146,15 @@
                         
                         <div>
                             <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="userID" id='option_select'>
-                                <option value="">Select User</option>
+                                <?php if($_SESSION['isSiteAdmin']): ?>
+                                    <option value="">Select Organization ID to populate</option>
+                                <?php else: ?>
+                                    <option value="">Select a User ID</option>
+                                    <?php foreach($users as $u): ?>
+                                    <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
                             </select>
                         </div>
                     </div>
@@ -166,11 +174,15 @@
                 </div>
                 
             </form>
+            <?php if($_SESSION['isSiteAdmin']):
+            //cool ajax call to dynamically fill User ID based on SELECTED Org ID
+                
+            
+            ?>
             <script>
                 $(document).ready(function(){
                     $('#organization_select').change(function(){
                         var organization_id = $(this).val();
-                        console.log("got here");
                         $.ajax({
                             url: '../include/selectUsers.php',
                             type: 'post',
@@ -179,11 +191,10 @@
                             success:function(response){
                                 var len = response.length;
                                 $("#option_select").empty();
-                                for( var i = 0; i<len; i++){
-                                    var id = response[i]['userID'];
-                                    //var name = response[i]['name'];
-                                    $("#option_select").append("<option value='" +id+ "'></option>");
-                                }
+                                $("#option_select").append("<option value=''>Select a User ID</option>");
+                                response.forEach(function(item) {
+                                    $("#option_select").append("<option value='" + item.userID + "'>("  + item.userID + ") " + item.firstName + " " + item.lastName +"</option>");
+                                 });
                             },
                             error: function(xhr, status, error) {
                                 console.error(xhr.responseText);
@@ -194,6 +205,7 @@
                     });
                 });
             </script>
+            <?php endif; ?>
             <!--End search functionality -->
 
             
