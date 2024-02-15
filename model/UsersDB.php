@@ -53,6 +53,7 @@ class UserDB {
         
         return ($results);
     }
+
     public function getAllUsers() {
         $results = [];
         $userTable = $this->userData;
@@ -85,6 +86,7 @@ class UserDB {
 
 
     }
+
     public function getUser($userID){
         $results = [];
         $userTable = $this->userData;
@@ -178,8 +180,6 @@ class UserDB {
         
         return ($results);
     } 
-
-    
 
     public function createGeneralUser($orgID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $profilePicture){
 
@@ -345,9 +345,9 @@ class UserDB {
             $binds['isTrainer'] = '%'.$isTrainer.'%';
         }
 
-        $sqlStmt = $userTable->prepare($sqlString);
-        if ($sqlStmt->execute($binds) && $sqlStmt->rowCount() > 0) {
-            $results = $sqlStmt->fetchAll(PDO::FETCH_ASSOC);
+        $sqlString = $userTable->prepare($sqlString);
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return ($results);
@@ -356,7 +356,6 @@ class UserDB {
     public function getProfilePicture($userID) {
 
     }
-
 
     public function getUsername($userID){
 

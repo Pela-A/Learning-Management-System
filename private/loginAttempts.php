@@ -12,21 +12,15 @@
     //get action variable
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
-
-
-
-
     }
 
     //if edit comment
-    if(isset($_POST['edit'])){
-        
+    if(isset($_POST['edit'])){        
         $comments = filter_input(INPUT_POST, 'comments');
         $loginID = filter_input(INPUT_POST, 'loginID');
-
         $loginObj->editComments($loginID, $comments);
-        
     }
+
     //if search or coming to first time
     if(isset($_POST['search'])){
         $attemptDate = filter_input(INPUT_POST, 'attemptDate');

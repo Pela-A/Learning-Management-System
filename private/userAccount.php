@@ -601,58 +601,60 @@
                 <h2>Account Settings</h2>
 
                 <?php $account = $userObj->getUser($_SESSION['userID']); ?>
-                <a href="userAccount.php?action=updateUser&userID=<?= $account[0]['userID']; ?>">Make Changes to Account</a>
+                <a href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
                     <div style="display: flex;">
                         <label for="">Username: </label>
-                        <p><?= " " . $account[0]["username"]; ?></p>
+                        <p><?= $account["username"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Full Name: </label>
-                        <p><?= " " . $account[0]["firstName"] . " " . $account[0]["lastName"]; ?></p>
+                        <p><?= $account["firstName"] . " " . $account["lastName"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Account Created: </label>
-                        <p><?= " " . $account[0]["letterDate"]; ?></p>
+                        <p><?= $account["letterDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Email: </label>
-                        <p><?= " " . $account[0]["email"]; ?></p>
+                        <p><?= $account["email"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Birth Date: </label>
-                        <p><?= " " . $account[0]["birthDate"]; ?></p>
+                        <p><?= $account["birthDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Phone Number: </label>
-                        <p><?= " " . $account[0]["phoneNumber"]; ?></p>
+                        <p><?= $account["phoneNumber"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Gender: </label>
-                        <p><?= " " . $account[0]['gender']==1?"Male":"Female"; ?></p>
+                        <p><?= $account['gender']==1?"Male":"Female"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Website Administrator: </label>
-                        <p><?= " " . $account[0]['isSiteAdmin']==1?"Yes":"No"; ?></p>
+                        <p><?= $account['isSiteAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Organization Administrator: </label>
-                        <p><?= " " . $account[0]['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        <p><?= $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Training Manager: </label>
-                        <p><?= " " . $account[0]['isTrainer']==1?"Yes":"No"; ?></p>
+                        <p><?= $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
+
+                    <a href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
 
@@ -810,21 +812,19 @@
                     $account = $userObj->getUser($userID);
                     $organization = $orgObj->getOrganization($_SESSION['orgID']); 
 
-                    var_dump($userID);
-
                     if($account != null){
-                        $firstName = $account[0]['firstName'];
-                        $lastName = $account[0]['lastName'];
-                        $letterDate = $account[0]['letterDate'];
-                        $email = $account[0]['email'];
-                        $phoneNumber = $account[0]['phoneNumber'];
-                        $birthDate = $account[0]['birthDate'];
-                        $gender = $account[0]['gender'];
-                        $username = $account[0]['username'];
-                        $isSiteAdmin = $account[0]['isSiteAdmin'];
-                        $isOrgAdmin = $account[0]['isOrgAdmin'];
-                        $isTrainer = $account[0]['isTrainer'];
-                        $isVerified = $account[0]['isVerified'];
+                        $firstName = $account['firstName'];
+                        $lastName = $account['lastName'];
+                        $letterDate = $account['letterDate'];
+                        $email = $account['email'];
+                        $phoneNumber = $account['phoneNumber'];
+                        $birthDate = $account['birthDate'];
+                        $gender = $account['gender'];
+                        $username = $account['username'];
+                        $isSiteAdmin = $account['isSiteAdmin'];
+                        $isOrgAdmin = $account['isOrgAdmin'];
+                        $isTrainer = $account['isTrainer'];
+                        $isVerified = $account['isVerified'];
                     } else {
                         $firstName = "";
                         $lastName = "";
@@ -968,16 +968,16 @@
                     $organization = $orgObj->getOrganization($_SESSION['orgID']); 
 
                     if($account != null){
-                        $firstName = $account[0]['firstName'];
-                        $lastName = $account[0]['lastName'];
-                        $letterDate = $account[0]['letterDate'];
-                        $email = $account[0]['email'];
-                        $phoneNumber = $account[0]['phoneNumber'];
-                        $birthDate = $account[0]['birthDate'];
-                        $gender = $account[0]['gender'];
-                        $isOrgAdmin = $account[0]['isOrgAdmin'];
-                        $isTrainer = $account[0]['isTrainer'];
-                        $isVerified = $account[0]['isVerified'];
+                        $firstName = $account['firstName'];
+                        $lastName = $account['lastName'];
+                        $letterDate = $account['letterDate'];
+                        $email = $account['email'];
+                        $phoneNumber = $account['phoneNumber'];
+                        $birthDate = $account['birthDate'];
+                        $gender = $account['gender'];
+                        $isOrgAdmin = $account['isOrgAdmin'];
+                        $isTrainer = $account['isTrainer'];
+                        $isVerified = $account['isVerified'];
                     } else {
                         $firstName = "";
                         $lastName = "";
@@ -1097,13 +1097,13 @@
                     $organization = $orgObj->getOrganization($_SESSION['orgID']); 
 
                     if($account != null){
-                        $firstName = $account[0]['firstName'];
-                        $lastName = $account[0]['lastName'];
-                        $email = $account[0]['email'];
-                        $phoneNumber = $account[0]['phoneNumber'];
-                        $birthDate = $account[0]['birthDate'];
-                        $gender = $account[0]['gender'];
-                        $username = $account[0]['username'];
+                        $firstName = $account['firstName'];
+                        $lastName = $account['lastName'];
+                        $email = $account['email'];
+                        $phoneNumber = $account['phoneNumber'];
+                        $birthDate = $account['birthDate'];
+                        $gender = $account['gender'];
+                        $username = $account['username'];
                     } else {
                         $firstName = "";
                         $lastName = "";

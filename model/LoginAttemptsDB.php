@@ -113,9 +113,6 @@ class LoginDB {
         return ($results);
     }
 
-
-
-
     public function addLoginAttempt($userID, $attemptDate, $isSuccessful, $ip) {
         $results = "";
         $loginTable = $this->loginData;
@@ -154,8 +151,6 @@ class LoginDB {
         
         return ($results);
     }
-
-    
 
 }
 
