@@ -59,8 +59,8 @@ class UserDB {
         $userTable = $this->userData;
 
         $sqlString = $userTable->prepare("SELECT * FROM (users
-                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
-                                            ORDER BY lastName");
+                                          INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                          ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -82,8 +82,6 @@ class UserDB {
         }
 
         return $results;
-
-
 
     }
 
@@ -366,11 +364,10 @@ class UserDB {
     }
 
     public function setUsername($firstName, $lastName, $birthDate) {
-        $firstInitial = substr($firstName, 0, 1);
 
         $birthYear = date('Y', strtotime($birthDate));
         
-        $username = $firstInitial . $lastName . $birthYear;
+        $username = $firstName . $lastName . $birthYear;
 
         return $username;
     }

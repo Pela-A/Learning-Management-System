@@ -62,7 +62,7 @@ class TrainingEntryDB {
         return $results;
     }
 
-    public function createTrainingEntry($userID, $courseName, $entryDate, $completeDate, $isValidated, $validateDate, $validationComments, $creditHours, $category, $description) {
+    public function createTrainingEntry($userID, $courseName, $entryDate, $completeDate, $creditHours, $category, $description) {
         $results = [];
         $entryTable = $this->entryData;
 
