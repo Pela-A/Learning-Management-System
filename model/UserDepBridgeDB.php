@@ -78,6 +78,21 @@ class userDepDB {
         );
 
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = "Relationship Deleted";
+        }
+    }
+
+    public function deleteAllUserRelationships($userID) {
+        $results = [];
+        $userDeptTable = $this->userDeptData;
+
+        $sqlString = $userDeptTable->prepare("DELETE FROM depusersbridge WHERE userID = :u");
+        
+        $binds = array(
+            ":u" => $userID,
+        );
+
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
             $results = "User Deleted";
         }
     }

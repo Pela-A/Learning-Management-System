@@ -37,30 +37,21 @@
         return $compressedImageData;
     }
 
-    //binary search algorithm fastest if given a sorted array.
-    function binarySearch($arr, $target) {
-        $left = 0;
-        $right = count($arr) - 1;
-        while ($left <= $right) {
-            $mid = floor(($left + $right) / 2);
-            // Check if the target value is found at the middle index
-            if ($arr[$mid] === $target) {
-                return true;
-            }
-            // If the target is greater, ignore the left half
-            if ($arr[$mid] < $target) {
-                $left = $mid + 1;
-            }
-            // If the target is smaller, ignore the right half
-            else {
-                $right = $mid - 1;
-            }
+    function linear_search($arr, $target) {
+        for ($i = 0; $i < count($arr); $i++) {
+     
+           // If a match is found, return true.
+           if ($arr[$i] === $target) {
+              return true;
+           }
         }
-        // Target value not found in the array
+     
+        // No match was found, hence return false.
         return false;
-    }
+     }
+    
 
-    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass){
+    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass){
         $error = "";
         //RegExpressions****
 
@@ -119,7 +110,7 @@
         //username check
         $testUser = new UserDB();
         $testUsernames = $testUser->getAllUsername();
-        if(binarySearch($testUsernames, $newUser)){
+        if(linear_search($testUsernames, $newUser)){
             $error .= "<li>Username is already in use!</li>";
         }
         elseif(strlen($newUser) < 8){
@@ -131,12 +122,44 @@
             $error .= "<li>Password must be at least 8 characters long!</li>";
         }
 
+        if($confirmPass != $newPass){
+            $error .= "<li>Password and Confirm Password must be the same!</li>";
+        }
+
         return($error);
+    }
+
+    //setting session variables on login/org creation.
+    function setSessionLogin($userData) {
+        session_start();
+        $_SESSION['userID']=$userData['userID'];
+        $_SESSION['orgID']=$userData['orgID'];
+        $_SESSION['firstName']=$userData['firstName'];
+        $_SESSION['lastName']=$userData['lastName'];
+
+        if($userData['isSiteAdmin'] == 1){
+            $_SESSION['isSiteAdmin'] = True;
+        } else {
+            $_SESSION['isSiteAdmin'] = False;
+        }
+
+        if($userData['isOrgAdmin'] == 1){
+            $_SESSION['isOrgAdmin'] = True;
+        } else {
+            $_SESSION['isOrgAdmin'] = False;
+        }
+
+        if($userData['isTrainer'] == 1){
+            $_SESSION['isTrainer'] = True;
+        } else {
+            $_SESSION['isTrainer'] = False;
+        }
+
     }
 
     function verifyDepartmentInformation($name, $email){
         $error = '';
-        $pattern1 = "/[^A-Za-z-]+/";
+        $pattern1 = "/[^a-zA-Z ]+$/";
         $pattern3 = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
         if(preg_match($pattern1,$name)){
             $error .= "<li>Department Name must not contain special characters or numbers!</li>";

@@ -30,7 +30,7 @@ class OrganizationDB {
         $sqlString->bindValue(':orgID', $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
         }
 
         return $results;
@@ -65,13 +65,13 @@ class OrganizationDB {
 
     }
     
-    public function getOrgID (){
+    public function getOrgID ($orgCode){
         $results = [];
         $orgTable = $this->orgData;
 
         //never use spaces for column names in mySQL :/
-        $sqlString = $orgTable->prepare("SELECT orgID FROM organizations WHERE orgCode = :o");
-        $sqlString->bindValue(':o', $this->orgCode);
+        $sqlString = $orgTable->prepare("SELECT orgID FROM Organizations WHERE orgCode = :o");
+        $sqlString->bindValue(':o', $orgCode);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
             //FETCH_COLUMN returns just an array of all values in column
@@ -114,12 +114,33 @@ class OrganizationDB {
 
     }
 
-    public function updateOrganization() {
+    public function updateOrganization($orgID, $orgName, $address, $city, $state, $zipCode) {
+        $results = "";
 
+        $orgTable = $this->orgData;
+        $sqlString = $orgTable->prepare("UPDATE organizations set orgName = :n, address = :a, city = :c, state = :s, zipCode = :z WHERE orgID = :o");
+
+
+        $binds = array(
+            ":o" => $orgID,
+            ":n" => $orgName,
+            ":a" => $address,
+            ":c" => $city,
+            ":s" => $state,
+            ":z" => $zipCode
+        );
+        
+        
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = 'Data Updated';
+        }
+        
+        return ($results);
     }
     
     public function deleteOrganization() {
-
+        //needs to chain delete a ton of stuff
     }
     
 }

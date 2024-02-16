@@ -27,7 +27,7 @@ class DepartmentDB {
         $results = [];
         $departmentTable = $this->departmentData;
 
-        $sqlString = $departmentTable->prepare("SELECT depName, depEmail FROM Departments Where departmentID = :d");
+        $sqlString = $departmentTable->prepare("SELECT depName, depEmail FROM Departments Where depID = :d");
         $sqlString->bindValue(':d', $depID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
@@ -71,6 +71,7 @@ class DepartmentDB {
         //if our SQL statement returns results, populate our results confirmation string
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
             $results = "New Department Added";
+            echo("got here");
         }
         
         return ($results);
@@ -82,7 +83,7 @@ class DepartmentDB {
         $results = "";
 
         $departmentTable = $this->departmentData;
-        $sqlString = $departmentTable->prepare("UPDATE departments set depName = :n, depEmail = :e WHERE departmentID = :d");
+        $sqlString = $departmentTable->prepare("UPDATE departments set depName = :n, depEmail = :e WHERE depID = :d");
 
 
         $binds = array(
@@ -106,7 +107,7 @@ class DepartmentDB {
         $results = "Data was not deleted";
 
         $departmentTable = $this->departmentData;
-        $sqlString = $departmentTable->prepare("DELETE FROM Departments WHERE departmentID=:id");
+        $sqlString = $departmentTable->prepare("DELETE FROM Departments WHERE depID=:id");
         
         
         $sqlString->bindValue(':id', $depID);
@@ -124,7 +125,7 @@ class DepartmentDB {
         $results = "Data was not deleted";
 
         $departmentTable = $this->departmentData;
-        $sqlString = $departmentTable->prepare("DELETE FROM DepUsersBridge WHERE departmentID=:id");
+        $sqlString = $departmentTable->prepare("DELETE FROM DepUsersBridge WHERE depID=:id");
         
         
         $sqlString->bindValue(':id', $depID);

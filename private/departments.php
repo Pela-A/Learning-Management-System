@@ -1,6 +1,10 @@
 <?php
 
+
     include __DIR__ . '/../include/header.php';
+    if(!$_SESSION['isSiteAdmin'] && !$_SESSION['isOrgAdmin']){
+        header('Location: ../private/landingPage.php');
+    }
     include __DIR__ . '/../model/DepartmentsDB.php';
     include __DIR__ . '/../model/OrganizationsDB.php';
 
@@ -13,7 +17,7 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
-    $orgID = 50;
+    $orgID = $_SESSION['orgID'];
 
     $organization = $orgObj->getOrganization($orgID);
     
@@ -29,7 +33,7 @@
         $error = verifyDepartmentInformation($name,$email);
 
         //if valid input create the new department
-        if($error ==''){
+        if($error == ''){
             $depObj->createDep($orgID,$name,$email);
         }
 
@@ -42,7 +46,9 @@
 
         $error = verifyDepartmentInformation($name, $email);
 
-        if($error ==''){
+
+    
+        if($error == ''){
             $depObj->editDep($depID, $name, $email);
         }
         //edit department information
@@ -57,6 +63,19 @@
         $depObj->deleteDep($depID);
         $depObj->deleteDepBridge($depID);
     }
+
+        //siteADMIN
+        //Alexander
+        //AlexanderPela
+
+        //orgADMIN
+        //NewGuy13
+        //Pelaman12
+
+
+        //general USER
+        //JoinUser215125
+        //PelaMan12
 
 
 ?>
@@ -104,10 +123,10 @@
 
                     <?php foreach ($departments as $d):?>
                         <tr>
-                            <td><?= $d['departmentID']; ?></td>
+                            <td><?= $d['depID']; ?></td>
                             <td><?= $d['depName']; ?></td>
                             <td><?= $d['depEmail']; ?></td>
-                            <td><a href="departments.php?action=Edit&depID=<?= $d['departmentID']?>">Edit</a></td>
+                            <td><a href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
                             <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                         </tr>
                     <?php endforeach; ?>
