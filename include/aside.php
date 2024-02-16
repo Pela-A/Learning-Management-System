@@ -9,7 +9,7 @@
 
         <?php if($_SESSION['isSiteAdmin']): ?>
             <ul>
-                <li><a href="organizations.php">View Organizations</a></li>
+                <li><a href="organizations.php?action=Viewer">View Organizations</a></li>
                 <li><a href="userAccount.php?action=Viewer">View User Accounts</a></li>
                 <li><a href="loginAttempts.php?action=Viewer">Login Attempts Manager</a></li>
             </ul>

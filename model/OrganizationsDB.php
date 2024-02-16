@@ -30,7 +30,7 @@ class OrganizationDB {
         $sqlString->bindValue(':orgID', $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0){
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
         }
 
         return $results;
@@ -114,12 +114,33 @@ class OrganizationDB {
 
     }
 
-    public function updateOrganization() {
+    public function updateOrganization($orgID, $orgName, $address, $city, $state, $zipCode) {
+        $results = "";
 
+        $orgTable = $this->orgData;
+        $sqlString = $orgTable->prepare("UPDATE organizations set orgName = :n, address = :a, city = :c, state = :s, zipCode = :z WHERE orgID = :o");
+
+
+        $binds = array(
+            ":o" => $orgID,
+            ":n" => $orgName,
+            ":a" => $address,
+            ":c" => $city,
+            ":s" => $state,
+            ":z" => $zipCode
+        );
+        
+        
+        //if our SQL statement returns results, populate our results confirmation string
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
+            $results = 'Data Updated';
+        }
+        
+        return ($results);
     }
     
     public function deleteOrganization() {
-
+        //needs to chain delete a ton of stuff
     }
     
 }
