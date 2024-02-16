@@ -410,10 +410,8 @@ class UserDB {
     }
 
 
-    ################# PLEASE DONT CHANGE STUFF HERE AND BELOW WITHOUT MENTIONING. IT MAKES MERGING A NIGHTMARE SPENT AN HOUR FIXING MERGE
-
-    //login page functionality
-    //used to check if a entered new username in user creation is already in the database (UNIQUE USERNAME VALIDATION)
+    // login page functionality
+    // used to check if a entered new username in user creation is already in the database (UNIQUE USERNAME VALIDATION)
     public function getAllUsername(){
 
         $results = [];
@@ -430,6 +428,7 @@ class UserDB {
 
     }
 
+    // failed login attempt on a given username in database
     public function getUserID($username){
         $results = [];
         $userTable = $this->userData;
@@ -446,66 +445,6 @@ class UserDB {
 
 
     }
-
-    public function getUserLogin(){
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
-        $sqlString->bindValue(':u', $userID);
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
-            //fetch expects one record and gives it as a singular assoc array
-            //fetch all possible to have multiple records pulled (multiple assoc array)
-            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
-        }
-    }
-
-    public function createUserFromIndexPage($orgID,$firstName,$lastName,$phoneNumber,$email,$birthdate,$gender,$letterDate,$username,$password,$isOrgAdmin,$isVerified){
-
-        $results = 0;
-        $userTable = $this->userData;
-        $sqlString = $userTable->prepare("INSERT INTO Users set orgID = :o, firstName = :f, lastName = :ln, phoneNumber = :pn, email = :e, birthDate = :b, gender = :g, letterDate = :l, username = :u, password = :p, isOrgAdmin = :oa, isVerified = :v ");
-
-        //bind values
-        $binds = array(
-            ":o" => $orgID,
-            ":f" => $firstName,
-            ":ln" => $lastName,
-            ":pn" => $phoneNumber,
-            ":e" => $email,
-            ":b" => $birthdate,
-            ":g" => $gender,
-            ":l" => $letterDate,
-            ":u" => $username,
-            ":p" => $password,
-            ":oa" => $isOrgAdmin,
-            ":v" => $isVerified,
-        );
-
-
-        //if our SQL statement returns results, populate our results confirmation string
-        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0){
-            $results = (int)$userTable->lastInsertId();
-        }
-        
-        return ($results);
-    }
-
-    public function getUserFromIndex($userID){
-        $results = [];
-        $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("SELECT * FROM Users Where userID = :u");
-        $sqlString->bindValue(':u', $userID);
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0){
-            //fetch expects one record and gives it as a singular assoc array
-            //fetch all possible to have multiple records pulled (multiple assoc array)
-            $results = $sqlString->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return $results;
-    }
-
-    ######### END OF ALEX CODE
 
 
 }

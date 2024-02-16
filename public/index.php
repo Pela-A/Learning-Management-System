@@ -131,7 +131,7 @@
             //create USER Object and add to data base
             $makeUser = new UserDB();
             $newUserID=$makeUser->orgAdminCreateUser($newID, $firstName, $lastName, $email, $birthdate, $phoneNum, $gender, $newPass, 1, 0);
-            $newUserData = $makeUser->getUserFromIndex($newUserID);
+            $newUserData = $makeUser->getUser($newUserID);
 
             //call session set function. then redirect to landing page
             setSessionLogin($newUserData);
