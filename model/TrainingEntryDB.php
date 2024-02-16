@@ -34,6 +34,20 @@ class TrainingEntryDB {
         return $results;
     }
 
+    public function getAllUserTrainingEntries($userID) {
+        $results = [];
+        $entryTable = $this->entryData;
+
+        $sqlString = $entryTable->prepare("SELECT * FROM trainingentries INNER JOIN users ON TrainingEntries.userID = users.userID WHERE users.userID = :u ORDER BY entryDate");
+        $sqlString->bindValue(":u", $userID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
     public function getTrainingEntry($entryID){
         $results = [];
         $entryTable = $this->entryData;

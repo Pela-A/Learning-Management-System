@@ -660,146 +660,146 @@
 
                     <div style="display: flex;">
                         <label for="">Username: </label>
-                        <p><?= " " . $account[0]["username"]; ?></p>
+                        <p><?= " " . $account["username"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Full Name: </label>
-                        <p><?= " " . $account[0]["firstName"] . " " . $account[0]["lastName"]; ?></p>
+                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
                     </div>
                     
                     <div style="display: flex;">
                         <label for="">Organization: </label>
-                        <p><?= " " . $account[0]["orgName"]; ?></p>
+                        <p><?= " " . $account["orgName"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Account Created: </label>
-                        <p><?= " " . $account[0]["letterDate"]; ?></p>
+                        <p><?= " " . $account["letterDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Email: </label>
-                        <p><?= " " . $account[0]["email"]; ?></p>
+                        <p><?= " " . $account["email"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Birth Date: </label>
-                        <p><?= " " . $account[0]["birthDate"]; ?></p>
+                        <p><?= " " . $account["birthDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Phone Number: </label>
-                        <p><?= " " . $account[0]["phoneNumber"]; ?></p>
+                        <p><?= " " . $account["phoneNumber"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Gender: </label>
-                        <p><?= " " . $account[0]['gender']==1?"Male":"Female"; ?></p>
+                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Organization Administrator: </label>
-                        <p><?= " " . $account[0]['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Training Manager: </label>
-                        <p><?= " " . $account[0]['isTrainer']==1?"Yes":"No"; ?></p>
+                        <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
                 <?php elseif($_SESSION['isTrainer']): ?>
 
                     <div style="display: flex;">
                         <label for="">Username: </label>
-                        <p><?= " " . $account[0]["username"]; ?></p>
+                        <p><?= " " . $account["username"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Full Name: </label>
-                        <p><?= " " . $account[0]["firstName"] . " " . $account[0]["lastName"]; ?></p>
+                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
                     </div>
                     
                     <div style="display: flex;">
                         <label for="">Organization: </label>
-                        <p><?= " " . $account[0]["orgName"]; ?></p>
+                        <p><?= " " . $account["orgName"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Account Created: </label>
-                        <p><?= " " . $account[0]["letterDate"]; ?></p>
+                        <p><?= " " . $account["letterDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Email: </label>
-                        <p><?= " " . $account[0]["email"]; ?></p>
+                        <p><?= " " . $account["email"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Birth Date: </label>
-                        <p><?= " " . $account[0]["birthDate"]; ?></p>
+                        <p><?= " " . $account["birthDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Phone Number: </label>
-                        <p><?= " " . $account[0]["phoneNumber"]; ?></p>
+                        <p><?= " " . $account["phoneNumber"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Gender: </label>
-                        <p><?= " " . $account[0]['gender']==1?"Male":"Female"; ?></p>
+                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Training Manager: </label>
-                        <p><?= " " . $account[0]['isTrainer']==1?"Yes":"No"; ?></p>
+                        <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
                 <?php else: ?>
 
                     <div style="display: flex;">
                         <label for="">Username: </label>
-                        <p><?= " " . $account[0]["username"]; ?></p>
+                        <p><?= " " . $account["username"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Full Name: </label>
-                        <p><?= " " . $account[0]["firstName"] . " " . $account[0]["lastName"]; ?></p>
+                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
                     </div>
                     
                     <div style="display: flex;">
                         <label for="">Organization: </label>
-                        <p><?= " " . $account[0]["orgName"]; ?></p>
+                        <p><?= " " . $account["orgName"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Account Created: </label>
-                        <p><?= " " . $account[0]["letterDate"]; ?></p>
+                        <p><?= " " . $account["letterDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Email: </label>
-                        <p><?= " " . $account[0]["email"]; ?></p>
+                        <p><?= " " . $account["email"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Birth Date: </label>
-                        <p><?= " " . $account[0]["birthDate"]; ?></p>
+                        <p><?= " " . $account["birthDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Phone Number: </label>
-                        <p><?= " " . $account[0]["phoneNumber"]; ?></p>
+                        <p><?= " " . $account["phoneNumber"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Gender: </label>
-                        <p><?= " " . $account[0]['gender']==1?"Male":"Female"; ?></p>
+                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
                     </div>
 
                     <div style="display: flex;">
                         <label for="">Organization Administrator: </label>
-                        <p><?= " " . $account[0]['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                 <?php endif; ?>
