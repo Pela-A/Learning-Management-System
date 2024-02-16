@@ -121,13 +121,14 @@ class UserDB {
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln,letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
 
         //bind values
         $binds = array(
             ":o" => $orgID,
             ":f" => $firstName,
             ":ln" => $lastName,
+            ":letter" => date(("Y-m-d")),
             ":e" => $email,
             ":b" => $birthDate,
             ":pn" => $phoneNumber,
@@ -153,18 +154,19 @@ class UserDB {
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), profilePicture = :pp, isVerified = 0");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), profilePicture = :pp, isVerified = 0");
 
         //bind values
         $binds = array(
             ":o" => $orgID,
             ":f" => $firstName,
             ":ln" => $lastName,
+            ":letter" => date(("Y-m-d")),
             ":e" => $email,
-            ":b" => $birthdate,
+            ":b" => $birthDate,
             ":pn" => $phoneNumber,
             ":g" => $gender,
-            ":u" => setUsername($firstName, $lastName, $birthDate),
+            ":u" => $this->setUsername($firstName, $lastName, $birthDate),
             ":pass" => $password,
             ":pp" => '\assets\images\Default_pfp.svg.png',
         );

@@ -51,7 +51,7 @@
      }
     
 
-    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass){
+    function verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newPass,$confirmPass){
         $error = "";
         //RegExpressions****
 
@@ -107,7 +107,7 @@
             $error .= "<li>Please provide a Gender!</li>";
         }
 
-        //username check
+        /*username check
         $testUser = new UserDB();
         $testUsernames = $testUser->getAllUsername();
         if(linear_search($testUsernames, $newUser)){
@@ -115,7 +115,7 @@
         }
         elseif(strlen($newUser) < 8){
             $error .= "<li>Username must be at least 8 characters long!</li>";
-        }
+        }*/
 
         //password check
         if(strlen($newPass < 8)){
