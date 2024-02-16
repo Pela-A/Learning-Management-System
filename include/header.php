@@ -55,7 +55,7 @@
                 
                 <a class="nav-link mx-2 active dropdown-toggle" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</a>
                 <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
-                    <a class="dropdown-item" href="userAccount.php?action=User">Account Settings</a>
+                    <a class="dropdown-item" href="userAccount.php?action=personalSettings">Account Settings</a>
                     <a class="dropdown-item" href="userAccount.php?action=changePassword">Change Password</a>
                     <a class="dropdown-item" href="logout.php">Sign out</a>
                 </div>

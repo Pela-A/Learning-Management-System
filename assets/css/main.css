@@ -18,14 +18,11 @@ aside {
 aside ul {
     list-style-type: none;
     line-height: 30px;
-    padding: 0px;
 }
 
 aside a:link, a:active, a:visited {
     text-decoration: none;
     color:rgb(114, 114, 114);
-    padding-block: 8px;
-    margin: 10px;
 }
 
 aside li:hover {

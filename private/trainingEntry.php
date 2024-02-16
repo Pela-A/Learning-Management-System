@@ -12,6 +12,7 @@
     $userObj = new UserDB();
     $entryObj = new TrainingEntryDB();
     $moduleObj = new TrainingModuleDB();
+    $users = "";
     $action = "";
 
     if(isset($_GET['action'])){
@@ -22,7 +23,48 @@
 
     }
 
-    if(isset($_POST['']))
+    if(isset($_POST['submitTrainingForUserFromModule'])) {
+        $moduleID = filter_input(INPUT_POST, 'moduleID');
+        $userID = filter_input(INPUT_POST, 'userID');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+
+        $module = $moduleObj->getTrainingModule($moduleID);
+
+        $courseName = $module[0]['courseName'];
+        $creditHours = $module[0]['creditHours'];
+        $category = $module[0]['category'];
+        $description = $module[0]['description'];
+
+        $entryObj->createTrainingEntry($userID, $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
+    }
+
+    if(isset($_POST['submitManualTrainingForUser'])) {
+        $userID = filter_input(INPUT_POST, 'userID');
+        $courseName = filter_input(INPUT_POST, 'courseName');
+        $creditHours = filter_input(INPUT_POST, 'creditHours');
+        $category = filter_input(INPUT_POST, 'category');
+        $description = filter_input(INPUT_POST, 'description');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+
+        $entryObj->createTrainingEntry($userID, $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
+    }
+
+    if(isset($_POST['submitTraining'])) {
+        $moduleID = filter_input(INPUT_POST, 'moduleID');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+
+        $module = $moduleObj->getTrainingModule($moduleID);
+
+        $courseName = $module[0]['courseName'];
+        $creditHours = $module[0]['creditHours'];
+        $category = $module[0]['category'];
+        $description = $module[0]['description'];
+
+        $entryObj->createTrainingEntry($_SESSION['userID'], $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
+    }
 
     $users = $userObj->getAllUsers();
     $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
@@ -175,22 +217,22 @@
                     <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
                         <div style="display: flex;">
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
-                                <div class="valid-feedback">First name field is valid!</div>
-                                <div class="invalid-feedback">First name field cannot be blank!</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
-                                <div class="valid-feedback">Last name field is valid!</div>
-                                <div class="invalid-feedback">Last name field cannot be blank!</div>
-                            </div>
-
-                            <div class="col-md-6">
                                 <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
                                 <div class="valid-feedback">Course name field is valid!</div>
                                 <div class="invalid-feedback">Course name field cannot be blank!</div>
                             </div>
+
+                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="category" required>
+                                <option value="">Select Category</option>
+                                <?php 
+                                    $uniqueCategories = array();
+                                    foreach($entries as $e): 
+                                        if(!in_array($e['category'], $uniqueCategories)) {
+                                            $uniqueCategories[] = $e['category']; ?>
+                                            <option value="<?= $e['category']; ?>"><?= $e['category']; ?></option>
+                                        <?php 
+                                        } endforeach; ?>
+                            </select>
                         </div>
 
                         <div style="display: flex;">
@@ -205,18 +247,6 @@
                                 <div class="valid-feedback">Completion Date field is valid!</div>
                                 <div class="invalid-feedback">Completion Date field cannot be blank!</div>
                             </div>
-
-                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="category" required>
-                                <option value="">Select Category</option>
-                                <?php 
-                                    $uniqueCategories = array();
-                                    foreach($entries as $e): 
-                                        if(!in_array($e['category'], $uniqueCategories)) {
-                                            $uniqueCategories[] = $e['category']; ?>
-                                            <option value="<?= $e['category']; ?>"><?= $e['category']; ?></option>
-                                        <?php 
-                                        } endforeach; ?>
-                            </select>
                         </div>
 
                         <div class="mt-3">
@@ -279,6 +309,138 @@
 
                 <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
 
+                    <div class="accordion" style="min-width: 1200px;" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Select Training Module
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Course Name</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Credit Hours</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <?php foreach ($modules as $m): ?>
+                                                <tr>                                   
+                                                    <td><?= $m['courseName']; ?></td>
+                                                    <td><?= $m['description']; ?></td>
+                                                    <td><?= $m['category']; ?></td>
+                                                    <td><?= $m['creditHours']; ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+
+                                    <form action="trainingEntry.php?action=ViewAll" method="POST">
+
+                                        <div style="display: flex; flex-wrap: wrap;">
+                                            <select class="form-select" name="userID" style="max-width: 200px;" aria-label="Default select example">
+                                                <option value="">Select User</option>
+                                                <?php 
+                                                    $uniqueUsers = array();
+                                                    foreach($users as $u): 
+                                                        if(!in_array($u['userID'], $uniqueUsers)) {
+                                                            $uniqueUsers[] = $u['userID']; ?>
+                                                            <option value="<?= $u['userID']; ?>"><?= $u['firstName'] . " " . $u['lastName']; ?></option>
+                                                <?php } endforeach; ?>
+                                            </select>
+                                        
+                                            <select class="form-select" style="max-width: 800px;" name="moduleID" aria-label="Default select example">
+                                                <option value="">Select Training Module</option>
+                                                <?php foreach($modules as $m): ?>
+                                                    <option value="<?= $m['moduleID']; ?>"><?= $m['courseName'] ?></option>
+                                                <?php endforeach; ?>
+                                            </select>    
+                                            
+                                            <div style="display: flex;">
+                                                <label>Date Completed: </label>
+                                                <input class="form-control" type="date" name="completionDate" value="">
+                                            </div>
+
+                                            <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
+
+                                            <input type="submit" class="btn btn-sm btn-danger" id="submitTrainingForUserFromModule" name="submitTrainingForUserFromModule" value="Submit Training" />
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Manually Input Training
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <form action="trainingEntry.php?action=ViewAll" method="POST">
+                                        <div style="display: flex;">
+                                            
+                                            <select class="form-select" name="userID" style="max-width: 200px;" aria-label="Default select example">
+                                                <option value="">Select User</option>
+                                                <?php 
+                                                    $uniqueUsers = array();
+                                                    foreach($users as $u): 
+                                                        if(!in_array($u['userID'], $uniqueUsers)) {
+                                                            $uniqueUsers[] = $u['userID']; ?>
+                                                            <option value="<?= $u['userID']; ?>"><?= $u['firstName'] . " " . $u['lastName']; ?></option>
+                                                <?php } endforeach; ?>
+                                            </select>
+                                        
+                                            <div class="">
+                                                <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
+                                                <div class="valid-feedback">Course name field is valid!</div>
+                                                <div class="invalid-feedback">Course name field cannot be blank!</div>
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex;">
+                                    
+                                            <div class="">
+                                                <input class="form-control" type="text" name="creditHours" placeholder="Credit Hours" required>
+                                                <div class="valid-feedback">Credit hours field is valid!</div>
+                                                <div class="invalid-feedback">Credit hours field cannot be blank!</div>
+                                            </div>
+
+                                            <div class="">
+                                                <input class="form-control" type="text" name="category" placeholder="Category" required>
+                                                <div class="valid-feedback">Category field is valid!</div>
+                                                <div class="invalid-feedback">Category field cannot be blank!</div>
+                                            </div>
+
+                                            <div class="">
+                                                <input class="form-control" type="text" name="description" placeholder="Description" required>
+                                                <div class="valid-feedback">Description field is valid!</div>
+                                                <div class="invalid-feedback">Description field cannot be blank!</div>
+                                            </div>
+
+                                        </div>
+
+                                        <div style="display: flex;">
+                                            <label>Date Completed: </label>
+                                            <input class="form-control" type="date" name="completionDate" value="">
+                                        </div>
+
+                                        <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
+
+                                        <input type="submit" class="btn btn-sm btn-danger" id="submitManualTrainingForUser" name="submitManualTrainingForUser" value="Submit Training" />
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 <?php else: ?>
                     
                     <div class="accordion" style="min-width: 1200px;" id="accordionExample">
@@ -337,6 +499,7 @@
                                 <div class="accordion-body">
                                     <form action="trainingEntry.php?action=ViewAll">
                                         <div style="display: flex;">
+                                        
                                             <div class="">
                                                 <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
                                                 <div class="valid-feedback">Course name field is valid!</div>
@@ -361,6 +524,9 @@
                                                 <div class="invalid-feedback">Description field cannot be blank!</div>
                                             </div>
                                         </div>
+
+                                        <input type="date" name="completionDate" value="">
+                                        <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
 
                                         <input type="submit" class="btn btn-sm btn-danger" id="submitTraining" name="submitTraining" value="Submit Training" />
 

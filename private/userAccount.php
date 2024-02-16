@@ -142,7 +142,7 @@
         $username = filter_input(INPUT_POST, 'username');
         $profilePicture = filter_input(INPUT_POST, 'profilePicture');
 
-        $error = validateUserInformation();
+        //$error = validateUserInformation();
 
         if($error == ''){
             $users = $userObj->generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username, $profilePicture);
@@ -708,6 +708,8 @@
                         <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
+                    <a href="userAccount.php?action=changePassword">Change Password</a>
+
                 <?php elseif($_SESSION['isTrainer']): ?>
 
                     <div style="display: flex;">
@@ -755,6 +757,8 @@
                         <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
+                    <a href="userAccount.php?action=changePassword">Change Password</a>
+
                 <?php else: ?>
 
                     <div style="display: flex;">
@@ -801,6 +805,8 @@
                         <label for="">Organization Administrator: </label>
                         <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
+
+                    <a href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php endif; ?>
 
@@ -1120,13 +1126,6 @@
                     </div>
 
                     <form action="userAccount.php?action=personalSettings" class="requires-validation" novalidate method="POST">
-
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
-                            <option value="">Select Department</option>
-                            <?php foreach($deps as $d): ?>
-                                <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
 
                         <div class="col-md-12" >
                             <label>Username: </label>
