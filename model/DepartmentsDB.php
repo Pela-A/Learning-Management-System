@@ -3,9 +3,6 @@
 class DepartmentDB {
     private $departmentData;
 
-    
-
-
     public function __construct() {
         if ($ini = parse_ini_file('dbconfig.ini')) {
             $departmentPDO = new PDO(   "mysql:host=" . $ini['servername'] .
