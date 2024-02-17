@@ -82,7 +82,7 @@ class LoginDB {
         return $results;
     }
 
-    public function searchLogins($attemptDate, $userID, $orgID) {
+    public function searchLogins($attemptDate, $successful, $userID, $orgID) {
         $results = [];
         $loginTable = $this->loginData;
 
@@ -94,6 +94,10 @@ class LoginDB {
             $binds[':a'] = '%'.$attemptDate.'%';
         }
 
+        if($successful != '') {
+            $sqlString .= "AND isSuccessful = :s";
+            $binds[':s'] = $successful;
+        }
         if ($userID != '') {
             $sqlString .= " AND loginattempts.userID = :u";
             $binds[':u'] = $userID;
@@ -102,8 +106,6 @@ class LoginDB {
             $sqlString .= " AND orgID = :o";
             $binds[':o'] = $orgID;
         }
-        echo($userID);
-        echo('got here');
 
         $sqlString = $loginTable->prepare($sqlString);
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {

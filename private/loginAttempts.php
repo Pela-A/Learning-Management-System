@@ -24,6 +24,7 @@
     //if search or coming to first time
     if(isset($_POST['search'])){
         $attemptDate = filter_input(INPUT_POST, 'attemptDate');
+        $successful = filter_input(INPUT_POST, 'successful');
         if($_SESSION['isSiteAdmin']){
             $userID = filter_input(INPUT_POST, 'userID');
             $orgID = filter_input(INPUT_POST, 'orgID');
@@ -38,7 +39,7 @@
             $userID = $_SESSION['userID'];
             $orgID = $_SESSION['orgID'];
         }
-        $logins = $loginObj->searchLogins($attemptDate, $userID, $orgID);
+        $logins = $loginObj->searchLogins($attemptDate,$successful, $userID, $orgID);
     }
     //otherwise loading into page first time.
     else{
@@ -114,6 +115,14 @@
                             <input type="Date" name="attemptDate" value="<?=$attemptDate;?>"/>
                         </div>
                     </div>   
+
+                    <label class="mb-3 mr-1" for="isTrainer">Successful Login: </label>
+
+                    <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-danger" for="successfulYes">Yes</label>
+
+                    <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-danger" for="successfulNo">No</label>
 
                     <?php if($_SESSION['isSiteAdmin']): ?>
                     <div class="col-sm text-center">

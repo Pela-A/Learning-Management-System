@@ -88,7 +88,7 @@ class UserDB {
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = :pass, isSiteAdmin = :siteAdmin, isOrgAdmin = :orgAdmin, isTrainer = :trainer, profilePicture = :pp, isVerified = 1");
 
         //bind values
         $binds = array(
@@ -119,7 +119,7 @@ class UserDB {
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln,letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln,letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = :pass, isOrgAdmin = :org, isTrainer = :tr, profilePicture = :pp, isVerified = 1");
 
         //bind values
         $binds = array(
@@ -152,7 +152,7 @@ class UserDB {
         $results = 0;
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = sha1(:pass), profilePicture = :pp, isVerified = 0");
+        $sqlString = $userTable->prepare("INSERT INTO users set orgID = :o, firstName = :f, lastName = :ln, letterDate = :letter, email = :e, birthDate = :b, phoneNumber = :pn, gender = :g, username = :u, password = :pass, profilePicture = :pp, isVerified = 0");
 
         //bind values
         $binds = array(
@@ -363,7 +363,7 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET password = sha1(:pass) WHERE userID = :id");
+        $sqlString = $userTable->prepare("UPDATE users SET password = :pass WHERE userID = :id");
 
         $boundParams = array(
             ":id" =>$userID,
