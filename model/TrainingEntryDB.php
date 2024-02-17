@@ -103,11 +103,47 @@ class TrainingEntryDB {
         return $results;
     }
 
-    public function searchTrainingEntry($firstName, $lastName, $courseName, $entryDate, $completeDate, $isValidated, $category){
+    public function searchUserTrainingEntry($courseName, $entryDate, $completeDate, $category){
         $results = [];
         $entryTable = $this->entryData;
 
         $sqlString = $entryTable->prepare("SELECT * FROM TrainingEntries INNER JOIN users ON TrainingEntries.userID = users.userID WHERE 1=1");
+
+        $binds = [];
+
+        if ($courseName != '') {
+            $sqlString .= " AND courseName LIKE :courseName";
+            $binds['courseName'] = '%'.$courseName.'%';
+        }
+
+        if ($entryDate != '') {
+            $sqlString .= " AND entryDate LIKE :entryDate";
+            $binds['entryDate'] = '%'.$entryDate.'%';
+        }
+
+        if ($completeDate != '') {
+            $sqlString .= " AND completeDate LIKE :completeDate";
+            $binds['completeDate'] = '%'.$completeDate.'%';
+        }
+
+        if ($category != '') {
+            $sqlString .= " AND category LIKE :category";
+            $binds['category'] = '%'.$category.'%';
+        }
+
+        $sqlString = $userTable->prepare($sqlString);
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return ($results);
+    }
+
+    public function searchAllTrainingEntry($firstName, $lastName, $courseName, $entryDate, $completeDate, $category){
+        $results = [];
+        $entryTable = $this->entryData;
+
+        $sqlString = $entryTable->prepare("SELECT * FROM (TrainingEntries INNER JOIN users ON TrainingEntries.userID = users.userID) WHERE 0=0");
 
         $binds = [];
 
@@ -134,11 +170,6 @@ class TrainingEntryDB {
         if ($completeDate != '') {
             $sqlString .= " AND completeDate LIKE :completeDate";
             $binds['completeDate'] = '%'.$completeDate.'%';
-        }
-
-        if ($isValidated != '') {
-            $sqlString .= " AND isValidated LIKE :isValidated";
-            $binds['isValidated'] = '%'.$isValidated.'%';
         }
 
         if ($category != '') {

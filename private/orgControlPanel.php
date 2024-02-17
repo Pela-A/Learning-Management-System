@@ -23,7 +23,7 @@
     <div style="display: flex;">
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div id="controlPanel" class="content">
+        <div id="controlPanel" class="pageContent container-fluid">
             <h3>Organization Control Panel</h3>
             <ul>
                 <li><a href="userAccount.php?action=Viewer">User Manager</a></li>

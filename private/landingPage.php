@@ -23,7 +23,7 @@
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div class="content">
+        <div class="pageContent container-fluid">
             <p>main content goes here</p>
         </div>
 

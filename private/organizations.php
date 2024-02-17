@@ -1,8 +1,7 @@
 <?php
 
     include __DIR__ . '/../include/header.php';
-
-    
+    include __DIR__ . '/../model/OrganizationsDB.php';    
     
 ?>
 
@@ -20,10 +19,12 @@
 </head>
 <body>
     
-    <?php include __DIR__ . '/../include/aside.php'; ?>
+    <div class="mainContent"">
 
-    <div class="content">
-        <p>main content goes here</p>
+        <?php include __DIR__ . '/../include/aside.php'; ?>
+
+        <div class="pageContent container-fluid">
+        </div>
     </div>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>

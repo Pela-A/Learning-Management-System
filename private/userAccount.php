@@ -181,7 +181,7 @@
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div class="pageContent">
+        <div class="pageContent container-fluid">
 
             <?php if($action == 'Viewer'): ?>
 

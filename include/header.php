@@ -43,7 +43,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark px-5" id="header" style="width: 100%;">
+    <nav class="navbar navbar-expand-lg bg-dark px-5" id="header" style="width: 100%;">
         
         <img src="" alt="">
         <a class="navbar-brand" href="landingPage.php">LMS Website</a>
