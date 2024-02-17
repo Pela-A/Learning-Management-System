@@ -59,8 +59,8 @@ class UserDB {
         $userTable = $this->userData;
 
         $sqlString = $userTable->prepare("SELECT * FROM (users
-                                          INNER JOIN organizations ON users.orgID = organizations.orgID)
-                                          ORDER BY lastName");
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            ORDER BY lastName");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -82,7 +82,20 @@ class UserDB {
         }
 
         return $results;
+    }
 
+    public function getAllUnvalidatedUsersInOrg($orgID) {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT * FROM users WHERE orgID = :o and isVerified = 0");
+        $sqlString->bindValue(":o", $orgID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
     }
 
     public function getUser($userID){
@@ -418,12 +431,6 @@ class UserDB {
 
         return true;
     }
-
-
-
-
-
-
 
 
     ################# PLEASE DONT CHANGE STUFF HERE AND BELOW WITHOUT MENTIONING. IT MAKES MERGING A NIGHTMARE SPENT AN HOUR FIXING MERGE
