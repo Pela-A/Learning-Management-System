@@ -100,8 +100,8 @@
         <div class="pageContent">
 
             <div>
-                <h1><?= $organization[0]['orgName']; ?></h1>
-                <h3><?= $organization[0]['address']. ", " . $organization[0]['city'] . ", " . $organization[0]['state']; ?></h3>
+                <h1><?= $organization['orgName']; ?></h1>
+                <h3><?= $organization['address']. ", " . $organization['city'] . ", " . $organization['state']; ?></h3>
             </div>
 
         <?php if($action == 'Viewer'):
