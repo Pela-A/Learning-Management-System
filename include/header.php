@@ -46,7 +46,7 @@
     <nav class="navbar navbar-expand-lg bg-dark px-5" id="header" style="width: 100%; justify-content: space-between;">
         
         <div style="display:flex;">
-            <img src="" alt="">
+            <img src="..\assets\images\atlasPhotos\ATLAS_Logo.png" alt="ATLAS Logo" style="max-height: 40px;">
             <a class="navbar-brand text-light" href="landingPage.php">ATLAS</a>
         </div>
 
@@ -64,8 +64,7 @@
                     </div>
                 </li>
             </ul>
-        </div>
-        
+        </div>        
     </nav>           
 
 </body>

@@ -9,14 +9,26 @@ header, footer {
     width: 100%;
 }
 
-aside {
-    padding: 20px; 
+aside { 
     min-width: 300px;
+}
+
+aside h2 {
+    padding-left: 15px;
+}
+
+aside h4 {
+    padding-left: 25px;
 }
 
 aside ul {
     list-style-type: none;
     line-height: 30px;
+    padding: 0px;
+}
+
+aside a { 
+    margin-left: 30px;
 }
 
 aside a:link, a:active, a:visited {
@@ -25,11 +37,11 @@ aside a:link, a:active, a:visited {
 }
 
 aside li:hover {
-    background-color: rgb(114, 114, 114);
+    background-color: rgb(69, 69, 69);
 }
 
 aside a:hover {
-    color: white;
+    color: rgb(179, 179, 179);
 }
 
 footer {
@@ -40,8 +52,10 @@ footer {
 .mainContent {
     flex: 1; /* This makes the main content area stretch vertically */
     display: flex;
+    color: white;
 }
 
 .pageContent {
+    background-color: #333333;
     padding: 20px;
 }

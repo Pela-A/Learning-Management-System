@@ -1,11 +1,29 @@
 <?php 
 
-    //
+    $pageName = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
+
+    if($pageName == 'landingPage') {
+        $pageName = 'Landing Page';
+    } elseif($pageName == 'departments') {
+        $pageName = 'Department Manager';
+    } elseif($pageName == 'loginAttempts') {
+        $pageName = 'Login Manager';
+    } elseif($pageName == 'organizations') {
+        $pageName = 'Organization Manager';
+    } elseif($pageName == 'orgControlPanel') {
+        $pageName = 'Admin Controller';
+    } elseif($pageName == 'trainingEntry') {
+        $pageName = 'Training Entries';
+    } elseif($pageName == 'trainingModules') {
+        $pageName = 'Training Modules';
+    } elseif($pageName == 'userAccount') {
+        $pageName = 'Account Settings';
+    } 
 
 ?>
 
-    <aside style="background-color: lightgrey;">
-        <h2><?= $_SESSION['firstName'] . " " . $_SESSION['lastName']; ?></h2>
+    <aside class="bg-dark text-light">
+        <h2><?= $pageName; ?></h2>
 
         <?php if($_SESSION['isSiteAdmin']): ?>
             <h4>Site Admin Controller</h4>

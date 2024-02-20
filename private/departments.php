@@ -90,59 +90,91 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>LMS || Departments</title>
+    <title>Department Manager</title>
 </head>
 <body>
 
-    <div class="mainContent">
+    <div class="mainContent" style="display:flex;">
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div class="pageContent">
+        <div class="pageContent container-fluid">
 
             <div>
                 <h1><?= $organization['orgName']; ?></h1>
                 <h3><?= $organization['address']. ", " . $organization['city'] . ", " . $organization['state']; ?></h3>
             </div>
 
-        <?php if($action == 'Viewer'):
-            $departments = $depObj->getAllDepartments($orgID);
-            ?>
-            <a href="departments.php?action=Add">Create New Department</a>
+            <?php if($action == 'Viewer'):
+                $departments = $depObj->getAllDepartments($orgID);
+                ?>
+                <a href="departments.php?action=Add">Create New Department</a>
 
-            <table class="table table-bordered text-center col-11">
-                <thead>
-                    <tr>
-                        <th>Department ID</th>
-                        <th>Department Name</th>
-                        <th>Department Email</th>
-                        <th>Edit Department</th>
-                    </tr>
-                </thead>
-
-                    <tbody>
-
-                    <?php foreach ($departments as $d):?>
+                <table class="table table-bordered text-center col-11">
+                    <thead>
                         <tr>
-                            <td><?= $d['depID']; ?></td>
-                            <td><?= $d['depName']; ?></td>
-                            <td><?= $d['depEmail']; ?></td>
-                            <td><a href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
-                            <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
+                            <th>Department ID</th>
+                            <th>Department Name</th>
+                            <th>Department Email</th>
+                            <th>Edit Department</th>
                         </tr>
-                    <?php endforeach; ?>
-                                
-                    </tbody>
-                </table>
+                    </thead>
 
-        <?php elseif($action == 'Edit'): 
-            
-            
-            $depID = filter_input(INPUT_GET, 'depID');
-            $depart = $depObj->getDepartment($depID);
-            $name = $depart[0]['depName'];
-            $email = $depart[0]['depEmail']; ?>
+                        <tbody>
 
-            <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
+                        <?php foreach ($departments as $d):?>
+                            <tr>
+                                <td><?= $d['depID']; ?></td>
+                                <td><?= $d['depName']; ?></td>
+                                <td><?= $d['depEmail']; ?></td>
+                                <td><a href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
+                                <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
+                            </tr>
+                        <?php endforeach; ?>
+                                    
+                        </tbody>
+                    </table>
+
+            <?php elseif($action == 'Edit'): 
+                
+                
+                $depID = filter_input(INPUT_GET, 'depID');
+                $depart = $depObj->getDepartment($depID);
+                $name = $depart[0]['depName'];
+                $email = $depart[0]['depEmail']; ?>
+
+                <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
+
+                        <label>Department Name</label>
+                        <input type="text" name="name" value='<?=$name?>'>
+                        </br>
+                    
+                        <label>Department Email</label>
+                        <input type="text" name="email" value='<?=$email?>'>
+                        </br>
+
+                    
+                    <input type="hidden" name="depID" value="<?=$depID;?>">
+                    <input type="submit" name="edit" value="Edit Department">
+
+                    <input type="submit" name="delete" value="Delete Department">
+
+                    
+
+                        
+                    </form>
+
+                <a href="departments.php?action=Viewer">
+                    <button>Go Back</button>
+                </a>
+
+            <?php elseif($action == 'Add'): 
+                $name = "";
+                $email = "";
+
+                
+                
+                ?>
+                <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
 
                     <label>Department Name</label>
                     <input type="text" name="name" value='<?=$name?>'>
@@ -153,49 +185,17 @@
                     </br>
 
                 
-                <input type="hidden" name="depID" value="<?=$depID;?>">
-                <input type="submit" name="edit" value="Edit Department">
+                    <input type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
+                    <input type="submit" name="create" value="Create Department">
 
-                <input type="submit" name="delete" value="Delete Department">
-
-                
 
                     
                 </form>
 
-            <a href="departments.php?action=Viewer">
-                <button>Go Back</button>
-            </a>
-
-        <?php elseif($action == 'Add'): 
-            $name = "";
-            $email = "";
-
-            
-            
-            ?>
-            <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
-
-                <label>Department Name</label>
-                <input type="text" name="name" value='<?=$name?>'>
-                </br>
-            
-                <label>Department Email</label>
-                <input type="text" name="email" value='<?=$email?>'>
-                </br>
-
-            
-                <input type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
-                <input type="submit" name="create" value="Create Department">
-
-
-                
-            </form>
-
-            <a href="departments.php?action=Viewer">
-                <button>Go Back</button>
-            </a>
-        <?php endif; ?>
+                <a href="departments.php?action=Viewer">
+                    <button>Go Back</button>
+                </a>
+            <?php endif; ?>
 
         </div>
     </div>

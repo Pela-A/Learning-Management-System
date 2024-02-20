@@ -85,7 +85,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>LMS || Login Attempts</title>
+    <title>Login Manager</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -96,35 +96,19 @@
         <p>main content goes here</p>
 
         <?php if($action == "Viewer"):
-
-            
-            
-
             $userDB = new userDB();
-            $users = $userDB->getAllUsersInOrg($_SESSION['orgID']);
-            ?>
+            $users = $userDB->getAllUsersInOrg($_SESSION['orgID']); ?>
 
-            <!--Search functionality -->
-            <form method="POST" name="search_books" class="col-lg-10 offset-lg-1 ">
-                <div class="row justify-content-center">
-                    <div class="col-sm text-center">
-                        <div class="label">
-                            <label>Login Attempt Date:</label>
-                        </div>
-                        <div>
-                            <input type="Date" name="attemptDate" value="<?=$attemptDate;?>"/>
-                        </div>
-                    </div>   
+            <form method="POST" name="search_books" class="col-lg-10 offset-lg-1">
+                <label class="mb-3 mr-1" for="isTrainer">Successful Login: </label>
 
-                    <label class="mb-3 mr-1" for="isTrainer">Successful Login: </label>
+                <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                <label class="btn btn-sm btn-outline-danger" for="successfulYes">Yes</label>
 
-                    <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-danger" for="successfulYes">Yes</label>
+                <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                <label class="btn btn-sm btn-outline-danger" for="successfulNo">No</label>
 
-                    <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-danger" for="successfulNo">No</label>
-
-                    <?php if($_SESSION['isSiteAdmin']): ?>
+                <?php if($_SESSION['isSiteAdmin']): ?>
                     <div class="col-sm text-center">
                         <div class="label">
                             <label>Organization ID:</label>
@@ -139,9 +123,9 @@
                             </select>
                         </div>
                     </div>
-                    <?php endif; ?>
+                <?php endif; ?>
 
-                    <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
+                <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
                     <div class="col-sm text-center">
                         <div class="label">
                             <label>User ID:</label>
@@ -156,13 +140,12 @@
                                     <?php foreach($users as $u): ?>
                                     <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
                                     <?php endforeach; ?>
-                                <?php endif; ?>
-                                
+                                <?php endif; ?>   
                             </select>
                         </div>
                     </div>
-                    <?php endif; ?>
-                </div>
+                <?php endif; ?>
+
                 <div class="row justify-content-center">
                     <div class="col-6 text-center">
                         <div>
@@ -171,52 +154,40 @@
                         <div>
                             <input type="submit" name="search" value="Search" />
                         </div>
-
                     </div>
-
                 </div>
-                
             </form>
-            <?php if($_SESSION['isSiteAdmin']):
-            //cool ajax call to dynamically fill User ID based on SELECTED Org ID
-                
-            
-            ?>
-            <script>
-                $(document).ready(function(){
-                    $('#organization_select').change(function(){
-                        var organization_id = $(this).val();
-                        $.ajax({
-                            url: '../include/selectUsers.php',
-                            type: 'post',
-                            data: {organization_id: organization_id},
-                            dataType: 'json',
-                            success:function(response){
-                                var len = response.length;
-                                $("#option_select").empty();
-                                $("#option_select").append("<option value=''>Select a User ID</option>");
-                                response.forEach(function(item) {
-                                    $("#option_select").append("<option value='" + item.userID + "'>("  + item.userID + ") " + item.firstName + " " + item.lastName +"</option>");
-                                 });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                // Handle errors if needed
-                            }
-                            
+
+            <?php if($_SESSION['isSiteAdmin']): ?>
+                <script>
+                    $(document).ready(function(){
+                        $('#organization_select').change(function(){
+                            var organization_id = $(this).val();
+                            $.ajax({
+                                url: '../include/selectUsers.php',
+                                type: 'post',
+                                data: {organization_id: organization_id},
+                                dataType: 'json',
+                                success:function(response){
+                                    var len = response.length;
+                                    $("#option_select").empty();
+                                    $("#option_select").append("<option value=''>Select a User ID</option>");
+                                    response.forEach(function(item) {
+                                        $("#option_select").append("<option value='" + item.userID + "'>("  + item.userID + ") " + item.firstName + " " + item.lastName +"</option>");
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                    // Handle errors if needed
+                                }
+                                
+                            });
                         });
                     });
-                });
-            </script>
+                </script>
             <?php endif; ?>
             <!--End search functionality -->
 
-            
-            
-            
-            
-            
-            
             <table class="table table-striped table-hover table-dark">
                 <thead>
                     <tr>
@@ -252,23 +223,15 @@
                 </tbody>
 
             </table>
-
-            
-
-
-
         
         <?php elseif($action == 'Edit'):
-
-
             $loginID = filter_input(INPUT_GET, 'loginID');
             $loginData = $loginObj->getLogin($loginID);
             $userID = $loginData['userID'];
             $attemptDate = $loginData['attemptDate'];
             $isSuccessful = $loginData['isSuccessful']==0?"No":"Yes";
             $comments = $loginData['comments'];
-            $ip = $loginData['ipAddress'];
-            ?>
+            $ip = $loginData['ipAddress']; ?>
             
 
             <!--Form for editing -->
@@ -303,8 +266,6 @@
             <a href="loginAttempts.php?action=Viewer">
                 <button>Go Back</button>
             </a>
-            
-
         <?php endif; ?>
     </div>
 
