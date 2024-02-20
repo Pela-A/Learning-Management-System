@@ -139,8 +139,20 @@ class OrganizationDB {
         return ($results);
     }
     
-    public function deleteOrganization() {
-        //needs to chain delete a ton of stuff
+    public function deleteOrganization($orgID) {
+        $results = "Organization not deleted.";
+
+        $orgTable = $this->orgData;
+        $sqlString = $orgTable->prepare("DELETE FROM organizations WHERE orgID=:id");
+        
+        
+        $sqlString->bindValue(':id', $orgID);
+            
+        if ($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = 'Organization Deleted.';
+        }
+        
+        return ($results);
     }
     
 }

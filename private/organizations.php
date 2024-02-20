@@ -4,7 +4,7 @@
     include __DIR__ . '/../model/OrganizationsDB.php';
     
     $orgDB = new OrganizationDB();
-
+    $feedback="";
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
@@ -24,6 +24,10 @@
     }
     elseif(isset($_POST['delete'])){
         echo("delete button pressed");
+        
+        $orgID = filter_input(INPUT_POST, 'orgID');
+        $feedback = $orgDB->deleteOrganization($orgID);
+        header('Location: ../private/organizations.php?action=Viewer');
         //delete all records of org from database and subsequent users/training/etc
     }
 
