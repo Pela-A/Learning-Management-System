@@ -5,20 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="..\assets\css\footer.css">
-    
     <title>Document</title>
 </head>
 <body>
     
     <footer style=" padding-block: 15px;
-                    margin: 0px;
-                    background-color: rgba(217,217,217,.6); 
+                    margin: 0px; 
                     font-family: 'Advent Pro'; 
                     text-align: center; 
                     font-size: 18px;
-                    width: 100%;">
-                            
+                    width: 100%;
+                    background-color: rgba(217,217,217);
+                    position: fixed;
+                    bottom: 0;"> 
+                    
         <div class="container">
             <?php 
                 $file = basename($_SERVER['PHP_SELF']);

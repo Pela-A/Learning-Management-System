@@ -183,7 +183,7 @@
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div class="pageContent">
+        <div class="pageContent container-fluid">
 
             <?php if($action == 'Viewer'): ?>
 
@@ -1226,8 +1226,65 @@
 
                 </form>
 
+            <?php elseif($action == 'validateUser'): 
+                if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']):                 
+                    $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Organization</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Birth Date</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>Username</th>
+                                <th>Website Admin</th>
+                                <th>Organization Admin</th>
+                                <th>Training Manager</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($users as $u): ?>
+                                <tr>
+                                    <td>
+                                        <form method="POST">
+                                            <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
+                                            <input class="btn btn-danger btn-sm" type="submit" name="deleteUser" value="Delete" />
+                                        </form>
+                                    </td>
+                                    
+                                    <td><?= $u['orgName']; ?></td>
+                                    <td><?= $u['firstName']; ?></td>
+                                    <td><?= $u['lastName']; ?></td>
+                                    <td><?= $u['email']; ?></td>
+                                    <td><?= $u['birthDate']; ?></td>
+                                    <td><?= $u['phoneNumber']; ?></td>
+                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                    <td><?= $u['username'];?></td>
+                                    <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-danger btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                <?php else: 
+                    header('Location: userAccount.php?action=personalSettings'); 
+                    
+                endif; ?>
+            
             <?php endif; ?>
-        </div>
+        
+            </div>
     </div>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>

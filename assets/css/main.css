@@ -3,10 +3,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
-  
+}
+
 header, footer {
-    position: absolute;
     width: 100%;
 }
 
@@ -32,8 +31,9 @@ aside li:hover {
 aside a:hover {
     color: white;
 }
-  
+
 footer {
+    position: fixed;
     bottom: 0;
 }
 

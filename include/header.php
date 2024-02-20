@@ -43,28 +43,28 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark px-5" id="header" style="width: 100%;">
+    <nav class="navbar navbar-expand-lg bg-dark px-5" id="header" style="width: 100%; justify-content: space-between;">
         
-        <img src="" alt="">
-        <a class="navbar-brand" href="landingPage.php">LMS Website</a>
-        
-        <ul>
-            <li class="nav-item dropdown" style="margin-right: 10px; display:flex;">
-                
-                <img style="height: 30px;" class="m-auto pl-3" src="..\assets\images\Default_pfp.svg.png" alt="">
-                
-                <a class="nav-link mx-2 active dropdown-toggle" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</a>
-                <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
-                    <a class="dropdown-item" href="userAccount.php?action=personalSettings">Account Settings</a>
-                    <a class="dropdown-item" href="userAccount.php?action=changePassword">Change Password</a>
-                    <a class="dropdown-item" href="logout.php">Sign out</a>
-                </div>
-            </li>
-        </ul>
+        <div style="display:flex;">
+            <img src="" alt="">
+            <a class="navbar-brand text-light" href="landingPage.php">ATLAS</a>
+        </div>
 
-    <p><?=$_SESSION['firstName']; ?></p>
-        
-        <img src="" alt="">
+        <div style="display: flex;">
+            <ul style="margin: 0px;">
+                <li class="nav-item dropdown" style="display:flex;">
+                    
+                    <img style="height: 30px;" class="m-auto pl-3" src="..\assets\images\Default_pfp.svg.png" alt="">
+                    
+                    <a class="nav-link mx-2 active dropdown-toggle text-light" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome <?=$_SESSION['firstName']; ?></a>
+                    <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
+                        <a class="dropdown-item" href="userAccount.php?action=personalSettings">Account Settings</a>
+                        <a class="dropdown-item" href="userAccount.php?action=changePassword">Change Password</a>
+                        <a class="dropdown-item" href="logout.php">Sign out</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
         
     </nav>           
 

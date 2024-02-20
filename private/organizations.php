@@ -48,7 +48,7 @@
 </head>
 <body>
     
-    <?php include __DIR__ . '/../include/aside.php'; ?>
+    <div class="mainContent"">
 
     <div class="content">
         <p>main content goes here</p>

@@ -19,8 +19,25 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
-    if(isset($_POST['searchBtn'])){
+    if(isset($_POST['searchUserButton'])){
+        $courseName = filter_input(INPUT_POST, 'courseName');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $category = filter_input(INPUT_POST, 'category');
 
+        $entries = $entryObj->searchUserTrainingEntry($courseName, $entryDate, $completeDate, $category);
+
+    }
+
+    if(isset($_POST['searchAllButton'])){
+        $firstName = filter_input(INPUT_POST, 'firstName');
+        $lastName = filter_input(INPUT_POST, 'lastName');
+        $courseName = filter_input(INPUT_POST, 'courseName');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $category = filter_input(INPUT_POST, 'category');
+
+        $entries = $entryObj->searchAllTrainingEntry($firstName, $lastName, $courseName, $entryDate, $completeDate, $category);
     }
 
     if(isset($_POST['submitTrainingForUserFromModule'])) {
@@ -51,7 +68,7 @@
         $entryObj->createTrainingEntry($userID, $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
     }
 
-    if(isset($_POST['submitTraining'])) {
+    if(isset($_POST['submitTrainingModule'])) {
         $moduleID = filter_input(INPUT_POST, 'moduleID');
         $entryDate = filter_input(INPUT_POST, 'entryDate');
         $completeDate = filter_input(INPUT_POST, 'completionDate');
@@ -66,7 +83,18 @@
         $entryObj->createTrainingEntry($_SESSION['userID'], $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
     }
 
-    $users = $userObj->getAllUsers();
+    if(isset($_POST['submitTrainingManually'])) {
+        $courseName = filter_input(INPUT_POST, 'courseName');
+        $creditHours = filter_input(INPUT_POST, 'creditHours');
+        $category = filter_input(INPUT_POST, 'category');
+        $description = filter_input(INPUT_POST, 'description');
+        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $completeDate = filter_input(INPUT_POST, 'completionDate');
+
+        $entryObj->createTrainingEntry($_SESSION['userID'], $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
+    }
+
+    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
     $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
 
 ?>
@@ -89,7 +117,7 @@
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
-        <div class="pageContent">
+        <div class="pageContent container-fluid">
 
             <?php if($action == 'ViewAll'): ?>
 
@@ -157,15 +185,13 @@
                             <div class="invalid-feedback mv-up">Please select a validation status!</div>
                         </div>
 
-                        <input type="submit" class="btn btn-sm btn-danger" id="searchBtn" name="searchButton" value="Search" />
+                        <input type="submit" class="btn btn-sm btn-danger" id="searchAllBtn" name="searchAllButton" value="Search" />
 
                     </form>
 
                     <table class="table table-striped table-hover table-dark">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>User ID</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Course Name</th>
@@ -177,21 +203,12 @@
                                 <th>Credit Hours</th>
                                 <th>Category</th>
                                 <th>Description</th>
-                                <th></th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <?php foreach ($entries as $e): ?>
-                                <tr>
-                                    <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="userID" value="<?= $e['userID']; ?>" />
-                                            <input class="btn btn-danger btn-sm" type="submit" name="deleteUser" value="Delete" />
-                                        </form>
-                                    </td>
-                                    
-                                    <td><?= $e['userID']; ?></td>
+                                <tr>                                   
                                     <td><?= $e['firstName']; ?></td>
                                     <td><?= $e['lastName']; ?></td>
                                     <td><?= $e['courseName']; ?></td>
@@ -203,7 +220,6 @@
                                     <td><?= $e['creditHours']; ?></td>
                                     <td><?= $e['category']; ?></td>
                                     <td><?= $e['description']; ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-danger btn-sm text-light" href="trainingEntry.php?action=Update&entryID=<?= $u['entryID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -262,7 +278,7 @@
                             <div class="invalid-feedback mv-up">Please select a validation status!</div>
                         </div>
 
-                        <input type="submit" class="btn btn-sm btn-danger" id="searchBtn" name="searchButton" value="Search" />
+                        <input type="submit" class="btn btn-sm btn-danger" id="searchBtn" name="searchUserButton" value="Search" />
 
                     </form>
 
@@ -525,10 +541,14 @@
                                             </div>
                                         </div>
 
-                                        <input type="date" name="completionDate" value="">
+                                        <div style="display: flex;">
+                                            <label>Completion Date:</label>
+                                            <input type="date" name="completionDate" value="">
+                                        </div>
+                                        
                                         <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
 
-                                        <input type="submit" class="btn btn-sm btn-danger" id="submitTraining" name="submitTraining" value="Submit Training" />
+                                        <input type="submit" class="btn btn-sm btn-danger" id="submitTrainingManually" name="submitTraining" value="Submit Training" />
 
                                     </form>
                                 </div>
@@ -539,6 +559,10 @@
                 <?php endif; ?>
 
             <?php elseif($action == 'Update'): ?>
+
+                <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
+
+
             <?php elseif($action == 'Validator'): ?>
             <?php endif; ?>
             
