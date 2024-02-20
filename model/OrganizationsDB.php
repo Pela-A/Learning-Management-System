@@ -49,6 +49,26 @@ class OrganizationDB {
         return ($results);
     }
 
+    public function searchOrganizations($orgName){
+        $results = [];
+        $orgTable = $this->orgData;
+
+        $sqlString = "SELECT * FROM organizations WHERE 1=1 ";
+        $binds = [];
+
+        if ($orgName != '') {
+            $sqlString .= " AND orgName LIKE :a";
+            $binds[':a'] = '%'.$orgName.'%';
+        }
+
+        $sqlString = $orgTable->prepare($sqlString);
+        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return ($results);
+    }
+
     public function getAllOrgCodes (){
         $results = [];
         $orgTable = $this->orgData;
