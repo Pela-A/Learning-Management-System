@@ -33,7 +33,33 @@
 
     //if search or coming to first time
     if(isset($_POST['search'])){
+        $orgName = filter_input(INPUT_POST, 'orgName');
+
+
+        $organizations = $orgDB->searchOrganizations($orgName);
+
+
+
+        $successful = filter_input(INPUT_POST, 'successful');
+        if($_SESSION['isSiteAdmin']){
+            $userID = filter_input(INPUT_POST, 'userID');
+            $orgID = filter_input(INPUT_POST, 'orgID');
+            $orgDB = new organizationDB();
+            $orgs = $orgDB->getAllOrganizations();
+        }
+        elseif($_SESSION['isOrgAdmin']){
+            $userID = filter_input(INPUT_POST, 'userID');
+            $orgID = $_SESSION['orgID'];
+        }
+        else{
+            $userID = $_SESSION['userID'];
+            $orgID = $_SESSION['orgID'];
+        }
+        $logins = $loginObj->searchLogins($attemptDate,$successful, $userID, $orgID);
         // search organization functionality
+    }
+    else{
+        $organizations =  $orgDB->getAllOrganizations();
     }
     
 ?>
@@ -52,17 +78,25 @@
 </head>
 <body>
     
-    <div class="mainContent"">
+    <div class="mainContent">
 
     <div class="content">
-        <p>main content goes here</p>
+        <h2>Manage Organizations</h2>
 
 
         <?php if($action == 'Viewer'): 
             
-            $organizations =  $orgDB->getAllOrganizations();
+            
             
         ?>
+
+        <form method="post" action="organizations.php?action=Viewer" name="Organization_Search">
+
+        </form>
+
+
+
+        <h3>Viewer</h3>
         <table class="table table-bordered text-center col-11">
             <thead>
                 <tr>
@@ -110,6 +144,8 @@
 
         ?>
 
+        <h3>Editor</h3>
+
             <form method="post" action="organizations.php?action=Viewer" name="Organization_CRUD">
 
                     <label>Organization Name</label>
@@ -140,8 +176,10 @@
                 <input type="hidden" name="orgID" value="<?=$orgID;?>" readonly>
                 <input type="submit" name="edit" value="Edit Organization">
 
+                <?php if($_SESSION['isSiteAdmin']): ?>
                 <input type="submit" name="delete" value="Delete Organization">
-
+                
+                <?php endif; ?>
                 
 
                     
