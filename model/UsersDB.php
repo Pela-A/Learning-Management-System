@@ -178,7 +178,7 @@ class UserDB {
         return ($results);
     }
 
-    public function siteAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer){
+    public function siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer){
         $results = [];
         $userTable = $this->userData;
 
@@ -186,6 +186,7 @@ class UserDB {
 
         $boundParams = array(
             ":id"           =>$userID,
+            ":dep"          =>$department,
             ":first"        =>$firstName,
             ":last"         =>$lastName,
             ":letter"       =>$letterDate,
