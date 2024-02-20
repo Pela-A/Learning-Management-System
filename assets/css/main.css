@@ -27,8 +27,13 @@ aside ul {
     padding: 0px;
 }
 
-aside a { 
+aside img {
     margin-left: 30px;
+    max-height: 30px;
+}
+
+aside a { 
+    margin-left: 5px;
 }
 
 aside a:link, a:active, a:visited {
