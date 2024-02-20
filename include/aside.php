@@ -10,7 +10,7 @@
         <?php if($_SESSION['isSiteAdmin']): ?>
             <h4>Site Admin Controller</h4>
             <ul>
-                <li><a href="organizations.php">Manage Organizations</a></li>
+                <li><a href="organizations.php?action=Viewer">Manage Organizations</a></li>
                 <li><a href="userAccount.php?action=Viewer">Manage User Accounts</a></li>
                 <li><a href="loginAttempts.php?action=Viewer">Manage User Login Attempts</a></li>
             </ul>
