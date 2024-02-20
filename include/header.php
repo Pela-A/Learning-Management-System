@@ -46,7 +46,7 @@
     <nav class="navbar navbar-expand-lg bg-dark px-5" id="header" style="width: 100%;">
         
         <img src="" alt="">
-        <a class="navbar-brand" href="landingPage.php">LMS Website</a>
+        <a class="navbar-brand" href="landingPage.php">ATLAS</a>
         
         <ul>
             <li class="nav-item dropdown" style="margin-right: 10px; display:flex;">

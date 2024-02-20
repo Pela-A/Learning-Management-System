@@ -559,6 +559,10 @@
                 <?php endif; ?>
 
             <?php elseif($action == 'Update'): ?>
+
+                <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
+
+
             <?php elseif($action == 'Validator'): ?>
             <?php endif; ?>
             
