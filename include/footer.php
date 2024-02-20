@@ -9,13 +9,13 @@
 </head>
 <body>
     
-    <footer style=" padding-block: 15px;
+    <footer class="bg-dark text-light"  
+            style=" padding-block: 15px;
                     margin: 0px; 
                     font-family: 'Advent Pro'; 
                     text-align: center; 
                     font-size: 18px;
                     width: 100%;
-                    background-color: rgba(217,217,217);
                     position: fixed;
                     bottom: 0;"> 
                     
