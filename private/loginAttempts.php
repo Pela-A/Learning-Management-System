@@ -24,6 +24,7 @@
     //if search or coming to first time
     if(isset($_POST['search'])){
         $attemptDate = filter_input(INPUT_POST, 'attemptDate');
+        $successful = filter_input(INPUT_POST, 'successful');
         if($_SESSION['isSiteAdmin']){
             $userID = filter_input(INPUT_POST, 'userID');
             $orgID = filter_input(INPUT_POST, 'orgID');
@@ -38,7 +39,7 @@
             $userID = $_SESSION['userID'];
             $orgID = $_SESSION['orgID'];
         }
-        $logins = $loginObj->searchLogins($attemptDate, $userID, $orgID);
+        $logins = $loginObj->searchLogins($attemptDate,$successful, $userID, $orgID);
     }
     //otherwise loading into page first time.
     else{
@@ -95,17 +96,57 @@
                             </div>
                         </div>   
 
-                        <?php if($_SESSION['isSiteAdmin']): ?>
-                        <div class="col-sm text-center">
-                            <div class="label">
-                                <label>Organization ID:</label>
-                            </div>
-                            
-                            <div>
-                                <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="orgID" id='organization_select'>
-                                    <option value="">Select Organization</option>
-                                    <?php foreach($orgs as $o): ?>
-                                        <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
+            <!--Search functionality -->
+            <form method="POST" name="search_books" class="col-lg-10 offset-lg-1 ">
+                <div class="row justify-content-center">
+                    <div class="col-sm text-center">
+                        <div class="label">
+                            <label>Login Attempt Date:</label>
+                        </div>
+                        <div>
+                            <input type="Date" name="attemptDate" value="<?=$attemptDate;?>"/>
+                        </div>
+                    </div>   
+
+                    <label class="mb-3 mr-1" for="isTrainer">Successful Login: </label>
+
+                    <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-danger" for="successfulYes">Yes</label>
+
+                    <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-danger" for="successfulNo">No</label>
+
+                    <?php if($_SESSION['isSiteAdmin']): ?>
+                    <div class="col-sm text-center">
+                        <div class="label">
+                            <label>Organization ID:</label>
+                        </div>
+                        
+                        <div>
+                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="orgID" id='organization_select'>
+                                <option value="">Select Organization</option>
+                                <?php foreach($orgs as $o): ?>
+                                    <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
+                    <div class="col-sm text-center">
+                        <div class="label">
+                            <label>User ID:</label>
+                        </div>
+                        
+                        <div>
+                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="userID" id='option_select'>
+                                <?php if($_SESSION['isSiteAdmin']): ?>
+                                    <option value="">Select Organization ID to populate</option>
+                                <?php else: ?>
+                                    <option value="">Select a User ID</option>
+                                    <?php foreach($users as $u): ?>
+                                    <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

@@ -102,6 +102,7 @@
     }
 
     if(isset($_POST['submitSiteAdminUpdateUser'])){
+        $department = filter_input(INPUT_POST, 'department');
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
         $letterDate = filter_input(INPUT_POST, 'letterDate');
@@ -114,10 +115,11 @@
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
 
-        $userObj->siteAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer);
+        $userObj->siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer);
     }
 
     if(isset($_POST['submitOrgAdminUpdateUser'])){
+        $department = filter_input(INPUT_POST, 'department');
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
         $letterDate = filter_input(INPUT_POST, 'letterDate');
@@ -177,7 +179,7 @@
 </head>
 <body>
     
-    <div class="mainContent"">
+    <div class="mainContent">
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
@@ -816,7 +818,7 @@
 
                 <?php if($_SESSION['isSiteAdmin']):
                     $account = $userObj->getUser($userID);
-                    $organization = $orgObj->getOrganization($_SESSION['orgID']); 
+                    $organization = $orgObj->getOrganization($_SESSION['orgID']);
 
                     if($account != null){
                         $firstName = $account['firstName'];
@@ -844,16 +846,16 @@
                         $isOrgAdmin = "";
                         $isTrainer = "";
                         $isVerified = "";
-                    }?>
+                    } ?>
 
                     <div style="display: flex;">
                         <p>Organization: </p>
-                        <p><?= $organization[0]['orgName']; ?></p>
+                        <p><?= $organization['orgName']; ?></p>
                     </div>
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control text-dark col-md-12" name="department" style="height: 40px;" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -999,12 +1001,12 @@
 
                     <div style="display: flex;">
                         <p>Organization: </p>
-                        <p><?= $organization[0]['orgName']; ?></p>
+                        <p><?= $organization['orgName']; ?></p>
                     </div>
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control text-dark col-md-12" name="department" style="height: 40px;" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -1122,7 +1124,7 @@
 
                     <div style="display: flex;">
                         <p>Organization: </p>
-                        <p><?= $organization[0]['orgName']; ?></p>
+                        <p><?= $organization['orgName']; ?></p>
                     </div>
 
                     <form action="userAccount.php?action=personalSettings" class="requires-validation" novalidate method="POST">

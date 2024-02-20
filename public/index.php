@@ -30,7 +30,7 @@
             if($userData != "No Results Found"){
     
                 $loginDB = new LoginDB();
-                $loginDate = date('Y-m-d');
+                $loginDate = date('Y-m-d H:i:s');
                 $ip = getenv("REMOTE_ADDR");
                 if($userData['isVerified'] == 0){
                     //login attempt funct with isSuccessful False (0)
@@ -51,7 +51,7 @@
             }else{
                 $error = "Incorrect Username or Password!";
                 if(linear_search($userDB->getAllUsername(), $username)){
-                    $loginDate = date('Y-m-d');
+                    $loginDate = date('Y-m-d H:i:s');
                     $ip = getenv("REMOTE_ADDR");
                     $loginDB = new LoginDB();
                     $loginDB->addLoginAttempt($userDB->getUserID($username), $loginDate, 0, $ip);
@@ -72,12 +72,11 @@
         $email = filter_input(INPUT_POST, 'email');
         $birthdate = filter_input(INPUT_POST, 'birthdate');
         $gender = filter_input(INPUT_POST, 'gender');
-        $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
         $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
         //verifyUserInformation
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass, $confirmPass);
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newPass,$confirmPass);
         
         //post entered org information
         $orgName = filter_input(INPUT_POST, 'orgName');
@@ -131,15 +130,15 @@
 
             //create USER Object and add to data base
             $makeUser = new UserDB();
-            $newUserID=$makeUser->createUserFromIndexPage($newID,$firstName,$lastName,$phoneNum,$email,$birthdate,$gender,date('Y-m-d'),$newUser,$newPass,1,1);
-            $newUserData = $makeUser->getUserFromIndex($newUserID);
+            $newUserID=$makeUser->orgAdminCreateUser($newID, $firstName, $lastName, $email, $birthdate, $phoneNum, $gender, $newPass, 1, 0);
+            $newUserData = $makeUser->getUser($newUserID);
 
             //call session set function. then redirect to landing page
             setSessionLogin($newUserData);
 
             //log their loginAttempt
             $loginDB = new LoginDB();
-            $loginDate = date('Y-m-d');
+            $loginDate = date('Y-m-d H:i:s');
             $ip = getenv("REMOTE_ADDR");
             $loginDB->addLoginAttempt($newUserData['userID'], $loginDate, 1, $ip);
 
@@ -159,11 +158,10 @@
         $email = filter_input(INPUT_POST, 'email');
         $birthdate = filter_input(INPUT_POST, 'birthdate');
         $gender = filter_input(INPUT_POST, 'gender');
-        $newUser = filter_input(INPUT_POST, 'newUser');
         $newPass = filter_input(INPUT_POST, 'newPass');
         $confirmPass = filter_input(INPUT_POST, 'confirmPass');
 
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newUser,$newPass,$confirmPass);
+        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newPass,$confirmPass);
         
         $orgName = "";
         $address = "";
@@ -186,12 +184,12 @@
                 $makeUser = new UserDB();
         
                 //create new user
-                $newUserID = $makeUser->createUserFromIndexPage($joinID, $firstName, $lastName, $phoneNum, $email, $birthdate,$gender,date('Y-m-d'), $newUser, $newPass, 0, 0);
+                $profilePicture = "";
+                $newUserID = $makeUser->createGeneralUser($joinID,$firstName,$lastName,$email,$birthdate,$phoneNum,$gender,$newPass, $profilePicture);
 
-            
-
+                //send login attempt and redirect to not verified page
                 $loginDB = new LoginDB();
-                $loginDate = date('Y-m-d');
+                $loginDate = date('Y-m-d H:i:s');
                 $ip = getenv("REMOTE_ADDR");
                 $loginDB->addLoginAttempt($newUserID, $loginDate, 0, $ip);
                 header('Location: index.php?action=notVerified');
@@ -214,7 +212,6 @@
         $email = "";
         $birthdate = "";
         $gender = "";
-        $newUser = "";
         $newPass = "";
         $confirmPass = "";
         $orgName = "";
@@ -339,11 +336,6 @@
                     <input type="radio" value="1" name="gender" <?php if($gender==TRUE) echo('checked');?>> Male
                     <input type="radio" value="0" name="gender"<?php if($gender==FALSE) echo('checked');?>> Female
                     <br />
-                </div>
-                
-                <div class="row">
-                    <label>Create Username:</label>
-                    <input type="text" name="newUser" value="<?=$newUser?>">
                 </div>
                 
                 <div class="row">
@@ -486,11 +478,6 @@
                     <input type="radio" value="1" name="gender" <?php if($gender=="1") echo('checked');?>> Male
                     <input type="radio" value="0" name="gender"<?php if($gender=="0") echo('checked');?>> Female
                     <br />
-                </div>
-
-                <div class="row">
-                    <label>Create Username:</label>
-                    <input type="text" name="newUser" value="<?=$newUser?>">
                 </div>
 
                 <div class="row">
