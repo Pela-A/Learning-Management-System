@@ -1,0 +1,31 @@
+/*
+CSS For indexPage!
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@200;300;400;500&display=swap');
+body{
+    Background-Color: rgb(32, 33, 36);
+}
+
+
+.formContent{
+
+    Background-color: rgb(48, 49, 52);
+    border-radius: 10px;
+}
+
+
+
+/* 
+Logo CSS
+*/
+
+.navbar-brand img{
+    margin-right:-20px;
+}
+
+strong{
+    color: #FFFFFF;
+    font-family: 'Cormorant Garamond';
+
+}
