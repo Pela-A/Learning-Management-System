@@ -19,6 +19,10 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
+    if(isset($_GET['entryID'])){
+        $entryID = filter_input(INPUT_GET, 'entryID');
+    }
+
     if(isset($_POST['searchUserButton'])){
         $courseName = filter_input(INPUT_POST, 'courseName');
         $completeDate = filter_input(INPUT_POST, 'completionDate');
@@ -92,6 +96,15 @@
         $completeDate = filter_input(INPUT_POST, 'completionDate');
 
         $entryObj->createTrainingEntry($_SESSION['userID'], $courseName, $entryDate, $completeDate, $creditHours, $category, $description);
+    }
+
+    if(isset($_POST['submitValidation'])) {
+        $entryID = filter_input(INPUT_POST, 'entryID');
+        $isValidated = filter_input(INPUT_POST, 'isValidated');
+        $validationDate = filter_input(INPUT_POST, 'validationDate');
+        $validationComments = filter_input(INPUT_POST, 'validationComments');
+
+        $entryObj->validateTrainingEntry($entryID, $isValidated, $validateDate, $validationComments);
     }
 
     $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
@@ -558,9 +571,130 @@
 
                 <?php endif; ?>
 
-            <?php elseif($action == 'Update'): ?>
+            <?php elseif($action == 'Validator'): 
+                
+                if($_SESSION['isTrainer']): 
+                    $entries = $entryObj->getAllUnvalidatedTrainingEntries($_SESSION['orgID']); ?>
 
-            <?php elseif($action == 'Validator'): ?>
+                    <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
+                        <div style="display: flex;">
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex;">
+                            <div class="col-md-6">
+                                <input class="form-control" type="date" name="entryDate" placeholder="Entry Date" required>
+                                <div class="valid-feedback">Entry Date field is valid!</div>
+                                <div class="invalid-feedback">EntryDate field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <input class="form-control" type="date" name="completeDate" placeholder="Completion Date" required>
+                                <div class="valid-feedback">Completion Date field is valid!</div>
+                                <div class="invalid-feedback">Completion Date field cannot be blank!</div>
+                            </div>
+                        </div>
+
+                        <input type="submit" class="btn btn-sm btn-danger" id="searchAllBtn" name="searchAllButton" value="Search" />
+
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Course Name</th>
+                                <th>Entry Date</th>
+                                <th>Completion Date</th>
+                                <th>Validated</th>
+                                <th>Validation Date</th>
+                                <th>Validation Comments</th>
+                                <th>Credit Hours</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($entries as $e): ?>
+                                <tr>                                   
+                                    <td><?= $e['firstName'] . " " . $e['lastName']; ?></td>
+                                    <td><?= $e['courseName']; ?></td>
+                                    <td><?= $e['entryDate']; ?></td>
+                                    <td><?= $e['completeDate']; ?></td>
+                                    <td><?= $e['isValidated']==1?"Yes":"No" ?></td>
+                                    <td><?= $e['validateDate'];?></td>
+                                    <td><?= $e['validationComments']; ?></td>
+                                    <td><?= $e['creditHours']; ?></td>
+                                    <td><?= $e['category']; ?></td>
+                                    <td><?= $e['description']; ?></td>
+                                    <td><a class="btn btn-light" href="trainingEntry.php?action=ValidateTraining&entryID=<?= $e['entryID']; ?>">Validate</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+
+            <?php elseif($action == "ValidateTraining"): 
+                $entry = $entryObj->getTrainingEntry($entryID); ?>
+
+                <form method="POST" action="trainingEntry.php?action=ViewAll">
+
+                    <input type="hidden" name="entryID" value="<?= $entryID; var_dump($entryID); ?>">
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Course Name</th>
+                                <th>Entry Date</th>
+                                <th>Completion Date</th>
+                                <th>Validated</th>
+                                <th>Validation Date</th>
+                                <th>Validation Comments</th>
+                                <th>Credit Hours</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($entry as $e): ?>
+                                <tr>                                   
+                                    <td><?= $e['firstName'] . " " . $e['lastName']; ?></td>
+                                    <td><?= $e['courseName']; ?></td>
+                                    <td><?= $e['entryDate']; ?></td>
+                                    <td><?= $e['completeDate']; ?></td>
+                                    <td>
+                                        <select name="isValidated">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="date" name="validationDate"></td>
+                                    <td><textarea name="validationComments" cols="100" rows="4"></textarea></td>
+                                    <td><?= $e['creditHours']; ?></td>
+                                    <td><?= $e['category']; ?></td>
+                                    <td><?= $e['description']; ?></td>
+                                    <td><input class="btn btn-light" type="submit" name="submitValidation"></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </form>
+
             <?php endif; ?>
             
         </div>

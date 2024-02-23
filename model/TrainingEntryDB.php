@@ -48,6 +48,20 @@ class TrainingEntryDB {
         return $results;
     }
 
+    public function getAllUnvalidatedTrainingEntries($orgID) {
+        $results = [];
+        $entryTable = $this->entryData;
+
+        $sqlString = $entryTable->prepare("SELECT * FROM trainingentries INNER JOIN users ON TrainingEntries.userID = users.userID WHERE isValidated = 0 && users.orgID = :oi ORDER BY entryDate");
+        $sqlString->bindValue(":oi", $orgID);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $results;
+    }
+
     public function getTrainingEntry($entryID){
         $results = [];
         $entryTable = $this->entryData;
