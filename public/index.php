@@ -249,10 +249,10 @@
         </a>
     </nav>
 
-    <div class="container-fluid text-light">
+    <div class="container-fluid">
 
         <div class="row m-5">
-            <div class="col-lg-7 col-md-12 p-5">
+            <div class="col-lg-7 col-md-12 p-2 m-2 text-light">
 
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
@@ -262,21 +262,21 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                        <img class="d-block w-100" src="../assets/images/profilePhotos/BunnyProfile.png" alt="First slide">
+                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg1.png" alt="First slide">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Picture 1</h5>
                             <p>Description Pic 1</p>
                         </div>
                         </div>
                         <div class="carousel-item">
-                        <img class="d-block w-100" src="../assets/images/profilePhotos/DogProfile.png" alt="Second slide">
+                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg2.png" alt="Second slide">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Picture 2</h5>
                             <p>Description Pic 2</p>
                         </div>
                         </div>
                         <div class="carousel-item">
-                        <img class="d-block w-100" src="../assets/images/profilePhotos/ElephantProfile.png" alt="Third slide">
+                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg3.png" alt="Third slide">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Picture 3</h5>
                             <p>Description Pic 3</p>
@@ -294,10 +294,10 @@
                 </div>
             </div>
 
-            <div class="col-lg-5 col-md-12 p-5 formContent">
+            <div class="col-lg-4 col-md-12 p-2 m-2 formContent">
 
                 <?php if($action == ''): ?>
-                    <h2>Login Form</h2>
+                    <h2>Login</h2>
 
                     <?php if($error != ""):?>
                         <div class="row">

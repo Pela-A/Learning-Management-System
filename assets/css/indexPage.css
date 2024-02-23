@@ -9,23 +9,26 @@ body{
 
 
 .formContent{
-
     Background-color: rgb(48, 49, 52);
     border-radius: 10px;
 }
 
 
+h2{
+    color: rgb(165,37,224);
+    font-family: 'Cormorant Garamond';
 
+}
 /* 
 Logo CSS
 */
 
 .navbar-brand img{
-    margin-right:-20px;
+    margin-right: 0px;
 }
 
 strong{
     color: #FFFFFF;
-    font-family: 'Cormorant Garamond';
+    
 
 }
