@@ -319,11 +319,11 @@
 
                         <form name="login_form" method="post" class="px-4 pb-2 pt-2">
                             <div class="form-group">
-                                <label>Username</label>
+                                <label class="form-label" >Username</label>
                                 <input name="username" type="text" class="form-control" placeholder="Username" value="<?=$username?>">
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label class="form-label">Password</label>
                                 <input name="password" type="password" class="form-control" placeholder="Password" value="<?=$password?>">
                             </div>
             
@@ -374,7 +374,8 @@
 
 
                         <h2>Create Organization</h2>
-                        <form name="create_org_form" method="post" class="px-4 pb-2 pt-2">
+
+                        <form name="create_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
                             <h2>Account Information</h2>
 
                             <?php if($error != ""):?>
@@ -388,140 +389,226 @@
                                 </div>
                             <?php endif; ?>
 
-                            <div class="row">
-                                <label>First Name:</label>
-                                <input type="text" name="firstName" value="<?=$firstName?>">
+                            <div class="mb-3">
+                                <label class="form-label">First Name:</label>
+                                <input type="text" class="form-control" name="firstName" id="firstName" pattern="^[A-Za-z]+$" required/>
+                                <div class="valid-feedback">
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please Provide a Valid First Name
+                                </div>
                             </div>
 
-                            <div class="row">
-                                <label>Last Name:</label>
-                                <input type="text" name="lastName" value="<?=$lastName?>">
+                            <div class="mb-3">
+                                <label class="form-label">Last Name:</label>
+                                <input type="text" class="form-control" name="lastName" id="lastName" pattern="^[A-Za-z]+$" required>
+                                <div class="valid-feedback">
+                                    Works
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please Provide a Valid Last Name
+                                </div>
+                            
                             </div>
 
-                            <div class="row">
-                                <label>Phone Number:</label>
-                                <input type="text" name="phoneNum" value="<?=$phoneNum?>">
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number:</label>
+                                <input type="text" class="form-control" name="phoneNum" id="phoneNum" pattern="[0-9]{10}" placeholder="3778219909" required>
+                            
+                                <div class="invalid-feedback">
+                                    Please Provide a Valid Phone Number (Ten Digits)
+                                </div>
+                            
                             </div>
 
-                            <div class="row">
-                                <label>Email:</label>
-                                <input type="text" name="email" value="<?=$email?>">
+                            <div class="mb-3">
+                                <label class="form-label">Email:</label>
+                                <input type="text" class="form-control" name="email" id="email" value="<?=$email?>">
                             </div>
                             
-                            <div class="row">
-                                <label>Birthday:</label>
-                                <input type="date" name="birthdate" value="<?=$birthdate?>">
+                            <div class="mb-3">
+                                <label class="form-label">Birthday:</label>
+                                <input type="date" class="form-control" name="birthdate" id="birthdate" required>
                             </div>
                             
-                            <div class="row">
-                                <label>Gender:</label>
-                                <input type="radio" value="1" name="gender" <?php if($gender==TRUE) echo('checked');?>> Male
-                                <input type="radio" value="0" name="gender"<?php if($gender==FALSE) echo('checked');?>> Female
-                                <br />
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="genderMale">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" required>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Female
+                                    </label>
+                                </div>
                             </div>
                             
-                            <div class="row">
-                                <label>Create Username:</label>
-                                <input type="text" name="newUser" value="">
-                            </div>
-                            <div class="row">
-                                <label>Create Password:</label>
-                                <input type="text" name="newPass" value="<?=$newPass?>">
+                            <div class="mb-3">
+                                <label class="form-label">Create Password:</label>
+                                <input type="text" class="form-control" name="newPass" id="newPass" pattern=".{8,}" required />
                             </div>
 
-                            <div class="row">
-                                <label>Confirm Password:</label>
-                                <input type="text" name="confirmPass" value="<?=$confirmPass?>">
+                            <div class="mb-3">
+                                <label class="form-label">Confirm Password:</label>
+                                <input type="text" class="form-control" name="confirmPass" id="confirmPass" pattern=".{8,}" required>
                             </div>
 
 
                             
-                            <h2>Organization Information</h3>
+                            <div class="part2">
 
-                            <div class="row">
-                                <label>Organization Name</label>
-                                <input type="text" name="orgName" value="<?=$orgName?>">
-                            </div>
+
+
                             
-                            <div class="row">
-                                <label>Address</label>
-                                <input type="text" name="address" value="<?=$address?>">
-                            </div>
-                            
-                            <div class="row">
-                                <label>City</label>
-                                <input type="text" name="city" value="<?=$city?>">
-                            </div>
-                            
-                            <div class="row">
-                                <label>State</label>
-                                <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" selected="<?=$state?>" required >
-                                    <option value="">State</option>
-                                    <option value="AL">Alabama</option>
-                                    <option value="AK">Alaska</option>
-                                    <option value="AZ">Arizona</option>
-                                    <option value="AR">Arkansas</option>
-                                    <option value="CA">California</option>
-                                    <option value="CO">Colorado</option>
-                                    <option value="CT">Connecticut</option>
-                                    <option value="DE">Delaware</option>
-                                    <option value="FL">Florida</option>
-                                    <option value="GA">Georgia</option>
-                                    <option value="HI">Hawaii</option>
-                                    <option value="ID">Idaho</option>
-                                    <option value="IL">Illinois</option>
-                                    <option value="IN">Indiana</option>
-                                    <option value="IA">Iowa</option>
-                                    <option value="KS">Kansas</option>
-                                    <option value="KY">Kentucky</option>
-                                    <option value="LA">Louisiana</option>
-                                    <option value="ME">Maine</option>
-                                    <option value="MD">Maryland</option>
-                                    <option value="MA">Massachusetts</option>
-                                    <option value="MI">Michigan</option>
-                                    <option value="MN">Minnesota</option>
-                                    <option value="MS">Mississippi</option>
-                                    <option value="MO">Missouri</option>
-                                    <option value="MT">Montana</option>
-                                    <option value="NE">Nebraska</option>
-                                    <option value="NV">Nevada</option>
-                                    <option value="NH">New Hampshire</option>
-                                    <option value="NJ">New Jersey</option>
-                                    <option value="NM">New Mexico</option>
-                                    <option value="NY">New York</option>
-                                    <option value="NC">North Carolina</option>
-                                    <option value="ND">North Dakota</option>
-                                    <option value="OH">Ohio</option>
-                                    <option value="OK">Oklahoma</option>
-                                    <option value="OR">Oregon</option>
-                                    <option value="PA">Pennsylvania</option>
-                                    <option value="RI">Rhode Island</option>
-                                    <option value="SC">South Carolina</option>
-                                    <option value="SD">South Dakota</option>
-                                    <option value="TN">Tennessee</option>
-                                    <option value="TX">Texas</option>
-                                    <option value="UT">Utah</option>
-                                    <option value="VT">Vermont</option>
-                                    <option value="VA">Virginia</option>
-                                    <option value="WA">Washington</option>
-                                    <option value="WV">West Virginia</option>
-                                    <option value="WI">Wisconsin</option>
-                                    <option value="WY">Wyoming</option>
-                                </select>
-                            </div>
-                            
-                            <div class="row">
-                                <label>Zip Code</label>
-                                <input type="text" name="zipCode" value="<?=$zipCode?>">
-                            </div>
-                            
-                            <div class="row">
-                                <input type="submit" name="create" value="Create Organization">
+                                <h2>Organization Information</h3>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Organization Name</label>
+                                    <input type="text" class="form-control" name="orgName" id="orgName" value="" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" name="address" id="address" value="" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" name="city" id="city" value="" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">State</label>
+                                    <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" required >
+                                        <option value="">State</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="CA">California</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NY">New York</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VT">Vermont</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control" name="zipCode" id="zipCode" value="<?=$zipCode?>">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <input type="submit" class="btn btn-block"name="create" value="Create Organization">
+                                </div>
                             </div>
                         </form>
                 
                     </div>
                 </div>
+
+                <script>
+
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (function () {
+                    'use strict'
+
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.querySelectorAll('.needs-validation')
+
+                    // Loop over them and prevent submission
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            }
+
+                            form.classList.add('was-validated')
+                        }, false)
+                        })
+                    })()
+                    /*var firstName = document.querySelector(`#firstName`)
+
+                    console.log(firstName)
+                    firstName.addEventListener(`change`, (e)=>{
+
+                        console.log("on change worked")
+                        var message=""
+
+                        var pattern1 = /[^A-Za-z-]+/
+                        if(firstName.value !== "" && !pattern1.test(firstName.value) )
+                        {
+                            //firstName.parentElement.classList.remove(`error`)
+                            firstName.previousElementSibling.classList.add(`hidden`)
+                            firstName.previousElementSibling.innerHTML = ""
+                        }
+                        else if(firstName.value == ""){
+                            message = `Please enter a first name.`
+                            //inputs[0].parentElement.classList.add(`error`)
+                            firstName.previousElementSibling.classList.remove(`hidden`)
+                            firstName.previousElementSibling.innerHTML = `* ${message}`
+                        }
+                        else{
+                            message = `First Name contains special characters or numbers`
+                            //inputs[0].parentElement.classList.add(`error`)
+                            firstName.previousElementSibling.previousElementSibling.classList.add(`error`)
+                            firstName.previousElementSibling.classList.remove(`hidden`)
+                            firstName.previousElementSibling.innerHTML = `* ${message}`
+                        }
+                    })*/
+
+
+
+
+
+                </script>
             <?php elseif($action == 'joinOrg'): ?>
                 <h2>Join Organization Form</h2>
                 <form name="join_org_form" method="post">
@@ -593,9 +680,19 @@
                 </form>
 
             <?php elseif($action == 'notVerified'): ?>
-                <h2>Your account is current not verified!</h2>
 
-                <p>Please contact your organization administrator!</p>
+                <div class=" col-xl-4 col-md-12 py-4 special">
+
+                    <div class="row formContent pt-4 pb-5">
+
+                    <h2>Your account is currently not verified!</h2>
+
+                    <p>Please contact your organization administrator!</p>
+
+                    </div>
+
+                </div>
+                
 
             <?php endif; ?>
 

@@ -68,6 +68,10 @@ Logo CSS
 
 strong{
     color: #FFFFFF;
-    font-family: 'Cormorant Garamond';
+    font-family: 'Advent Pro';
 
+}
+
+.hidden{
+    display:none;
 }
