@@ -55,7 +55,9 @@ class UserDB {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("SELECT * FROM users WHERE orgID = :o and isVerified = 0");
+        $sqlString = $userTable->prepare("SELECT * FROM (users 
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            WHERE users.orgID = :o and isVerified = 0");
         $sqlString->bindValue(":o", $orgID);
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
@@ -454,6 +456,22 @@ class UserDB {
         return $results[0];
 
 
+    }
+
+    public function validateUser($userID) {
+        $results = [];
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("UPDATE users isVerified = 1 WHERE userID = :id");
+        $boundParams = array(
+            ":id" => $userID,
+        );
+
+        if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
+            $results = "User Updated Successfully";
+        }
+        
+        return $results;
     }
 
 

@@ -163,6 +163,17 @@
         
     }
 
+    if(isset($_POST['submitValidation'])){
+        $isVerified = filter_input(INPUT_POST, 'isValidated');
+        $userID = filter_input(INPUT_POST, 'userID');
+
+        if($isVerified == 1) {
+            $userObj->validateUser($userID);
+        } else {
+            $userObj->deleteUser($userID);
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -1225,62 +1236,61 @@
                     </div>
 
                 </form>
-
-            <?php elseif($action == 'validateUser'): 
-                if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']):                 
+            
+            <?php elseif($action == 'Validator'): ?>
+                <h3>Validate New Users</h3>
+                
+                <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']):                 
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
 
-                    <table class="table table-striped table-hover table-dark">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Organization</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Birth Date</th>
-                                <th>Phone</th>
-                                <th>Gender</th>
-                                <th>Username</th>
-                                <th>Website Admin</th>
-                                <th>Organization Admin</th>
-                                <th>Training Manager</th>
-                                <th>Verified</th>
-                            </tr>
-                        </thead>
+                    <form method="POST" action="userAccount.php?action=ViewAll">
 
-                        <tbody>
-                            <?php foreach ($users as $u): ?>
+                        <table class="table table-striped table-hover table-dark">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                            <input class="btn btn-danger btn-sm" type="submit" name="deleteUser" value="Delete" />
-                                        </form>
-                                    </td>
-                                    
-                                    <td><?= $u['orgName']; ?></td>
-                                    <td><?= $u['firstName']; ?></td>
-                                    <td><?= $u['lastName']; ?></td>
-                                    <td><?= $u['email']; ?></td>
-                                    <td><?= $u['birthDate']; ?></td>
-                                    <td><?= $u['phoneNumber']; ?></td>
-                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
-                                    <td><?= $u['username'];?></td>
-                                    <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
-                                    <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
-                                    <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
-                                    <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-danger btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                    <th>Organization</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Birth Date</th>
+                                    <th>Phone</th>
+                                    <th>Gender</th>
+                                    <th>Username</th>
+                                    <th>Organization Admin</th>
+                                    <th>Training Manager</th>
+                                    <th>Verified</th>
+                                    <th></th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </thead>
 
-                <?php else: 
-                    header('Location: userAccount.php?action=personalSettings'); 
+                            <tbody>
+                                <?php foreach ($users as $u): ?>
+                                    <tr>                                  
+                                        <td><?= $u['orgName']; ?></td>
+                                        <td><?= $u['firstName']; ?></td>
+                                        <td><?= $u['lastName']; ?></td>
+                                        <td><?= $u['email']; ?></td>
+                                        <td><?= $u['birthDate']; ?></td>
+                                        <td><?= $u['phoneNumber']; ?></td>
+                                        <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                        <td><?= $u['username'];?></td>
+                                        <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
+                                        <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
+                                        <td>
+                                            <select class="form-control" name="isValidated">
+                                                <option value=""></option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="submit" class="btn btn-light" name="submitValidation" value="Validate"></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </form>
                     
-                endif; ?>
+                <?php endif; ?>
             
             <?php endif; ?>
         

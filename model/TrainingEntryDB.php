@@ -153,7 +153,7 @@ class TrainingEntryDB {
         return ($results);
     }
 
-    public function searchAllTrainingEntry($firstName, $lastName, $courseName, $entryDate, $completeDate, $category){
+    public function searchAllTrainingEntry($firstName, $lastName, $entryDate, $completeDate, $category){
         $results = [];
         $entryTable = $this->entryData;
 

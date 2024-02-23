@@ -49,7 +49,7 @@ class OrganizationDB {
         return ($results);
     }
 
-    public function searchOrganizations($orgName){
+    public function searchOrganizations($orgName, $state){
         $results = [];
         $orgTable = $this->orgData;
 
@@ -59,6 +59,11 @@ class OrganizationDB {
         if ($orgName != '') {
             $sqlString .= " AND orgName LIKE :a";
             $binds[':a'] = '%'.$orgName.'%';
+        }
+
+        if ($state != '') {
+            $sqlString .= " AND state LIKE :state";
+            $binds[':state'] = '%'.$state.'%';
         }
 
         $sqlString = $orgTable->prepare($sqlString);

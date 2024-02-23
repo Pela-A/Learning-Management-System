@@ -36,12 +36,11 @@
     if(isset($_POST['searchAllButton'])){
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
-        $courseName = filter_input(INPUT_POST, 'courseName');
         $completeDate = filter_input(INPUT_POST, 'completionDate');
         $entryDate = filter_input(INPUT_POST, 'entryDate');
         $category = filter_input(INPUT_POST, 'category');
 
-        $entries = $entryObj->searchAllTrainingEntry($firstName, $lastName, $courseName, $entryDate, $completeDate, $category);
+        $entries = $entryObj->searchAllTrainingEntry($firstName, $lastName, $entryDate, $completeDate, $category);
     }
 
     if(isset($_POST['submitTrainingForUserFromModule'])) {
@@ -134,45 +133,27 @@
 
             <?php if($action == 'ViewAll'): ?>
 
+                <h3>Training Entry Viewer</h3>
+
                 <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): 
                     $entries = $entryObj->getAllTrainingEntries($_SESSION['orgID']); ?>
-                    <a href="trainingEntry.php?action=Create">Create new training entry</a>
+                    <a class="form-control btn btn-light" href="trainingEntry.php?action=Create">Create new training entry</a>
 
-                    <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
-                        <div style="display: flex;">
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                    <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries">
+                        <div style="display: flex;" class="my-2">
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name">
                                 <div class="valid-feedback">First name field is valid!</div>
                                 <div class="invalid-feedback">First name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name">
                                 <div class="valid-feedback">Last name field is valid!</div>
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
-                                <div class="valid-feedback">Course name field is valid!</div>
-                                <div class="invalid-feedback">Course name field cannot be blank!</div>
-                            </div>
-                        </div>
-
-                        <div style="display: flex;">
-                            <div class="col-md-6">
-                                <input class="form-control" type="date" name="entryDate" placeholder="Entry Date" required>
-                                <div class="valid-feedback">Entry Date field is valid!</div>
-                                <div class="invalid-feedback">EntryDate field cannot be blank!</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <input class="form-control" type="date" name="completeDate" placeholder="Completion Date" required>
-                                <div class="valid-feedback">Completion Date field is valid!</div>
-                                <div class="invalid-feedback">Completion Date field cannot be blank!</div>
-                            </div>
-
-                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="category" required>
+                            <select class="form-control col-md-4" type="text" name="category">
                                 <option value="">Select Category</option>
                                 <?php 
                                     $uniqueCategories = array();
@@ -185,21 +166,21 @@
                             </select>
                         </div>
 
-                        <div class="mt-3">
-                            <label class="mb-3 mr-1" for="validated">Validated: </label>
+                        <div style="display: flex;">
+                            <div class="">
+                                <input class="form-control" type="date" name="entryDate" placeholder="Entry Date">
+                                <div class="valid-feedback">Entry Date field is valid!</div>
+                                <div class="invalid-feedback">EntryDate field cannot be blank!</div>
+                            </div>
 
-                            <input type="radio" class="btn-check" name="validated" value=1 id="valYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-danger" for="valYes">Yes</label>
+                            <div class="">
+                                <input class="form-control" type="date" name="completeDate" placeholder="Completion Date">
+                                <div class="valid-feedback">Completion Date field is valid!</div>
+                                <div class="invalid-feedback">Completion Date field cannot be blank!</div>
+                            </div>
 
-                            <input type="radio" class="btn-check" name="validated" value=0 id="valNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-danger" for="valNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a validation status!</div>
-                            <div class="invalid-feedback mv-up">Please select a validation status!</div>
+                            <input type="submit" class="btn btn-light" id="searchAllBtn" name="searchAllButton" value="Search" />
                         </div>
-
-                        <input type="submit" class="btn btn-sm btn-danger" id="searchAllBtn" name="searchAllButton" value="Search" />
-
                     </form>
 
                     <table class="table table-striped table-hover table-dark">

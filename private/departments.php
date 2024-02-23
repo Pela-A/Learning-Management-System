@@ -107,9 +107,9 @@
             <?php if($action == 'Viewer'):
                 $departments = $depObj->getAllDepartments($orgID);
                 ?>
-                <a href="departments.php?action=Add">Create New Department</a>
+                <a class="form-control btn btn-light" href="departments.php?action=Add">Create New Department</a>
 
-                <table class="table table-bordered text-center col-11">
+                <table class="table table-striped table-hover table-dark">
                     <thead>
                         <tr>
                             <th>Department ID</th>
@@ -145,58 +145,48 @@
                 <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
 
                         <label>Department Name</label>
-                        <input type="text" name="name" value='<?=$name?>'>
+                        <input class="form-control" type="text" name="name" value='<?=$name?>'>
                         </br>
                     
                         <label>Department Email</label>
-                        <input type="text" name="email" value='<?=$email?>'>
+                        <input class="form-control" type="text" name="email" value='<?=$email?>'>
                         </br>
 
                     
-                    <input type="hidden" name="depID" value="<?=$depID;?>">
-                    <input type="submit" name="edit" value="Edit Department">
-
-                    <input type="submit" name="delete" value="Delete Department">
-
-                    
-
-                        
-                    </form>
-
-                <a href="departments.php?action=Viewer">
-                    <button>Go Back</button>
-                </a>
+                    <input class="form-control" type="hidden" name="depID" value="<?=$depID;?>">
+                    <div style="display: flex;">
+                
+                        <input class="form-control" type="submit" name="edit" value="Edit Department">
+                        <input class="form-control" type="submit" name="delete" value="Delete Department">
+                        <a class="form-control btn btn-light" href="departments.php?action=Viewer">Go Back</a>
+                
+                    </div>
+                </form>
 
             <?php elseif($action == 'Add'): 
                 $name = "";
-                $email = "";
-
+                $email = ""; ?>
                 
-                
-                ?>
                 <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
 
                     <label>Department Name</label>
-                    <input type="text" name="name" value='<?=$name?>'>
+                    <input class="form-control" type="text" name="name" value='<?=$name?>'>
                     </br>
                 
                     <label>Department Email</label>
-                    <input type="text" name="email" value='<?=$email?>'>
+                    <input class="form-control" type="text" name="email" value='<?=$email?>'>
                     </br>
 
+                    <input class="form-control" type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
+
+                    <div style="display: flex;">
                 
-                    <input type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
-                    <input type="submit" name="create" value="Create Department">
+                        <input class="form-control btn btn-light" type="submit" name="create" value="Create Department">
+                        <a class="form-control btn btn-light" href="departments.php?action=Viewer">Go Back</a>
 
-
-                    
+                    </div>
                 </form>
-
-                <a href="departments.php?action=Viewer">
-                    <button>Go Back</button>
-                </a>
             <?php endif; ?>
-
         </div>
     </div>
 
