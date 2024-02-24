@@ -553,9 +553,10 @@
                 <?php endif; ?>
 
             <?php elseif($action == 'Validator'): 
-                
                 if($_SESSION['isTrainer']): 
                     $entries = $entryObj->getAllUnvalidatedTrainingEntries($_SESSION['orgID']); ?>
+
+                    <h3>Validate Training Entries</h3>
 
                     <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
                         <div style="display: flex;">
@@ -629,6 +630,8 @@
 
             <?php elseif($action == "ValidateTraining"): 
                 $entry = $entryObj->getTrainingEntry($entryID); ?>
+
+                <h3>Validate Training Entry</h3>
 
                 <form method="POST" action="trainingEntry.php?action=ViewAll">
 

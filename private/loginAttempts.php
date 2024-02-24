@@ -8,6 +8,8 @@
     $error= '';
     $action = '';
     $loginObj = new LoginDB();
+    $userObj = new UserDB();
+    $orgObj = new OrganizationDB();
 
     //get action variable
     if(isset($_GET['action'])){
@@ -57,22 +59,6 @@
         $userID = "";
     }
 
-        //siteADMIN
-        //Alexander
-        //AlexanderPela
-
-        //orgADMIN
-        //NewGuy13
-        //Pelaman12
-
-
-        //general USER
-        //JoinUser215125
-        //PelaMan12
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -98,17 +84,11 @@
                 $userDB = new userDB();
                 $users = $userDB->getAllUsersInOrg($_SESSION['orgID']); ?>
 
+                <h3>User Login Attempts</h3>
+
                 <form method="POST" name="search_books" class="col-lg-10 offset-lg-1">
-                    <label class="mb-3 mr-1" for="isTrainer">Successful Login: </label>
-
-                    <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-danger" for="successfulYes">Yes</label>
-
-                    <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-danger" for="successfulNo">No</label>
-
                     <?php if($_SESSION['isSiteAdmin']): ?>
-                        <div class="col-sm text-center">
+                        <div class="text-center">
                             <div class="label">
                                 <label>Organization ID:</label>
                             </div>
@@ -125,7 +105,7 @@
                     <?php endif; ?>
 
                     <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
-                        <div class="col-sm text-center">
+                        <div class="text-center">
                             <div class="label">
                                 <label>User ID:</label>
                             </div>
@@ -145,14 +125,18 @@
                         </div>
                     <?php endif; ?>
 
-                    <div class="row justify-content-center">
-                        <div class="col-6 text-center">
-                            <div>
-                                &nbsp;
-                            </div>
-                            <div>
-                                <input type="submit" name="search" value="Search" />
-                            </div>
+                    <div style="display: flex; justify-content: space-between;" class="mt-2">
+                        <div>
+                            <label>Successful Login: </label>
+
+                            <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                            <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+
+                            <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                            <label class="btn btn-outline-light" for="successfulNo">No</label>
+                        </div>
+                        <div>
+                            <input class="form-control btn btn-light" type="submit" name="search" value="Search" />
                         </div>
                     </div>
                 </form>
@@ -226,45 +210,44 @@
             <?php elseif($action == 'Edit'):
                 $loginID = filter_input(INPUT_GET, 'loginID');
                 $loginData = $loginObj->getLogin($loginID);
+
                 $userID = $loginData['userID'];
                 $attemptDate = $loginData['attemptDate'];
                 $isSuccessful = $loginData['isSuccessful']==0?"No":"Yes";
                 $comments = $loginData['comments'];
-                $ip = $loginData['ipAddress']; ?>
-                
+                $ip = $loginData['ipAddress'];
 
+                $userData = $userObj->getUser($userID); ?>
+
+                <h3>Edit Login Comments</h3>
+                
                 <!--Form for editing -->
                 <form method="post" action="loginAttempts.php?action=Viewer" name="loginAttempts_CRUD">
 
-                    <label>User ID</label>
-                    <input type="text" name="name" value='<?=$userID?>' disabled>
-                    </br>
-                    
+                    <label>Full Name</label>
+                    <input class="form-control" type="text" name="name" value='<?=$userData['firstName'] . " " . $userData['lastName']; ?>' disabled>
+
                     <label>Attempt Date</label>
-                    <input type="date" name="attemptDate" value='<?=$attemptDate?>' disabled>
-                    </br>
+                    <input class="form-control" type="date" name="attemptDate" value='<?=$attemptDate?>' disabled>
 
                     <label>Successful Login</label>
-                    <input type="text" name="isSuccessful" value='<?=$isSuccessful?>' disabled>
-                    </br>
+                    <input class="form-control" type="text" name="isSuccessful" value='<?=$isSuccessful?>'  disabled>
 
                     <label>Comments</label>
-                    <input type="text" name="comments" value='<?=$comments?>' autofocus>
-                    </br>
+                    <textarea class="form-control" name="comments" value='<?= $loginData['comments']; ?>' cols="100" rows="4" placeholder="Enter Comments" autofocus></textarea>
 
                     <label>IP Address</label>
-                    <input type="text" name="ip" value='<?=$ip?>' disabled>
-                    </br>
+                    <input class="form-control" type="text" name="ip" value='<?=$ip?>' disabled>
 
-                    <input type="hidden" name="loginID" value="<?=$loginID;?>" readonly>
+                    <input class="form-control" type="hidden" name="loginID" value="<?=$loginID;?>" readonly>
 
-                    <input type="submit" name="edit" value="Edit Comments">
-                        
-                    </form>
+                    <div style="display: flex;">
+                        <input class="form-control btn btn-light" type="submit" name="edit" value="Update Login Comments">
+                        <a class="form-control btn btn-light" href="loginAttempts.php?action=Viewer">Go Back</a>
+                    </div>
 
-                <a href="loginAttempts.php?action=Viewer">
-                    <button>Go Back</button>
-                </a>
+                </form>
+
             <?php endif; ?>
         </div>
     </div>    
