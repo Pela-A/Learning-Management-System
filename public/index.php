@@ -74,9 +74,10 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newPass = filter_input(INPUT_POST, 'newPass');
         $confirmPass = filter_input(INPUT_POST, 'confirmPass');
+        echo("got here");
 
         //verifyUserInformation
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newPass,$confirmPass);
+    
         
         //post entered org information
         $orgName = filter_input(INPUT_POST, 'orgName');
@@ -87,21 +88,7 @@
 
         $enterOrgCode = "";
 
-        if($orgName == ""){
-            $error .= "<li>Please enter an organization name!";
-        }
-        if($address == ""){
-            $error .= "<li>Please enter an organization address!";
-        }
-        if($city == ""){
-            $error .= "<li>Please enter an organization city!";
-        }
-
-        //zipcode verification
-        $zipPattern = "/^[0-9]{5}$/";
-        if(!preg_match($zipPattern, $zipCode)){
-            $error .= "<li>Please enter a five digit zipcode for your organization!";
-        }
+        
         
         //If no errors, create organization and assign user to Org as OrgAdmin
         if($error == ""){
@@ -160,14 +147,6 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $newPass = filter_input(INPUT_POST, 'newPass');
         $confirmPass = filter_input(INPUT_POST, 'confirmPass');
-
-        $error = verifyUserInformation($firstName,$lastName,$phoneNum,$email,$birthdate,$gender,$newPass,$confirmPass);
-        
-        $orgName = "";
-        $address = "";
-        $city = "";
-        $state = "";
-        $zipCode = "";
 
         $enterOrgCode = filter_input(INPUT_POST, 'orgCode');
 
@@ -243,7 +222,7 @@
 <body>
 
     <nav class="navbar pageContent">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.php">
             <img src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
             <strong>ATLAS</strong>
         </a>
@@ -252,6 +231,7 @@
     <div class="container-fluid text-light mt-4">
 
         <div class="row pageContent">
+            
             <div class="col-xl-8 col-md-12 py-4">
 
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -370,120 +350,122 @@
 
                     <div class="row formContent pt-4 pb-5">
 
-            
-
-
-                        <h2>Create Organization</h2>
-
                         <form name="create_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
-                            <h2>Account Information</h2>
 
-                            <?php if($error != ""):?>
-                                <div class="row">
+                            <div class="row part1">
 
-                                    <div class="col-sm">
-                                        <div class="error">
-                                            <?php echo($error); ?>
-                                        </div>
+                                <h2>Account Information</h2>
+
+
+                            
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">First Name:</label>
+                                    <input type="text" class="form-control firstHalf" name="firstName" id="firstName" pattern="^[A-Za-z]+$" required/>
+                                    <div class="invalid-feedback">
+                                        Provide a Valid First Name
                                     </div>
                                 </div>
-                            <?php endif; ?>
 
-                            <div class="mb-3">
-                                <label class="form-label">First Name:</label>
-                                <input type="text" class="form-control" name="firstName" id="firstName" pattern="^[A-Za-z]+$" required/>
-                                <div class="valid-feedback">
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Last Name:</label>
+                                    <input type="text" class="form-control firstHalf" name="lastName" id="lastName" pattern="^[A-Za-z]+$" required>
+                                    <div class="invalid-feedback">
+                                        Please Provide a Valid Last Name
+                                    </div>
+                                
                                 </div>
-                                <div class="invalid-feedback">
-                                    Please Provide a Valid First Name
+
+                                <div class="mb-2">
+                                    <label class="form-label">Phone Number:</label>
+                                    <input type="text" class="form-control firstHalf" name="phoneNum" id="phoneNum" pattern="[0-9]{10}" placeholder="3778219909" required>
+                                
+                                    <div class="invalid-feedback">
+                                        Please Provide a Valid Phone Number (Ten Digits)
+                                    </div>
+                                
                                 </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Last Name:</label>
-                                <input type="text" class="form-control" name="lastName" id="lastName" pattern="^[A-Za-z]+$" required>
-                                <div class="valid-feedback">
-                                    Works
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Email:</label>
+                                    <input type="text" class="form-control firstHalf" name="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required>
+                                    <div class="invalid-feedback">
+                                        Provide a valid Email
+                                    </div>
                                 </div>
-                                <div class="invalid-feedback">
-                                    Please Provide a Valid Last Name
+                                
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Birthday:</label>
+                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required>
                                 </div>
-                            
-                            </div>
+                                
+                                <div class="col-12 mb-2">
+                                    <label class="form-label">Gender:</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderMale" value="0">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderFemale" value="1" required>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Female
+                                        </label>
+                                    </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number:</label>
-                                <input type="text" class="form-control" name="phoneNum" id="phoneNum" pattern="[0-9]{10}" placeholder="3778219909" required>
-                            
-                                <div class="invalid-feedback">
-                                    Please Provide a Valid Phone Number (Ten Digits)
                                 </div>
-                            
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Email:</label>
-                                <input type="text" class="form-control" name="email" id="email" value="<?=$email?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Birthday:</label>
-                                <input type="date" class="form-control" name="birthdate" id="birthdate" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Gender</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderMale">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Male
-                                    </label>
+                                
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Create Password:</label>
+                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" pattern=".{8,}" required />
+                                    <div class="invalid-feedback">
+                                        Password must be atleast 6 characters.
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" required>
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        Female
-                                    </label>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Confirm Password:</label>
+                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" pattern=".{8,}" required>
+                                    <div class="invalid-feedback">
+                                        Password must be atleast 6 characters.
+                                    </div>
                                 </div>
+
+                                <button class="btn btn-block" id="continue">Continue</button>
+
                             </div>
                             
-                            <div class="mb-3">
-                                <label class="form-label">Create Password:</label>
-                                <input type="text" class="form-control" name="newPass" id="newPass" pattern=".{8,}" required />
-                            </div>
+                            <div class="part2 hidden">
 
-                            <div class="mb-3">
-                                <label class="form-label">Confirm Password:</label>
-                                <input type="text" class="form-control" name="confirmPass" id="confirmPass" pattern=".{8,}" required>
-                            </div>
-
-
-                            
-                            <div class="part2">
-
-
-
-                            
                                 <h2>Organization Information</h3>
 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label class="form-label">Organization Name</label>
-                                    <input type="text" class="form-control" name="orgName" id="orgName" value="" required>
+                                    <input type="text" class="form-control" name="orgName" id="orgName secondHalf" value="" required>
+                                    <div class="invalid-feedback">
+                                        Enter an Organization Name!
+                                    </div>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" name="address" id="address" value="" required>
+                                    <input type="text" class="form-control" name="address" id="address secondHalf" value="" required>
+                                    <div class="invalid-feedback">
+                                        Enter an Address!
+                                    </div>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label class="form-label">City</label>
-                                    <input type="text" class="form-control" name="city" id="city" value="" required>
+                                    <input type="text" class="form-control" name="city" id="city secondHalf" value="" required>
+                                    <div class="invalid-feedback">
+                                        Enter a city!
+                                    </div>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label class="form-label">State</label>
-                                    <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" required >
+                                    <select class="form-control text-secondary col-md-4" style="height: 40px;" type="text" name="state" id="secondHalf" required >
                                         <option value="">State</option>
                                         <option value="AL">Alabama</option>
                                         <option value="AK">Alaska</option>
@@ -536,14 +518,23 @@
                                         <option value="WI">Wisconsin</option>
                                         <option value="WY">Wyoming</option>
                                     </select>
+                                    <div class="invalid-feedback">
+                                        Select a State!
+                                    </div>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control" name="zipCode" id="zipCode" value="<?=$zipCode?>">
+                                    <input type="text" class="form-control" name="zipCode" id="zipCode secondHalf" pattern="[0-9]{5}" required placeholder="55555">
+                                    <div class="invalid-feedback">
+                                        Zipcode must be 5 digits!
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <button class="btn btn-block" id="back">Back</button>
                                 </div>
                                 
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <input type="submit" class="btn btn-block"name="create" value="Create Organization">
                                 </div>
                             </div>
@@ -574,110 +565,208 @@
                         }, false)
                         })
                     })()
-                    /*var firstName = document.querySelector(`#firstName`)
 
-                    console.log(firstName)
-                    firstName.addEventListener(`change`, (e)=>{
+                    var cont = document.querySelector(`#continue`)
+                    var back = document.querySelector(`#back`)
 
-                        console.log("on change worked")
-                        var message=""
 
-                        var pattern1 = /[^A-Za-z-]+/
-                        if(firstName.value !== "" && !pattern1.test(firstName.value) )
-                        {
-                            //firstName.parentElement.classList.remove(`error`)
-                            firstName.previousElementSibling.classList.add(`hidden`)
-                            firstName.previousElementSibling.innerHTML = ""
+                    var part1 = document.querySelector(`.part1`)
+                    var part2 = document.querySelector(`.part2`)
+
+                    cont.addEventListener('click', function(){
+                        
+                        if(validatePart1Fields()){
+                            part1.classList.add('hidden')
+                            part2.classList.remove('hidden')
                         }
-                        else if(firstName.value == ""){
-                            message = `Please enter a first name.`
-                            //inputs[0].parentElement.classList.add(`error`)
-                            firstName.previousElementSibling.classList.remove(`hidden`)
-                            firstName.previousElementSibling.innerHTML = `* ${message}`
+                        
+                    })
+                    back.addEventListener('click', function(){
+                        part1.classList.remove('hidden')
+                        part2.classList.add('hidden')
+                    })
+
+                    function validatePart1Fields(){
+                        var firstPart = document.querySelectorAll('.firstHalf')
+                        
+                        // Loop through each field and manually validate
+                        for (var i = 0; i < firstPart.length; i++) {
+                            if (!firstPart[i].checkValidity()) {
+                                // If any field is invalid, display validation feedback and return false
+                                return false;
+                            } else {
+                                
+                            }
                         }
-                        else{
-                            message = `First Name contains special characters or numbers`
-                            //inputs[0].parentElement.classList.add(`error`)
-                            firstName.previousElementSibling.previousElementSibling.classList.add(`error`)
-                            firstName.previousElementSibling.classList.remove(`hidden`)
-                            firstName.previousElementSibling.innerHTML = `* ${message}`
-                        }
-                    })*/
-
-
-
-
+                        
+                        return true
+                    }
 
                 </script>
             <?php elseif($action == 'joinOrg'): ?>
-                <h2>Join Organization Form</h2>
-                <form name="join_org_form" method="post">
-                    <h3>Enter Your Information</h3>
 
-                    <?php if($error != ""):?>
-                        <div class="row">
+                <div class=" col-xl-4 col-md-12 py-4">
+                
+                    <div class="row formContent pt-4 pb-5">
 
-                            <div class="col-sm">
-                                <div class="error">
-                                    <?php echo($error); ?>
+                        <form name="join_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
+                            <div class="row part1">
+
+                                <h2>Account Information</h2>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">First Name:</label>
+                                    <input type="text" class="form-control firstHalf" name="firstName" id="firstName" pattern="^[A-Za-z]+$" required/>
+                                    <div class="invalid-feedback">
+                                        Provide a Valid First Name
+                                    </div>
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Last Name:</label>
+                                    <input type="text" class="form-control firstHalf" name="lastName" id="lastName" pattern="^[A-Za-z]+$" required>
+                                    <div class="invalid-feedback">
+                                        Please Provide a Valid Last Name
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="form-label">Phone Number:</label>
+                                    <input type="text" class="form-control firstHalf" name="phoneNum" id="phoneNum" pattern="[0-9]{10}" placeholder="3778219909" required>
+
+                                    <div class="invalid-feedback">
+                                        Please Provide a Valid Phone Number (Ten Digits)
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Email:</label>
+                                    <input type="text" class="form-control firstHalf" name="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required>
+                                    <div class="invalid-feedback">
+                                        Provide a valid Email
+                                    </div>
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Birthday:</label>
+                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required>
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="form-label">Gender:</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderMale" value="0">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderFemale" value="1" required>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Female
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Create Password:</label>
+                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" pattern=".{8,}" required />
+                                    <div class="invalid-feedback">
+                                        Password must be atleast 6 characters.
+                                    </div>
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label">Confirm Password:</label>
+                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" pattern=".{8,}" required>
+                                    <div class="invalid-feedback">
+                                        Password must be atleast 6 characters.
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-block" id="continue">Continue</button>
+
+                            </div>
+
+                            <div class="part2 hidden">
+                                <div class="mb-2">
+                                    <label class="form-label">Enter Organization Code</label>
+                                    <input type="text" name="orgCode" class="form-control" pattern=".{20}" required>
+                                </div>
+
+                                <div class="mb-2">
+                                    <button class="btn btn-block" id="back">Back</button>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="submit" name="join" value="Join Organization">
                                 </div>
                             </div>
                         </div>
-                    <?php endif; ?>
-
-                    <div class="row">
-                        <label>First Name:</label>
-                        <input type="text" name="firstName" value="<?=$firstName?>">
                     </div>
-
-                    <div class="row">
-                        <label>Last Name:</label>
-                        <input type="text" name="lastName" value="<?=$lastName?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Phone Number:</label>
-                        <input type="text" name="phoneNum" value="<?=$phoneNum?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Email:</label>
-                        <input type="text" name="email" value="<?=$email?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Birthday:</label>
-                        <input type="date" name="birthdate" value="<?=$birthdate?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Gender:</label>
-                        <input type="radio" value="1" name="gender" <?php if($gender=="1") echo('checked');?>> Male
-                        <input type="radio" value="0" name="gender"<?php if($gender=="0") echo('checked');?>> Female
-                        <br />
-                    </div>
-
-                    <div class="row">
-                        <label>Create Password:</label>
-                        <input type="text" name="newPass" value="<?=$newPass?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Confirm Password:</label>
-                        <input type="text" name="confirmPass" value="<?=$confirmPass?>">
-                    </div>
-
-                    <div class="row">
-                        <label>Enter Organization Code</label>
-                        <input type="text" name="orgCode" value="<?=$enterOrgCode?>">
-                    </div>
-
-                    <div class="row">
-                        <input type="submit" name="join" value="Join Organization">
-                    </div>
-
 
                 </form>
+                <script>
+
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (function () {
+                    'use strict'
+
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.querySelectorAll('.needs-validation')
+
+                    // Loop over them and prevent submission
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            }
+
+                            form.classList.add('was-validated')
+                        }, false)
+                        })
+                    })()
+
+                    var cont = document.querySelector(`#continue`)
+                    var back = document.querySelector(`#back`)
+
+
+                    var part1 = document.querySelector(`.part1`)
+                    var part2 = document.querySelector(`.part2`)
+
+                    cont.addEventListener('click', function(){
+                        if(validatePart1Fields()){
+                            part1.classList.add('hidden')
+                            part2.classList.remove('hidden')
+                        }
+                    })
+
+                    back.addEventListener('click', function(){
+                        part1.classList.remove('hidden')
+                        part2.classList.add('hidden')
+                    })
+
+                    function validatePart1Fields(){
+                        var firstPart = document.querySelectorAll('.firstHalf')
+                        
+                        // Loop through each field and manually validate
+                        for (var i = 0; i < firstPart.length; i++) {
+                            if (!firstPart[i].checkValidity()) {
+                                // If any field is invalid, display validation feedback and return false
+                                return false;
+                            } else {
+                                
+                            }
+                        }
+                        
+                        return true
+                    }
+
+                </script>
 
             <?php elseif($action == 'notVerified'): ?>
 
@@ -693,17 +782,9 @@
 
                 </div>
                 
-
             <?php endif; ?>
 
-
         </div>
-
-
-
-        
-
-        
 
     </div>
     <?php //include __DIR__ . '/../include/footer.php'; ?>
