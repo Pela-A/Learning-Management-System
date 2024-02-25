@@ -215,7 +215,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="..\assets\css\indexPage.css">
-    <title>Home Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Atlas</title>
 
     
 </head>
@@ -643,15 +644,19 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Email:</label>
-                                    <input type="text" class="form-control firstHalf" name="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required>
-                                    <div class="invalid-feedback">
-                                        Provide a valid Email
+                                    <input type="email" class="form-control firstHalf" name="email" id="email" required  >
+                                    <div id="emailFeedback" class="invalid-feedback">
+                                        Provide a valid Email!
                                     </div>
+
                                 </div>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Birthday:</label>
-                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required>
+                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required max="<?=date('Y-m-d')?>">
+                                    <div class="invalid-feedback">
+                                        Provide a Date!
+                                    </div>
                                 </div>
 
                                 <div class="col-12 mb-2">
@@ -675,7 +680,7 @@
                                     <label class="form-label">Create Password:</label>
                                     <input type="text" class="form-control firstHalf" name="newPass" id="newPass" pattern=".{8,}" required />
                                     <div class="invalid-feedback">
-                                        Password must be atleast 6 characters.
+                                        Password must be atleast 6 characters!
                                     </div>
                                 </div>
 
@@ -731,9 +736,56 @@
                         })
                     })()
 
+                    function validateEmail(){
+                        var email = $('#email').val();
+                        pattern2 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+                        if(pattern2.test(email)){
+
+                            $.ajax({
+                                url: '../include/checkEmail.php',
+                                type: 'post',
+                                data: {email: email},
+                                dataType: 'json',
+                                success:function(response){
+                                    
+                                    if(response){
+
+                                        $('#email').removeClass('is-invalid').addClass('is-valid');
+                                        $('#emailFeedback').html('Email is available.').removeClass('invalid-feedback').addClass('valid-feedback');
+                                        
+                                        
+                                    } else {
+                                        $('#email').removeClass('is-valid').addClass('is-invalid');
+                                        $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');
+                                        event.preventDefault();
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                    // Handle errors if needed
+                                }
+                                
+                            });
+                        }
+                        else{
+                            $('#email').removeClass('is-valid').addClass('is-invalid');
+                            $('#emailFeedback').html('Provide a valid Email!').removeClass('valid-feedback').addClass('invalid-feedback');
+                        }
+                    }
+
+
+                    $(document).ready(function(){
+                        // Prevent the browser's default validation behavior for the email field when it's considered invalid
+
+                        //Check on input
+                        $('#email').on('input',function(){
+                            validateEmail();
+                        });
+                    });
+
+                    //Continue/Back button functionality
                     var cont = document.querySelector(`#continue`)
                     var back = document.querySelector(`#back`)
-
 
                     var part1 = document.querySelector(`.part1`)
                     var part2 = document.querySelector(`.part2`)
@@ -751,6 +803,7 @@
                     })
 
                     function validatePart1Fields(){
+                        validateEmail()
                         var firstPart = document.querySelectorAll('.firstHalf')
                         
                         // Loop through each field and manually validate
@@ -789,8 +842,6 @@
     </div>
     <?php //include __DIR__ . '/../include/footer.php'; ?>
 
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 

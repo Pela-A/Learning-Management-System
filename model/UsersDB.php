@@ -474,6 +474,21 @@ class UserDB {
         return $results;
     }
 
+    public function checkEmail($email){
+        $result = true;
+        $userTable = $this->userData;
+
+        $sqlString = $userTable->prepare("SELECT email from users where email = :e");
+
+        $sqlString->bindValue(':e',$email);
+
+        if($sqlString->execute() && $sqlString->rowCount() > 0){
+            $result = false;
+        }
+
+        return $result;
+    }
+
 
 }
 
