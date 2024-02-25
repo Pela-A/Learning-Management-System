@@ -97,6 +97,9 @@
 
             <?php elseif($action == "Create"): 
                 if($_SESSION['isTrainer']): ?>
+
+                    
+
                 <?php endif; ?>
 
             <?php elseif($action == "Edit"): 

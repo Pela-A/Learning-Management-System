@@ -243,18 +243,20 @@
 <body>
 
     <nav class="navbar pageContent">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand mt-3" style="vertical-align: baseline;" href="#">
             <img src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
-            <strong>ATLAS</strong>
+            <strong style=" font-family: 'Advent Pro';
+                            font-size: 40px;
+                            ">ATLAS
+            </strong>
         </a>
     </nav>
 
     <div class="container-fluid text-light mt-4">
 
         <div class="row pageContent">
-            <div class="col-xl-8 col-md-12 py-4">
-
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="" style="display:flex; justify-content: space-between;">
+                <div id="carouselExampleIndicators" class="carousel slide py-4" data-ride="carousel">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -292,23 +294,14 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-            </div>
-            
-            <?php if($action == ''): ?>
-                <div class=" col-xl-4 col-md-12 py-4 special">
 
-                    <div class="row formContent pt-4 pb-5">
-
-
-                
-
-
-                
+                <?php if($action == ''): ?>
+                <div class="container-fluid py-4 special col-md-4">
+                    <div class="formContent container-fluid pt-4 pb-5">
                         <h2>Login</h2>
 
                         <?php if($error != ""):?>
                             <div class="row">
-
                                 <div class="col-sm">
                                     <div class="error">
                                         <?php echo($error); ?>
@@ -331,48 +324,18 @@
                         </form>
                     </div>
 
-                    <div class="row formContent py-4">
-                        
-
-                        
-                            <div class="col-12 py-1">
-                                <a href="index.php?action=createOrg">
-                                    <button class="btn btn-block">
-                                        Register Organization
-                                    </button>
-                                </a>
-                            </div>
-                        
-                    
-                        
-                            <div class="col-12 py-1">
-                                <a href="index.php?action=joinOrg"> 
-                                    <button class="btn btn-block">Join Organization</button>
-                                </a>
-                            </div>
-                            
-                     
-                        
-                        
-                        
+                    <div class="formContent py-4">
+                        <a class="col-12 py-1 btn btn-block" href="index.php?action=createOrg">Register Organization</a>
+                        <a class="col-12 py-1 btn btn-block" href="index.php?action=joinOrg">Join Organization</a>
                     </div>
-
-
-
-
                 </div>
 
-                
+            </div>
 
             <?php elseif($action == 'createOrg'): ?>
 
                 <div class=" col-xl-4 col-md-12 py-4">
-
                     <div class="row formContent pt-4 pb-5">
-
-            
-
-
                         <h2>Create Organization</h2>
                         <form name="create_org_form" method="post" class="px-4 pb-2 pt-2">
                             <h2>Account Information</h2>

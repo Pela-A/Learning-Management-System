@@ -1294,7 +1294,7 @@
             
             <?php endif; ?>
         
-            </div>
+        </div>
     </div>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>
