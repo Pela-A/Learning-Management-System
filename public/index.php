@@ -611,22 +611,22 @@
                     <div class="row formContent pt-4 pb-5">
 
                         <form name="join_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
-                            <div class="row part1">
+                            <div class="row">
 
                                 <h2>Account Information</h2>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">First Name:</label>
-                                    <input type="text" class="form-control firstHalf" name="firstName" id="firstName" pattern="^[A-Za-z]+$" required/>
-                                    <div class="invalid-feedback">
+                                    <input type="text" class="form-control firstHalf" name="firstName" id="firstName" onchange="validateFirstName()"/>
+                                    <div id="firstFeedback" class="invalid-feedback">
                                         Provide a Valid First Name
                                     </div>
                                 </div>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Last Name:</label>
-                                    <input type="text" class="form-control firstHalf" name="lastName" id="lastName" pattern="^[A-Za-z]+$" required>
-                                    <div class="invalid-feedback">
+                                    <input type="text" class="form-control firstHalf" name="lastName" id="lastName" onchange="validateLastName()"/>
+                                    <div id="lastFeedback" class="invalid-feedback">
                                         Please Provide a Valid Last Name
                                     </div>
 
@@ -634,9 +634,9 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">Phone Number:</label>
-                                    <input type="text" class="form-control firstHalf" name="phoneNum" id="phoneNum" pattern="[0-9]{10}" placeholder="3778219909" required>
+                                    <input type="text" class="form-control firstHalf" name="phoneNum" id="phoneNum" placeholder="3778219909" onchange="validatePhoneNumber()">
 
-                                    <div class="invalid-feedback">
+                                    <div id="phoneFeedback" class="invalid-feedback">
                                         Please Provide a Valid Phone Number (Ten Digits)
                                     </div>
 
@@ -644,7 +644,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Email:</label>
-                                    <input type="email" class="form-control firstHalf" name="email" id="email" required  >
+                                    <input type="text" class="form-control firstHalf" name="email" id="email" onchange="validateEmail()"  >
                                     <div id="emailFeedback" class="invalid-feedback">
                                         Provide a valid Email!
                                     </div>
@@ -673,42 +673,41 @@
                                             Female
                                         </label>
                                     </div>
+                                    
 
                                 </div>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Create Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" pattern=".{8,}" required />
-                                    <div class="invalid-feedback">
+                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" onchange="comparePasswords()" />
+                                    <div id="passwordFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters!
                                     </div>
                                 </div>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Confirm Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" pattern=".{8,}" required>
-                                    <div class="invalid-feedback">
+                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" onchange="comparePasswords()"/>
+                                    <div id="confirmFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters.
                                     </div>
                                 </div>
-
-                                <button class="btn btn-block" id="continue">Continue</button>
-
-                            </div>
-
-                            <div class="part2 hidden">
+            
                                 <div class="mb-2">
                                     <label class="form-label">Enter Organization Code</label>
-                                    <input type="text" name="orgCode" class="form-control" pattern=".{20}" required>
+                                    <input type="text" id="orgCode" name="orgCode" class="form-control" onchange="validateOrgCode()">
+                                    <div id="orgCodeFeedback" class="invalid-feedback">
+                                        Org Code must be 20 characters.
+                                    </div>
                                 </div>
+                                    
 
+                            
                                 <div class="mb-2">
-                                    <button class="btn btn-block" id="back">Back</button>
+                                    <input type="submit" id="join" name="join" value="Join Organization" class="btn btn-block">
                                 </div>
-                                <div class="mb-2">
-                                    <input type="submit" name="join" value="Join Organization">
-                                </div>
-                            </div>
+                            </div>  
+                            
                         </div>
                     </div>
 
@@ -738,7 +737,7 @@
 
                     function validateEmail(){
                         var email = $('#email').val();
-                        pattern2 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+                        pattern2 = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
                         if(pattern2.test(email)){
 
                             $.ajax({
@@ -749,15 +748,13 @@
                                 success:function(response){
                                     
                                     if(response){
-
                                         $('#email').removeClass('is-invalid').addClass('is-valid');
                                         $('#emailFeedback').html('Email is available.').removeClass('invalid-feedback').addClass('valid-feedback');
-                                        
-                                        
+                                        $('#join').prop('disabled', false); 
                                     } else {
                                         $('#email').removeClass('is-valid').addClass('is-invalid');
                                         $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');
-                                        event.preventDefault();
+                                        $('#join').prop('disabled', true);
                                     }
                                 },
                                 error: function(xhr, status, error) {
@@ -773,52 +770,109 @@
                         }
                     }
 
+                    function comparePasswords(){
+                        var password = $('#newPass').val()
+                        var confirmPassword = $('#confirmPass').val()
 
-                    $(document).ready(function(){
-                        // Prevent the browser's default validation behavior for the email field when it's considered invalid
+                        if(password.length == 6){
 
-                        //Check on input
-                        $('#email').on('input',function(){
-                            validateEmail();
-                        });
-                    });
-
-                    //Continue/Back button functionality
-                    var cont = document.querySelector(`#continue`)
-                    var back = document.querySelector(`#back`)
-
-                    var part1 = document.querySelector(`.part1`)
-                    var part2 = document.querySelector(`.part2`)
-
-                    cont.addEventListener('click', function(){
-                        if(validatePart1Fields()){
-                            part1.classList.add('hidden')
-                            part2.classList.remove('hidden')
                         }
-                    })
-
-                    back.addEventListener('click', function(){
-                        part1.classList.remove('hidden')
-                        part2.classList.add('hidden')
-                    })
-
-                    function validatePart1Fields(){
-                        validateEmail()
-                        var firstPart = document.querySelectorAll('.firstHalf')
-                        
-                        // Loop through each field and manually validate
-                        for (var i = 0; i < firstPart.length; i++) {
-                            if (!firstPart[i].checkValidity()) {
-                                // If any field is invalid, display validation feedback and return false
-                                return false;
-                            } else {
-                                
+                        if(password.length >= 6 || confirmPassword.length >= 6){
+                            if(password !== confirmPassword){
+                                $('#confirmPass').removeClass('is-valid').addClass('is-invalid');
+                                $('#newPass').removeClass('is-valid').addClass('is-invalid');
+                                $('#confirmFeedback').html('Password and Confirm Password must be the Same!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#passwordFeedback').html('Password and Confirm Password must be the Same!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#join').prop('disabled', true); 
+                            }else{
+                                $('#confirmPass').removeClass('is-invalid').addClass('is-valid');
+                                $('#newPass').removeClass('is-invalid').addClass('is-valid');
+                                $('#confirmFeedback').html('Valid Passwords!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#passwordFeedback').html('Valid Passwords!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#join').prop('disabled', false); 
                             }
+
+                        }
+                        else{
+                            $('#confirmPass').removeClass('is-valid').addClass('is-invalid');
+                            $('#newPass').removeClass('is-valid').addClass('is-invalid');
+                            $('#confirmFeedback').html('Confirm Password must be at least 6 characters!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            $('#passwordFeedback').html('Password must be at least 6 characters!').removeClass('valid-feedback').addClass('invalid-feedback');
+                        }
+                    }
+                    function validateFirstName(){
+                        var firstName = $('#firstName').val()
+                        pattern = /^[A-Za-z]+$/
+                        if(firstName != ""){
+                            if(pattern.test(firstName)){
+                                $('#firstName').removeClass('is-invalid').addClass('is-valid');
+                                $('#firstFeedback').html('Valid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+                            else{
+                                $('#firstName').removeClass('is-valid').addClass('is-invalid');
+                                $('#firstFeedback').html('Invalid First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                            }
+                        }else{
+                            $('#firstName').removeClass('is-valid').addClass('is-invalid');
+                            $('#firstFeedback').html('Enter a First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
                         }
                         
-                        return true
                     }
 
+                    function validateLastName(){
+                        var lastName = $('#lastName').val()
+                        pattern = /^[A-Za-z]+$/
+                        if(lastName != ""){
+                            if(pattern.test(lastName)){
+                                $('#lastName').removeClass('is-invalid').addClass('is-valid');
+                                $('#lastFeedback').html('Valid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+                            else{
+                                $('#lasttName').removeClass('is-valid').addClass('is-invalid');
+                                $('#lastFeedback').html('Invalid First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                            }
+                        }else{
+                            $('#lastName').removeClass('is-valid').addClass('is-invalid');
+                            $('#lastFeedback').html('Enter a First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                        }
+                    }
+
+                    function validatePhoneNumber(){
+                        var phoneNum = $('#phoneNum').val()
+                        pattern = /[0-9]{10}/
+                        if(phoneNum != ""){
+                            if(pattern.test(phoneNum)){
+                                $('#phoneNum').removeClass('is-invalid').addClass('is-valid');
+                                $('#phoneFeedback').html('Valid Phone Number!').removeClass('invalid-feedback').addClass('valid-feedback');
+                            }
+                            else{
+                                $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
+                                $('#phoneFeedback').html(' Invalid Phone Number! (10 Digits Only)').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+                        }else{
+                            $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
+                            $('#phoneFeedback').html(' Enter a Phone Number!').removeClass('valid-feedback').addClass('invalid-feedback');
+                        }
+
+                    }
+
+                    function validateOrgCode(){
+                        var orgCode = $('#orgCode')
+                        if(orgCode.length != 20){
+                            $('#orgCode').removeClass('is-valid').addClass('is-invalid');
+                            $('#orgCodeFeedback').html('Organization Code must be 20 characters long!').removeClass('valid-feedback').addClass('invalid-feedback');
+                    
+                        }else{
+                            $('#orgCode').removeClass('is-invalid').addClass('is-valid');
+                            $('#orgCodeFeedback').html('Organization Code is valid!').removeClass('valid-feedback').addClass('invalid-feedback');
+                        }
+                    }
+
+                    
+
+                    
+
+    
                 </script>
 
             <?php elseif($action == 'notVerified'): ?>
