@@ -48,11 +48,11 @@ class TrainingModuleDB {
         return $results;
     }
 
-    public function createTrainingModule($orgID, $courseName, $creditHours, $category, $description, $websiteURL, $imageURL){
+    public function createTrainingModule($orgID, $courseName, $creditHours, $category, $description, $websiteURL){
         $results = [];
         $moduleTable = $this->moduleData;
 
-        $sqlString = $moduleTable->prepare("INSERT INTO trainingmodules SET orgID = :oi, courseName = :cn, creditHours = :ch, category = :cg, description = :de, websiteURL = :wu, imageURL = :iu");
+        $sqlString = $moduleTable->prepare("INSERT INTO trainingmodules SET orgID = :oi, courseName = :cn, creditHours = :ch, category = :cg, description = :dp, websiteURL = :wu");
 
         $binds = array(
             ":oi" => $orgID,
@@ -60,8 +60,7 @@ class TrainingModuleDB {
             ":ch" => $creditHours,
             ":cg" => $category,
             ":dp" => $description,
-            ":wu" => $websiteURL,
-            ":iu" => $imageURL
+            ":wu" => $websiteURL
         );
 
         if($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
@@ -89,42 +88,43 @@ class TrainingModuleDB {
         $results = [];
         $moduleTable = $this->moduleData;
 
-        $sqlString = $moduleTable->prepare("SELECT * FROM trainingmodules WHERE 1=1");
+        // Base SQL query
+        $sqlString = "SELECT * FROM trainingmodules WHERE orgID = :oi";
+        $binds = [":oi" => $orgID];
 
-        $binds = [];
-
+        // Add conditions based on inputs
         if ($courseName != '') {
             $sqlString .= " AND courseName LIKE :cn";
-            $binds['cn'] = '%'.$courseName.'%';
+            $binds[':cn'] = '%'.$courseName.'%';
         }
 
         if ($category != '') {
             $sqlString .= " AND category LIKE :cg";
-            $binds['cg'] = '%'.$category.'%';
+            $binds[':cg'] = '%'.$category.'%';
         }
 
-        $sqlString = $userTable->prepare($sqlString);
+        // Prepare and execute the SQL query
+        $sqlString = $moduleTable->prepare($sqlString);
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return ($results);
     }
 
-    public function updateTrainingModule($orgID, $courseName, $creditHours, $category, $description, $websiteURL, $imageURL){
+    return $results;
+}
+
+    public function updateTrainingModule($moduleID, $courseName, $creditHours, $category, $description, $websiteURL){
         $results = [];
         $moduleTable = $this->moduleData;
 
-        $sqlString = $moduleTable->prepare("UPDATE trainingmodules SET orgID = :oi, courseName = :cn, creditHours = :ch, category = :cg, description = :de, websiteURL = :wu, imageURL = :iu");
+        $sqlString = $moduleTable->prepare("UPDATE trainingmodules SET courseName = :cn, creditHours = :ch, category = :cg, description = :de, websiteURL = :wu WHERE moduleID = :mi");
 
         $binds = array(
-            ":oi" => $orgID,
+            ":mi" => $moduleID,
             ":cn" => $courseName,
             ":ch" => $creditHours,
             ":cg" => $category,
-            ":dp" => $description,
-            ":wu" => $websiteURL,
-            ":iu" => $imageURL
+            ":de" => $description,
+            ":wu" => $websiteURL
         );
 
         if($sqlString->execute($binds) && $sqlString->rowCount() > 0) {

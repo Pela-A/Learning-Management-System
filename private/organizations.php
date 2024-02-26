@@ -154,7 +154,7 @@
                             <td><?= $o['state']; ?></td>
                             <td><?= $o['zipCode']; ?></td>
                             <td><?= $o['orgCode']; ?></td>
-                            <td><a href="organizations.php?action=Edit&orgID=<?=$o['orgID']?>">Edit</a></td>
+                            <td><a class="btn btn-light" href="organizations.php?action=Edit&orgID=<?=$o['orgID']?>">Edit</a></td>
                             <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                         </tr>
                     <?php endforeach; ?>
