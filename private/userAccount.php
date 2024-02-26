@@ -158,7 +158,7 @@
         if($password === $validatePassword && $userObj->validatePassword($password)) {
             $userObj->changePassword($_SESSION['userID'], $password);
         } else {
-            echo '<div class="alert alert-danger" role="alert">Passwords do not match or do not meet the validation criteria. Please try again.</div>';
+            echo '<div class="alert alert-light" role="alert">Passwords do not match or do not meet the validation criteria. Please try again.</div>';
         }
         
     }
@@ -202,23 +202,23 @@
 
                 <?php if($_SESSION['isSiteAdmin']): ?>
                     
-                    <a href="userAccount.php?action=createUser">Create an Account</a>
+                    <a class="form-control btn btn-light mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
 
                     <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
-                            <div class="col-md-6">
+                            <div class="">
                                 <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
                                 <div class="valid-feedback">Username field is valid!</div>
                                 <div class="invalid-feedback">Username field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="">
                                 <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
                                 <div class="valid-feedback">Email field is valid!</div>
                                 <div class="invalid-feedback">Email field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="organization" required>
+                            <select class="form-control text-dark" style="height: 40px;" type="text" name="organization" required>
                                 <option value="">Select Organization</option>
                                 <?php foreach($orgs as $o): ?>
                                     <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
@@ -231,10 +231,10 @@
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                                 <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="male">Male</label>
+                                <label class="btn btn-sm btn-outline-light" for="male">Male</label>
 
                                 <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="female">Female</label>
+                                <label class="btn btn-sm btn-outline-light" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
                                 <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -244,10 +244,10 @@
                                 <label class="mb-3 mr-1" for="isSiteAdmin">Site Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="siteAdminYes">Yes</label>
+                                <label class="btn btn-sm btn-outline-light" for="siteAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="siteAdminNo">No</label>
+                                <label class="btn btn-sm btn-outline-light" for="siteAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected site admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select site admin status!</div>
@@ -257,10 +257,10 @@
                                 <label class="mb-3 mr-1" for="isOrgAdmin">Org Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="orgAdminYes">Yes</label>
+                                <label class="btn btn-sm btn-outline-light" for="orgAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="orgAdminNo">No</label>
+                                <label class="btn btn-sm btn-outline-light" for="orgAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected org admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select org admin status!</div>
@@ -270,16 +270,16 @@
                                 <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=1 id="trainerYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="trainerYes">Yes</label>
+                                <label class="btn btn-sm btn-outline-light" for="trainerYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=0 id="trainerNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-danger" for="trainerNo">No</label>
+                                <label class="btn btn-sm btn-outline-light" for="trainerNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected trainer status!</div>
                                 <div class="invalid-feedback mv-up">Please select trainer status!</div>
                             </div>
 
-                            <input type="submit" class="btn btn-sm btn-danger" id="searchBtn" name="searchButton" value="Search" />
+                            <input type="submit" class="btn btn-light" style="height: 40px;" name="searchButton" value="Search" />
                         </div>
                     </form>
 
@@ -308,7 +308,7 @@
                                     <td>
                                         <form method="POST">
                                             <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                            <input class="btn btn-danger btn-sm" type="submit" name="deleteUser" value="Delete" />
+                                            <input class="btn btn-light" type="submit" name="deleteUser" value="Delete" />
                                         </form>
                                     </td>
                                     
@@ -324,7 +324,7 @@
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-danger btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -359,7 +359,7 @@
                                 <td>
                                     <form method="POST">
                                         <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                        <input class="btn btn-danger btn-sm" type="submit" name="deleteUser" value="Delete" />
+                                        <input class="btn btn-light btn-sm" type="submit" name="deleteUser" value="Delete" />
                                     </form>
                                 </td>
                                 <td><?= $u['firstName']; ?></td>
@@ -372,7 +372,7 @@
                                 <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-danger btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -498,7 +498,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitSiteAdminCreateUser" type="submit" class="btn btn-primary">Create New User</button>
+                            <button name="submitSiteAdminCreateUser" type="submit" class="btn btn-light">Create New User</button>
                         </div>
 
                     </form>
@@ -602,7 +602,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button id="submit" name="submitOrgAdminCreateUser" type="submit" class="btn btn-primary">Create New User</button>
+                            <button id="submit" name="submitOrgAdminCreateUser" type="submit" class="btn btn-light">Create New User</button>
                         </div>
 
                     </form>
@@ -977,7 +977,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-primary">Update Information</button>
+                            <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
                         </div>
 
                     </form>
@@ -1106,7 +1106,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-primary">Update Information</button>
+                            <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
                         </div>
 
                     </form>
@@ -1196,7 +1196,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitUpdateUser" type="submit" class="btn btn-primary">Update Information</button>
+                            <button name="submitUpdateUser" type="submit" class="btn btn-light">Update Information</button>
                         </div>
 
                     </form>
@@ -1232,7 +1232,7 @@
                     <?php ?>
 
                     <div class="form-button mt-3">
-                        <button name="submiteChangePassword" type="submit" class="btn btn-primary">Change Password</button>
+                        <button name="submiteChangePassword" type="submit" class="btn btn-light">Change Password</button>
                     </div>
 
                 </form>
@@ -1294,7 +1294,7 @@
             
             <?php endif; ?>
         
-            </div>
+        </div>
     </div>
 
 <?php include __DIR__ . '/../include/footer.php'; ?>

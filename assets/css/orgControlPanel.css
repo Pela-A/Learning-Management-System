@@ -1,0 +1,17 @@
+#controlPanel {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.controlPanelWidget a:link, a:active, a:visited {
+    text-decoration: none;
+    color:rgb(114, 114, 114);
+}
+
+.controlPanelWidget li:hover {
+    background-color: rgb(69, 69, 69);
+}
+
+.controlPanelWidget a:hover {
+    color: rgb(179, 179, 179);
+}

@@ -26,8 +26,8 @@ body{
     Background-color: rgb(48, 49, 52);
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    padding-left: 60px;
-    padding-right: 60px;
+    padding-left: 40px;
+    padding-right: 40px;
 
     font-size: 20px;
 }

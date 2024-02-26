@@ -88,41 +88,27 @@
 
                 <form method="POST" name="search_books" class="col-lg-10 offset-lg-1">
                     <?php if($_SESSION['isSiteAdmin']): ?>
-                        <div class="text-center">
-                            <div class="label">
-                                <label>Organization ID:</label>
-                            </div>
-                            
-                            <div>
-                                <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="orgID" id='organization_select'>
-                                    <option value="">Select Organization</option>
-                                    <?php foreach($orgs as $o): ?>
-                                        <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
+
+                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="orgID" id='organization_select'>
+                            <option value="">Select Organization</option>
+                            <?php foreach($orgs as $o): ?>
+                                <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
                     <?php endif; ?>
 
                     <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
-                        <div class="text-center">
-                            <div class="label">
-                                <label>User ID:</label>
-                            </div>
-                            
-                            <div>
-                                <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="userID" id='option_select'>
-                                    <?php if($_SESSION['isSiteAdmin']): ?>
-                                        <option value="">Select Organization ID to populate</option>
-                                    <?php else: ?>
-                                        <option value="">Select a User ID</option>
-                                        <?php foreach($users as $u): ?>
-                                        <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>   
-                                </select>
-                            </div>
-                        </div>
+                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="userID" id='option_select'>
+                            <?php if($_SESSION['isSiteAdmin']): ?>
+                                <option value="">Select Organization ID to populate</option>
+                            <?php else: ?>
+                                <option value="">Select a User ID</option>
+                                <?php foreach($users as $u): ?>
+                                <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>   
+                        </select>
                     <?php endif; ?>
 
                     <div style="display: flex; justify-content: space-between;" class="mt-2">
@@ -197,7 +183,7 @@
                             <td><?= $l['comments']; ?></td>
                             <td><?= $l['ipAddress']; ?></td>
                             <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): ?>
-                                <td><a href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
                                 <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                             <?php endif; ?>
                         </tr>
