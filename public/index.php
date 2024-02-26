@@ -725,6 +725,11 @@
                     Array.prototype.slice.call(forms)
                         .forEach(function (form) {
                         form.addEventListener('submit', function (event) {
+                            validateFirstName()
+                            validateLastName()
+                            validatePhoneNumber()
+                            validateEmail()
+                            comparePasswords()
                             if (!form.checkValidity()) {
                             event.preventDefault()
                             event.stopPropagation()
