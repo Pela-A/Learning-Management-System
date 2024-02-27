@@ -388,7 +388,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Email:</label>
-                                    <input type="text" class="form-control firstHalf" name="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required>
+                                    <input type="text" class="form-control" name="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" required>
                                     <div class="invalid-feedback">
                                         Provide a valid Email
                                     </div>
@@ -396,7 +396,7 @@
                                 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Birthday:</label>
-                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required>
+                                    <input type="date" class="form-control" name="birthdate" id="birthdate" required>
                                 </div>
                                 
                                 <div class="col-12 mb-2">
@@ -617,7 +617,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">First Name:</label>
-                                    <input type="text" class="form-control firstHalf" name="firstName" id="firstName" onchange="validateFirstName()"/>
+                                    <input type="text" class="form-control" name="firstName" id="firstName" onchange="validateFirstName(); checkInputs();"/>
                                     <div id="firstFeedback" class="invalid-feedback">
                                         Provide a Valid First Name
                                     </div>
@@ -625,7 +625,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Last Name:</label>
-                                    <input type="text" class="form-control firstHalf" name="lastName" id="lastName" onchange="validateLastName()"/>
+                                    <input type="text" class="form-control" name="lastName" id="lastName" onchange="validateLastName(); checkInputs();"/>
                                     <div id="lastFeedback" class="invalid-feedback">
                                         Please Provide a Valid Last Name
                                     </div>
@@ -634,7 +634,7 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">Phone Number:</label>
-                                    <input type="text" class="form-control firstHalf" name="phoneNum" id="phoneNum" placeholder="3778219909" onchange="validatePhoneNumber()">
+                                    <input type="text" class="form-control" name="phoneNum" id="phoneNum" placeholder="3778219909" onchange="validatePhoneNumber(); checkInputs();">
 
                                     <div id="phoneFeedback" class="invalid-feedback">
                                         Please Provide a Valid Phone Number (Ten Digits)
@@ -644,7 +644,8 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Email:</label>
-                                    <input type="text" class="form-control firstHalf" name="email" id="email" onchange="validateEmail()"  >
+                                    <input type="text" class="form-control" name="email" id="email" onchange="validateEmail(); checkInputs();">
+
                                     <div id="emailFeedback" class="invalid-feedback">
                                         Provide a valid Email!
                                     </div>
@@ -653,8 +654,8 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Birthday:</label>
-                                    <input type="date" class="form-control firstHalf" name="birthdate" id="birthdate" required max="<?=date('Y-m-d')?>">
-                                    <div class="invalid-feedback">
+                                    <input type="date" class="form-control" name="birthdate" id="birthdate" required max="<?=date('Y-m-d')?>" onchange="validateBirthday(); checkInputs();">
+                                    <div id="birthdayFeedback" class="invalid-feedback">
                                         Provide a Date!
                                     </div>
                                 </div>
@@ -662,24 +663,27 @@
                                 <div class="col-12 mb-2">
                                     <label class="form-label">Gender:</label>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderMale" value="0">
+                                        <input class="form-check-input" type="radio" name="gender" id="maleGender" value="0" onchange="validateGender(); checkInputs();">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             Male
                                         </label>
+                                        
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input firstHalf" type="radio" name="gender" id="genderFemale" value="1" required>
+                                        <input class="form-check-input" type="radio" name="gender" id="femaleGender" value="1" required onchange="validateGender(); checkInputs();">
                                         <label class="form-check-label" for="flexRadioDefault2">
                                             Female
                                         </label>
+                                        <div id="genderFeedback" class="invalid-feedback">More example invalid feedback text</div>
                                     </div>
+                                    
                                     
 
                                 </div>
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Create Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" onchange="comparePasswords()" />
+                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" onchange="comparePasswords(); checkInputs();" />
                                     <div id="passwordFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters!
                                     </div>
@@ -687,7 +691,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Confirm Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" onchange="comparePasswords()"/>
+                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" onchange="comparePasswords(); checkInputs();"/>
                                     <div id="confirmFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters.
                                     </div>
@@ -695,7 +699,7 @@
             
                                 <div class="mb-2">
                                     <label class="form-label">Enter Organization Code</label>
-                                    <input type="text" id="orgCode" name="orgCode" class="form-control" onchange="validateOrgCode()">
+                                    <input type="text" id="orgCode" name="orgCode" class="form-control" onchange="validateOrgCode(); checkInputs();">
                                     <div id="orgCodeFeedback" class="invalid-feedback">
                                         Org Code must be 20 characters.
                                     </div>
@@ -725,20 +729,47 @@
                     Array.prototype.slice.call(forms)
                         .forEach(function (form) {
                         form.addEventListener('submit', function (event) {
-                            validateFirstName()
-                            validateLastName()
-                            validatePhoneNumber()
-                            validateEmail()
+                            validateFirstName() 
+                            validateLastName() 
+                            validatePhoneNumber() 
+                            validateEmail() 
                             comparePasswords()
-                            if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                            }
-
-                            form.classList.add('was-validated')
+                            validateBirthday() 
+                            validateOrgCode() 
+                            validateGender()
+                            checkInputs()
+                            
+                            
+                            
                         }, false)
-                        })
+                    })
                     })()
+
+                    function validateBirthday(){
+                        var birthday = $('#birthdate').val();
+                        if(birthday == ""){
+                            $('#birthdate').removeClass('is-valid').addClass('is-invalid');
+                            $('#birthdayFeedback').html('Enter a Birthday.').removeClass('valid-feedback').addClass('invalid-feedback');
+                        }else{
+                            $('#birthdate').removeClass('is-invalid').addClass('is-valid');
+                            $('#birthdayFeedback').html('Valid Birthday.').removeClass('invalid-feedback').addClass('valid-feedback');
+                        }
+                    }
+
+                    function validateGender(){
+                        var male = $('#maleGender')
+                        var female = $('#femaleGender')
+
+                        if(male.prop('checked') || female.prop('checked')){
+                            $('#maleGender').removeClass('is-invalid').addClass('is-valid');
+                            $('#femaleGender').removeClass('is-invalid').addClass('is-valid');
+                            $('#genderFeedback').html('Valid Gender.').removeClass('invalid-feedback').addClass('valid-feedback');                            
+                        }else{
+                            $('#maleGender').removeClass('is-valid').addClass('is-invalid');
+                            $('#femaleGender').removeClass('is-valid').addClass('is-invalid');
+                            $('#genderFeedback').html('Select a Gender.').removeClass('valid-feedback').addClass('invalid-feedback');                           
+                        }
+                    }
 
                     function validateEmail(){
                         var email = $('#email').val();
@@ -755,11 +786,9 @@
                                     if(response){
                                         $('#email').removeClass('is-invalid').addClass('is-valid');
                                         $('#emailFeedback').html('Email is available.').removeClass('invalid-feedback').addClass('valid-feedback');
-                                        $('#join').prop('disabled', false); 
                                     } else {
                                         $('#email').removeClass('is-valid').addClass('is-invalid');
-                                        $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');
-                                        $('#join').prop('disabled', true);
+                                        $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');                                       
                                     }
                                 },
                                 error: function(xhr, status, error) {
@@ -771,7 +800,7 @@
                         }
                         else{
                             $('#email').removeClass('is-valid').addClass('is-invalid');
-                            $('#emailFeedback').html('Provide a valid Email!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            $('#emailFeedback').html('Provide a valid Email!').removeClass('valid-feedback').addClass('invalid-feedback');                            
                         }
                     }
 
@@ -779,22 +808,17 @@
                         var password = $('#newPass').val()
                         var confirmPassword = $('#confirmPass').val()
 
-                        if(password.length == 6){
-
-                        }
                         if(password.length >= 6 || confirmPassword.length >= 6){
                             if(password !== confirmPassword){
                                 $('#confirmPass').removeClass('is-valid').addClass('is-invalid');
                                 $('#newPass').removeClass('is-valid').addClass('is-invalid');
                                 $('#confirmFeedback').html('Password and Confirm Password must be the Same!').removeClass('valid-feedback').addClass('invalid-feedback');
                                 $('#passwordFeedback').html('Password and Confirm Password must be the Same!').removeClass('valid-feedback').addClass('invalid-feedback');
-                                $('#join').prop('disabled', true); 
                             }else{
                                 $('#confirmPass').removeClass('is-invalid').addClass('is-valid');
                                 $('#newPass').removeClass('is-invalid').addClass('is-valid');
-                                $('#confirmFeedback').html('Valid Passwords!').removeClass('valid-feedback').addClass('invalid-feedback');
-                                $('#passwordFeedback').html('Valid Passwords!').removeClass('valid-feedback').addClass('invalid-feedback');
-                                $('#join').prop('disabled', false); 
+                                $('#confirmFeedback').html('Valid Passwords!').removeClass('invalid-feedback').addClass('valid-feedback');
+                                $('#passwordFeedback').html('Valid Passwords!').removeClass('invalid-feedback').addClass('valid-feedback');
                             }
 
                         }
@@ -811,15 +835,15 @@
                         if(firstName != ""){
                             if(pattern.test(firstName)){
                                 $('#firstName').removeClass('is-invalid').addClass('is-valid');
-                                $('#firstFeedback').html('Valid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#firstFeedback').html('Valid First Name!').removeClass('invalid-feedback').addClass('valid-feedback');
                             }
                             else{
                                 $('#firstName').removeClass('is-valid').addClass('is-invalid');
-                                $('#firstFeedback').html('Invalid First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                                $('#firstFeedback').html('Invalid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
                             }
                         }else{
                             $('#firstName').removeClass('is-valid').addClass('is-invalid');
-                            $('#firstFeedback').html('Enter a First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                            $('#firstFeedback').html('Enter a First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
                         }
                         
                     }
@@ -830,15 +854,15 @@
                         if(lastName != ""){
                             if(pattern.test(lastName)){
                                 $('#lastName').removeClass('is-invalid').addClass('is-valid');
-                                $('#lastFeedback').html('Valid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#lastFeedback').html('Valid First Name!').removeClass('invalid-feedback').addClass('valid-feedback');
                             }
                             else{
                                 $('#lasttName').removeClass('is-valid').addClass('is-invalid');
-                                $('#lastFeedback').html('Invalid First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                                $('#lastFeedback').html('Invalid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
                             }
                         }else{
                             $('#lastName').removeClass('is-valid').addClass('is-invalid');
-                            $('#lastFeedback').html('Enter a First Name!').removeClass('invalid-feedback').addClass('invalid-feedback');
+                            $('#lastFeedback').html('Enter a First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
                         }
                     }
 
@@ -862,22 +886,32 @@
                     }
 
                     function validateOrgCode(){
-                        var orgCode = $('#orgCode')
+                        var orgCode = $('#orgCode').val()
                         if(orgCode.length != 20){
                             $('#orgCode').removeClass('is-valid').addClass('is-invalid');
                             $('#orgCodeFeedback').html('Organization Code must be 20 characters long!').removeClass('valid-feedback').addClass('invalid-feedback');
-                    
                         }else{
                             $('#orgCode').removeClass('is-invalid').addClass('is-valid');
-                            $('#orgCodeFeedback').html('Organization Code is valid!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            $('#orgCodeFeedback').html('Organization Code is valid!').removeClass('invalid-feedback').addClass('valid-feedback');
+                        }
+                    }
+                    function checkInputs(){
+                        var form = document.querySelector('.needs-validation')
+                        var inputs = form.getElementsByTagName("input");
+                        for (var i = 0; i < inputs.length; i++) {
+                            // Check if the current input element has the specified class
+                            if (inputs[i].classList.contains("is-invalid")) {
+                                $('#join').prop('disabled', true); 
+                                event.preventDefault()
+                                event.stopPropagation()
+                                break;
+                            }else {
+                                // Class is not applied to this input element
+                                $('#join').prop('disabled', false); 
+                            }
                         }
                     }
 
-                    
-
-                    
-
-    
                 </script>
 
             <?php elseif($action == 'notVerified'): ?>
