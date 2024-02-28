@@ -5,10 +5,10 @@
     
     $orgDB = new OrganizationDB();
     $feedback="";
+    
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
-
 
     if(isset($_POST['edit'])){        
         echo("edit button pressed");

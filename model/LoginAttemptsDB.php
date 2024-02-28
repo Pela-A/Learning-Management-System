@@ -43,7 +43,9 @@ class LoginDB {
         $results = [];
         $loginTable = $this->loginData;
 
-        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts ORDER BY attemptDate");
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts 
+                                            INNER JOIN users ON loginAttempts.userID = users.userID
+                                            ORDER BY attemptDate DESC");
 
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
@@ -57,15 +59,16 @@ class LoginDB {
         $results = [];
         $loginTable = $this->loginData;
 
-        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts WHERE userID = :u ORDER BY attemptDate");
+        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts 
+                                            INNER JOIN users ON loginAttempts.userID = users.userID
+                                            WHERE userID = :u 
+                                            ORDER BY attemptDate DESC");
         $sqlString->bindValue(':u', $userID);
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return $results;
-
-
     }
 
     //used for getting all logins in an organization
@@ -73,8 +76,13 @@ class LoginDB {
         $results = [];
         $loginTable = $this->loginData;
 
-        $sqlString = $loginTable->prepare("SELECT * FROM loginattempts INNER JOIN Users ON loginattempts.userID = users.userID WHERE orgID = :o ORDER BY attemptDate");
+        $sqlString = $loginTable->prepare("SELECT * FROM ((loginattempts 
+                                            INNER JOIN users ON loginattempts.userID = users.userID)
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            WHERE organizations.orgID = :o 
+                                            ORDER BY attemptDate DESC");
         $sqlString->bindValue(':o', $orgID);
+
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -82,17 +90,15 @@ class LoginDB {
         return $results;
     }
 
-    public function searchLogins($attemptDate, $successful, $userID, $orgID) {
+    public function searchLogins($successful, $userID, $orgID) {
         $results = [];
         $loginTable = $this->loginData;
 
-        $sqlString = "SELECT * FROM loginattempts INNER JOIN users ON loginattempts.userID = users.userID WHERE 1=1 ";
-        $binds = [];
-
-        if ($attemptDate != '') {
-            $sqlString .= " AND attemptDate LIKE :a";
-            $binds[':a'] = '%'.$attemptDate.'%';
-        }
+        $sqlString = "SELECT * FROM ((loginattempts 
+                        INNER JOIN users ON loginattempts.userID = users.userID) 
+                        INNER JOIN organizations ON users.orgID = organizations.orgID)
+                        WHERE organizations.orgID = :oi";
+        $binds = [":oi", $orgID];
 
         if($successful != '') {
             $sqlString .= "AND isSuccessful = :s";
@@ -101,10 +107,6 @@ class LoginDB {
         if ($userID != '') {
             $sqlString .= " AND loginattempts.userID = :u";
             $binds[':u'] = $userID;
-        }
-        if ($orgID != '') {
-            $sqlString .= " AND orgID = :o";
-            $binds[':o'] = $orgID;
         }
 
         $sqlString = $loginTable->prepare($sqlString);

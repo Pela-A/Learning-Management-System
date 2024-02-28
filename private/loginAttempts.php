@@ -24,41 +24,13 @@
     }
 
     //if search or coming to first time
-    if(isset($_POST['search'])){
-        $attemptDate = filter_input(INPUT_POST, 'attemptDate');
+    if(isset($_POST['searchLogins'])){
+        $userID = filter_input(INPUT_POST, 'userID');
         $successful = filter_input(INPUT_POST, 'successful');
-        if($_SESSION['isSiteAdmin']){
-            $userID = filter_input(INPUT_POST, 'userID');
-            $orgID = filter_input(INPUT_POST, 'orgID');
-            $orgDB = new organizationDB();
-            $orgs = $orgDB->getAllOrganizations();
-        }
-        elseif($_SESSION['isOrgAdmin']){
-            $userID = filter_input(INPUT_POST, 'userID');
-            $orgID = $_SESSION['orgID'];
-        }
-        else{
-            $userID = $_SESSION['userID'];
-            $orgID = $_SESSION['orgID'];
-        }
-        $logins = $loginObj->searchLogins($attemptDate,$successful, $userID, $orgID);
+
+        $logins = $loginObj->searchLogins($successful, $userID, $_SESSION['orgID']);
     }
     //otherwise loading into page first time.
-    else{
-        if($_SESSION['isSiteAdmin']){
-            $logins = $loginObj->getAllLogins();
-            $orgDB = new organizationDB();
-            $orgs = $orgDB->getAllOrganizations();
-        }
-        elseif($_SESSION['isOrgAdmin']){
-            $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']);
-        }else{
-            $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']);
-        }
-        $attemptDate = "";
-        $userID = "";
-    }
-
 ?>
 
 <!DOCTYPE html>
@@ -80,14 +52,14 @@
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
         <div class="pageContent container-fluid">
-            <?php if($action == "Viewer"):
-                $userDB = new userDB();
-                $users = $userDB->getAllUsersInOrg($_SESSION['orgID']); ?>
-
+            <?php if($action == "Viewer"): ?>
                 <h3>User Login Attempts</h3>
+                <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
+                    $users = $userObj->getAllUsers();
+                    $logins = $loginObj->getAllLogins();
+                    $orgs = $orgObj->getAllOrganizations(); ?>
 
-                <form method="POST" name="search_books" class="col-lg-10 offset-lg-1">
-                    <?php if($_SESSION['isSiteAdmin']): ?>
+                    <form method="POST" name="search" class="col-lg-10 offset-lg-1">
 
                         <select class="form-control text-secondary" style="height: 40px;" type="text" name="orgID" id='organization_select'>
                             <option value="">Select Organization</option>
@@ -96,38 +68,56 @@
                             <?php endforeach; ?>
                         </select>
 
-                    <?php endif; ?>
-
-                    <?php if($_SESSION['isOrgAdmin'] || $_SESSION['isSiteAdmin']): ?>
                         <select class="form-control text-secondary" style="height: 40px;" type="text" name="userID" id='option_select'>
-                            <?php if($_SESSION['isSiteAdmin']): ?>
-                                <option value="">Select Organization ID to populate</option>
-                            <?php else: ?>
-                                <option value="">Select a User ID</option>
-                                <?php foreach($users as $u): ?>
+                            <option value="">Select Organization ID to populate</option>
+                            <option value="">Select a User ID</option>
+                            <?php foreach($users as $u): ?>
                                 <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>   
+                            <?php endforeach; ?>  
                         </select>
-                    <?php endif; ?>
 
-                    <div style="display: flex; justify-content: space-between;" class="mt-2">
-                        <div>
-                            <label>Successful Login: </label>
+                        <div style="display: flex; justify-content: space-between;" class="mt-2">
+                            <div>
+                                <label>Successful Login: </label>
 
-                            <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                            <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+                                <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                            <label class="btn btn-outline-light" for="successfulNo">No</label>
+                                <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                            </div>
+                            <div>
+                                <input class="form-control btn btn-light" type="submit" name="search" value="Search" />
+                            </div>
                         </div>
-                        <div>
-                            <input class="form-control btn btn-light" type="submit" name="search" value="Search" />
-                        </div>
-                    </div>
-                </form>
+                    </form>
 
-                <?php if($_SESSION['isSiteAdmin']): ?>
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Attempt Date</th>
+                                <th>Successful</th>
+                                <th>Comments</th>
+                                <th>IP Address</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($logins as $l):?>
+                                <tr>
+                                    <td><?= $l['firstName'] . " " . $l['lastName']; ?></td>
+                                    <td><?= $l['attemptDate']; ?></td>
+                                    <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
+                                    <td><?= $l['comments']; ?></td>
+                                    <td><?= $l['ipAddress']; ?></td>
+                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
                     <script>
                         $(document).ready(function(){
                             $('#organization_select').change(function(){
@@ -154,44 +144,110 @@
                             });
                         });
                     </script>
-                <?php endif; ?>
-                <!--End search functionality -->
 
-                <table class="table table-striped table-hover table-dark">
-                    <thead>
-                        <tr>
-                            <th>Login ID</th>
-                            <th>User ID</th>
-                            <th>Attempt Date</th>
-                            <th>Successful</th>
-                            <th>Comments</th>
-                            <th>IP Address</th>
-                            <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): ?>
+                <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):
+                    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+                    $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']); 
+                    $org = $orgObj->getOrganization($_SESSION['orgID']); ?>
+
+                    <form method="POST" name="search" class="col-lg-10 offset-lg-1">
+
+                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="userID" id='option_select'>
+                            <option value="">Select User Account</option>
+                            <?php foreach($users as $u): ?>
+                                <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
+                            <?php endforeach; ?>  
+                        </select>
+
+                        <div style="display: flex; justify-content: space-between;" class="mt-2">
+                            <div>
+                                <label>Successful Login: </label>
+
+                                <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                            </div>
+                            <div>
+                                <input class="form-control btn btn-light" type="submit" name="searchLogins" value="Search" />
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Attempt Date</th>
+                                <th>Successful</th>
+                                <th>Comments</th>
+                                <th>IP Address</th>
                                 <th>Edit</th>
-                            <?php endif; ?>
-                        </tr>
-                    </thead>
+                            </tr>
+                        </thead>
 
-                    <tbody>
+                        <tbody>
+                            <?php foreach ($logins as $l):?>
+                                <tr>
+                                    <td><?= $l['firstName'] . " " . $l['lastName']; ?></td>
+                                    <td><?= $l['attemptDate']; ?></td>
+                                    <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
+                                    <td><?= $l['comments']; ?></td>
+                                    <td><?= $l['ipAddress']; ?></td>
+                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
-                    <?php foreach ($logins as $l):?>
-                        <tr>
-                            <td><?= $l['loginID']; ?></td>
-                            <td><?= $l['userID']; ?></td>
-                            <td><?= $l['attemptDate']; ?></td>
-                            <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
-                            <td><?= $l['comments']; ?></td>
-                            <td><?= $l['ipAddress']; ?></td>
-                            <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): ?>
-                                <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
-                                <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
-                            <?php endif; ?>
-                        </tr>
-                    <?php endforeach; ?>
-                                
-                    </tbody>
+                <?php else: 
+                    $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']); ?>
 
-                </table>
+                    <form method="POST">
+                        <div style="display: flex; justify-content: space-between;" class="mt-2">
+                            <div>
+                                <label>Successful Login: </label>
+
+                                <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                            </div>
+                            <div>
+                                <input class="form-control btn btn-light" type="submit" name="searchLogins" value="Search" />
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Attempt Date</th>
+                                <th>Successful</th>
+                                <th>Comments</th>
+                                <th>IP Address</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($logins as $l):?>
+                                <tr>
+                                    <td><?= $l['firstName'] . " " . $l['lastName']; ?></td>
+                                    <td><?= $l['attemptDate']; ?></td>
+                                    <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
+                                    <td><?= $l['comments']; ?></td>
+                                    <td><?= $l['ipAddress']; ?></td>
+                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                <?php endif; ?>
             
             <?php elseif($action == 'Edit'):
                 $loginID = filter_input(INPUT_GET, 'loginID');
