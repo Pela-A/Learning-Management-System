@@ -153,50 +153,47 @@ class TrainingEntryDB {
         return ($results);
     }
 
-    public function searchAllTrainingEntry($firstName, $lastName, $entryDate, $completeDate, $category){
+    public function searchAllTrainingEntry($orgID, $firstName, $lastName, $entryDate, $completeDate, $category) {
         $results = [];
         $entryTable = $this->entryData;
-
-        $sqlString = $entryTable->prepare("SELECT * FROM (TrainingEntries INNER JOIN users ON TrainingEntries.userID = users.userID) WHERE 0=0");
-
-        $binds = [];
-
+    
+        // Base SQL query with table alias and joins
+        $sqlString = "SELECT * FROM TrainingEntries AS te INNER JOIN users AS u ON te.userID = u.userID WHERE u.orgID = :oi";
+        $binds = [":oi" => $orgID];
+    
+        // Add conditions based on inputs
         if ($firstName != '') {
-            $sqlString .= " AND users.firstName LIKE :first";
-            $binds['first'] = '%'.$firstName.'%';
+            $sqlString .= " AND u.firstName LIKE :first";
+            $binds[':first'] = '%'.$firstName.'%';
         }
-
+    
         if ($lastName != '') {
-            $sqlString .= " AND users.lastName LIKE :last";
-            $binds['last'] = '%'.$lastName.'%';
+            $sqlString .= " AND u.lastName LIKE :last";
+            $binds[':last'] = '%'.$lastName.'%';
         }
-
-        if ($courseName != '') {
-            $sqlString .= " AND courseName LIKE :courseName";
-            $binds['courseName'] = '%'.$courseName.'%';
-        }
-
-        if ($entryDate != '') {
-            $sqlString .= " AND entryDate LIKE :entryDate";
-            $binds['entryDate'] = '%'.$entryDate.'%';
-        }
-
-        if ($completeDate != '') {
-            $sqlString .= " AND completeDate LIKE :completeDate";
-            $binds['completeDate'] = '%'.$completeDate.'%';
-        }
-
+    
         if ($category != '') {
-            $sqlString .= " AND category LIKE :category";
-            $binds['category'] = '%'.$category.'%';
+            $sqlString .= " AND te.category LIKE :category";
+            $binds[':category'] = '%'.$category.'%';
         }
-
-        $sqlString = $userTable->prepare($sqlString);
-        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+    
+        if ($entryDate != '') {
+            $sqlString .= " AND te.entryDate > :entryDate"; 
+            $binds[':entryDate'] = $entryDate;
         }
-
-        return ($results);
+    
+        if ($completeDate != '') {
+            $sqlString .= " AND te.completeDate > :completeDate"; 
+            $binds[':completeDate'] = $completeDate;
+        }
+    
+        // Prepare the SQL query
+        $stmt = $entryTable->prepare($sqlString);
+        if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    
+        return $results;
     }
 
     public function updateTrainingEntry($entryID, $userID, $courseName, $entryDate, $completeDate, $isValidated, $validateDate, $validationComments, $creditHours, $category, $description){
