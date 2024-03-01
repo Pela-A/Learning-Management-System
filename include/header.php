@@ -9,6 +9,7 @@
         echo("why bro");
         echo($_SESSION['userID']);
         echo($_SESSION['firstName']);
+        
         //header('Location: logout.php');
     }
 
@@ -54,7 +55,7 @@
             <ul style="margin: 0px;">
                 <li class="nav-item dropdown" style="display:flex;">
                     
-                    <img style="height: 30px;" class="m-auto pl-3" src="..\assets\images\Default_pfp.svg.png" alt="">
+                    <img style="height: 30px;" class="m-auto pl-3" src="<?=$_SESSION['profilePicture']?>" alt="">
                     
                     <a class="nav-link mx-2 active dropdown-toggle text-light" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome <?=$_SESSION['firstName']; ?></a>
                     <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">

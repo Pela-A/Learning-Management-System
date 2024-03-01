@@ -136,6 +136,7 @@
         $_SESSION['orgID']=$userData['orgID'];
         $_SESSION['firstName']=$userData['firstName'];
         $_SESSION['lastName']=$userData['lastName'];
+        $_SESSION['profilePicture']=$userData['profilePicture'];
 
         if($userData['isSiteAdmin'] == 1){
             $_SESSION['isSiteAdmin'] = True;
@@ -154,6 +155,7 @@
         } else {
             $_SESSION['isTrainer'] = False;
         }
+        
 
     }
 

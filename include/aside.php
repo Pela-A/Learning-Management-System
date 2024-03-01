@@ -85,37 +85,43 @@
             </ul>
         <?php endif; ?>
 
-        <h4>Personal Training</h4>
-        <ul>
-            <li>
-                <img src="..\assets\images\atlasPhotos\EnterTraining.png" alt="Enter Training">
-                <a href="trainingEntry.php?action=Create">Log Training Event</a>
-            </li>
-            <li>
-                <img src="..\assets\images\atlasPhotos\ViewTraining.png" alt="Training Viewer">
-                <a href="trainingModules.php?action=ViewAll">Training Modules Viewer</a>
-            </li>
-            <li>
-                <img src="..\assets\images\atlasPhotos\PastTraining.png" alt="Past Training">
-                <a href="trainingEntry.php?action=ViewAll">View Past Training</a>
-            </li>
-            <li>
-                <img src="..\assets\images\atlasPhotos\LoginDashboard.png" alt="Login Dashboard">
-                <a href="loginAttempts.php?action=Viewer">Login Dashboard</a>
-            </li>
-        </ul>
+        <?php if(!$_SESSION['isSiteAdmin']): ?>
+        
+            <h4>Personal Training</h4>
+            <ul>
+                <li>
+                    <img src="..\assets\images\atlasPhotos\EnterTraining.png" alt="Enter Training">
+                    <a href="trainingEntry.php?action=Create">Log Training Event</a>
+                </li>
+                <li>
+                    <img src="..\assets\images\atlasPhotos\ViewTraining.png" alt="Training Viewer">
+                    <a href="trainingModules.php?action=ViewAll">Training Modules Viewer</a>
+                </li>
+                <li>
+                    <img src="..\assets\images\atlasPhotos\PastTraining.png" alt="Past Training">
+                    <a href="trainingEntry.php?action=ViewAll">View Past Training</a>
+                </li>
 
+                <li>
+                    <img src="..\assets\images\atlasPhotos\LoginDashboard.png" alt="Login Dashboard">
+                    <a href="loginAttempts.php?action=Viewer">Login Dashboard</a>
+                </li>
+            </ul>
+        <?php endif; ?>
 
-        <div>
-            <img src="..\assets\images\atlasPhotos\Settings.png" alt="Settings">
-            <a href="userAccount.php?action=personalSettings">Account Settings</a>
-        </div>
+        
 
-        <div>
-            <img src="..\assets\images\atlasPhotos\LogoutIcon.png" alt="Logout">
-            <a href="logout.php">Logout</a>
-        </div>
+        
+        
+            <div>
+                <img src="..\assets\images\atlasPhotos\Settings.png" alt="Settings">
+                <a href="userAccount.php?action=personalSettings">Account Settings</a>
+            </div>
 
+            <div>
+                <img src="..\assets\images\atlasPhotos\LogoutIcon.png" alt="Logout">
+                <a href="logout.php">Logout</a>
+            </div>
     </aside>
 </body>
 </html>
