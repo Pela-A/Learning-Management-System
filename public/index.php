@@ -219,7 +219,7 @@
 <body>
 
     <nav class="navbar pageContent">
-        <a class="navbar-brand mt-3" style="vertical-align: baseline;" href="#">
+        <a class="navbar-brand mt-3" style="vertical-align: baseline;" href="index.php">
             <img src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
             <strong style=" font-family: 'Advent Pro';
                             font-size: 40px;
