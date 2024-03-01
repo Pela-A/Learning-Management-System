@@ -418,7 +418,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn btn-block" id="continue">Continue</button>
+                                <button class="btn btn-block" type="button" id="continue">Continue</button>
 
                             </div>
                             
@@ -518,7 +518,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-2">
-                                    <button class="btn btn-block" id="back">Back</button>
+                                    <button class="btn btn-block" type="button" id="back">Back</button>
                                 </div>
                                 
                                 <div class="mb-2">
@@ -693,6 +693,7 @@
                                         $('#email').removeClass('is-valid').addClass('is-invalid');
                                         $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');                                       
                                     }
+                                    checkInputs();
                                 },
                                 error: function(xhr, status, error) {
                                     console.error(xhr.responseText);
@@ -822,7 +823,7 @@
 
                                         <div class="col-sm">
                                             <div class="error">
-                                                <?phpecho($error);?>
+                                                <?php echo($error)?>
                                             </div>
                                         </div>
                                     </div>
@@ -830,7 +831,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">First Name:</label>
-                                    <input type="text" class="form-control" name="firstName" id="firstName" onchange="validateFirstName(); checkInputs();" maxlength="50"/>
+                                    <input type="text" class="form-control" name="firstName" id="firstName" onchange="validateFirstName(); checkInputs();" maxlength="50" value="<?=$firstName?>"/>
                                     <div id="firstFeedback" class="invalid-feedback">
                                         Provide a Valid First Name
                                     </div>
@@ -838,7 +839,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Last Name:</label>
-                                    <input type="text" class="form-control" name="lastName" id="lastName" onchange="validateLastName(); checkInputs();" maxlength="50"/>
+                                    <input type="text" class="form-control" name="lastName" id="lastName" onchange="validateLastName(); checkInputs();" maxlength="50" value="<?=$lastName?>"/>
                                     <div id="lastFeedback" class="invalid-feedback">
                                         Please Provide a Valid Last Name
                                     </div>
@@ -847,7 +848,7 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">Phone Number:</label>
-                                    <input type="text" class="form-control" name="phoneNum" id="phoneNum" placeholder="3778219909" onchange="validatePhoneNumber(); checkInputs();" maxlength="10">
+                                    <input type="text" class="form-control" name="phoneNum" id="phoneNum" placeholder="3778219909" onchange="validatePhoneNumber(); checkInputs();" maxlength="10" value="<?=$phoneNum?>">
 
                                     <div id="phoneFeedback" class="invalid-feedback">
                                         Please Provide a Valid Phone Number (Ten Digits)
@@ -857,7 +858,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Email:</label>
-                                    <input type="text" class="form-control" name="email" id="email" onchange="validateEmail(); checkInputs();" maxlength="50">
+                                    <input type="text" class="form-control" name="email" id="email" onchange="validateEmail(); checkInputs();" maxlength="50" value="<?=$email?>">
 
                                     <div id="emailFeedback" class="invalid-feedback">
                                         Provide a valid Email!
@@ -867,7 +868,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Birthday:</label>
-                                    <input type="date" class="form-control" name="birthdate" id="birthdate" required max="<?=date('Y-m-d')?>" onchange="validateBirthday(); checkInputs();">
+                                    <input type="date" class="form-control" name="birthdate" id="birthdate" value="<?=$birthdate?>"required max="<?=date('Y-m-d')?>" onchange="validateBirthday(); checkInputs();">
                                     <div id="birthdayFeedback" class="invalid-feedback">
                                         Provide a Date!
                                     </div>
@@ -876,14 +877,14 @@
                                 <div class="col-12 mb-2">
                                     <label class="form-label">Gender:</label>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="gender" id="maleGender" value="0" onchange="validateGender(); checkInputs();">
+                                        <input class="form-check-input" type="radio" name="gender" id="maleGender" value="0" onchange="validateGender(); checkInputs();" <?php if($gender == "0") echo('checked') ?>>
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             Male
                                         </label>
                                         
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="gender" id="femaleGender" value="1" required onchange="validateGender(); checkInputs();">
+                                        <input class="form-check-input" type="radio" name="gender" id="femaleGender" value="1" required onchange="validateGender(); checkInputs();" <?php if($gender == "1") echo('checked') ?>>
                                         <label class="form-check-label" for="flexRadioDefault2">
                                             Female
                                         </label>
@@ -896,7 +897,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Create Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" onchange="comparePasswords(); checkInputs();" maxlength="50"/>
+                                    <input type="text" class="form-control firstHalf" name="newPass" id="newPass" onchange="comparePasswords(); checkInputs();" maxlength="50" value="<?=$newPass?>"/>
                                     <div id="passwordFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters!
                                     </div>
@@ -904,7 +905,7 @@
 
                                 <div class="col-6 mb-2">
                                     <label class="form-label">Confirm Password:</label>
-                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" onchange="comparePasswords(); checkInputs();" maxlength="50"/>
+                                    <input type="text" class="form-control firstHalf" name="confirmPass" id="confirmPass" onchange="comparePasswords(); checkInputs();" maxlength="50" value="<?=$confirmPass?>"/>
                                     <div id="confirmFeedback" class="invalid-feedback">
                                         Password must be atleast 6 characters.
                                     </div>
@@ -912,7 +913,7 @@
             
                                 <div class="mb-2">
                                     <label class="form-label">Enter Organization Code</label>
-                                    <input type="text" id="orgCode" name="orgCode" class="form-control" onchange="validateOrgCode(); checkInputs();" maxlength="20">
+                                    <input type="text" id="orgCode" name="orgCode" class="form-control" onchange="validateOrgCode(); checkInputs();" maxlength="20" value="<?=$enterOrgCode?>">
                                     <div id="orgCodeFeedback" class="invalid-feedback">
                                         Org Code must be 20 characters.
                                     </div>
@@ -1005,6 +1006,7 @@
                                         $('#email').removeClass('is-valid').addClass('is-invalid');
                                         $('#emailFeedback').html('Email is already in use.').removeClass('valid-feedback').addClass('invalid-feedback');                                       
                                     }
+                                    checkInputs();
                                 },
                                 error: function(xhr, status, error) {
                                     console.error(xhr.responseText);
