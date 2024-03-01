@@ -219,20 +219,19 @@
 <body>
 
     <nav class="navbar pageContent">
-        <a class="navbar-brand mt-3" style="vertical-align: baseline;" href="index.php">
+        <a class="navbar-brand" href="index.php">
             <img src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
-            <strong style=" font-family: 'Advent Pro';
-                            font-size: 40px;
-                            ">ATLAS
-            </strong>
+            <strong>ATLAS</strong>
         </a>
     </nav>
 
     <div class="container-fluid text-light mt-4">
 
         <div class="row pageContent">
-            <div class="" style="display:flex; justify-content: space-between;">
-                <div id="carouselExampleIndicators" class="carousel slide py-4" data-ride="carousel">
+            
+            <div class="col-xl-8 col-md-12 py-4">
+
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -270,14 +269,23 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+            </div>
+            
+            <?php if($action == ''): ?>
+                <div class=" col-xl-4 col-md-12 py-4 special">
 
-                <?php if($action == ''): ?>
-                <div class="container-fluid py-4 special col-md-4">
-                    <div class="formContent container-fluid pt-4 pb-5">
+                    <div class="row formContent pt-4 pb-5">
+
+
+                
+
+
+                
                         <h2>Login</h2>
 
                         <?php if($error != ""):?>
                             <div class="row">
+
                                 <div class="col-sm">
                                     <div class="error">
                                         <?php echo($error); ?>
@@ -322,6 +330,7 @@
             <?php elseif($action == 'createOrg'): ?>
 
                 <div class=" col-xl-4 col-md-12 py-4">
+
                     <div class="row formContent pt-4 pb-5">
 
                         <form name="create_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
@@ -1147,4 +1156,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
-
