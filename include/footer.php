@@ -9,14 +9,13 @@
 </head>
 <body>
     
-    <footer class="bg-dark text-light"  
+    <footer class="text-light"  
             style=" padding-block: 15px;
                     margin: 0px; 
                     font-family: 'Advent Pro'; 
                     text-align: center; 
                     font-size: 18px;
                     width: 100%;
-                    position: fixed;
                     bottom: 0;"> 
                     
         <div class="container">

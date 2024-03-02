@@ -6,11 +6,8 @@
 
     //Redirects to Home Page if session variable does not exist
     if(!isset($_SESSION['userID'])){
-        echo("why bro");
-        echo($_SESSION['userID']);
-        echo($_SESSION['firstName']);
         
-        //header('Location: logout.php');
+        header('Location: logout.php');
     }
 
     //Establishes landingType Session variable dependant on admin status
@@ -44,7 +41,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-dark px-5" id="header" style="width: 100%; justify-content: space-between;">
+    <nav class="navbar navbar-expand-lg px-1" id="header" style="width: 100%; justify-content: space-between;">
         
         <div style="display:flex;">
             <img src="..\assets\images\atlasPhotos\ATLAS_Logo.png" alt="ATLAS Logo" style="max-height: 40px;">
@@ -58,10 +55,10 @@
                     <img style="height: 30px;" class="m-auto pl-3" src="<?=$_SESSION['profilePicture']?>" alt="">
                     
                     <a class="nav-link mx-2 active dropdown-toggle text-light" href="#" id="assignmentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome <?=$_SESSION['firstName']; ?></a>
-                    <div class="dropdown-menu" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
-                        <a class="dropdown-item" href="userAccount.php?action=personalSettings">Account Settings</a>
-                        <a class="dropdown-item" href="userAccount.php?action=changePassword">Change Password</a>
-                        <a class="dropdown-item" href="logout.php">Sign out</a>
+                    <div class="dropdown-menu bg-dark" style="width: 200px; font-size: 20px; margin-left: 12px; margin-top: 7px;" aria-labelledby="assignmentsDropdown">
+                        <a class="dropdown-item" href="userAccount.php?action=personalSettings"><img src="..\assets\images\atlasPhotos\Settings.png" alt="Settings">Account Settings</a>
+                        <a class="dropdown-item" href="userAccount.php?action=changePassword"><img src="..\assets\images\atlasPhotos\ChangePassword.png" alt="Logout">Change Password</a>
+                        <a class="dropdown-item" href="logout.php"><img src="..\assets\images\atlasPhotos\LogoutIcon.png" alt="Logout">Sign out</a>
                     </div>
                 </li>
             </ul>

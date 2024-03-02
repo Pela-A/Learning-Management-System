@@ -613,7 +613,11 @@
 
                 <h2>Account Settings</h2>
 
-                <?php $account = $userObj->getUser($_SESSION['userID']); ?>
+                <?php 
+                
+                $account = $userObj->getUser($_SESSION['userID']);
+                
+                ?>
                 <a href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
@@ -860,11 +864,10 @@
                     } ?>
 
                     <div style="display: flex;">
-                        <p>Organization: </p>
-                        <p><?= $organization['orgName']; ?></p>
+                        <p>Organization: <?=$organization['orgName']?> </p>
                     </div>
 
-                    <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer" class="row requires-validation" novalidate method="POST">
 
                         <select class="form-control text-dark col-md-12" name="department" style="height: 40px;" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
@@ -875,21 +878,21 @@
 
                         <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
 
-                        <div class="col-md-12" >
+                        <div class="col-md-6" >
                             <label>Username:</label>
                             <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" required>
                             <div class="valid-feedback">Username field is valid!</div>
                             <div class="invalid-feedback">Username field cannot be blank!</div>
                         </div>
 
-                        <div class="col-md-12" >
+                        <div class="col-md-6" >
                             <label>First Name: </label>
                             <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" placeholder="First Name" required>
                             <div class="valid-feedback">First name field is valid!</div>
                             <div class="invalid-feedback">First name field cannot be blank!</div>
                         </div>
 
-                        <div class="col-md-12" >
+                        <div class="col-md-4" >
                             <label>Last Name: </label>
                             <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" placeholder="Last Name" required>
                             <div class="valid-feedback">Last name field is valid!</div>
