@@ -3,6 +3,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #332A38 !important;
 }
 
 header, footer {
@@ -12,7 +13,7 @@ header, footer {
 aside { 
     min-width: 400px;
     height: auto;
-    background-color: rgba(48,49,52,.7);
+    background-color: rgb(36, 36, 36);
     border-right: 1px solid #555555;
 }
 
