@@ -20,7 +20,6 @@
     $orgID = $_SESSION['orgID'];
 
     $organization = $orgObj->getOrganization($orgID);
-    
 
     //Form functionality for creating editing or deleting a department
     if(isset($_POST['create'])){
@@ -105,8 +104,8 @@
             </div>
 
             <?php if($action == 'Viewer'):
-                $departments = $depObj->getAllDepartments($orgID);
-                ?>
+                $departments = $depObj->getAllDepartments($orgID); ?>
+
                 <a class="form-control btn btn-light" href="departments.php?action=Add">Create New Department</a>
 
                 <table class="table table-striped table-hover table-dark">
@@ -119,7 +118,7 @@
                         </tr>
                     </thead>
 
-                        <tbody>
+                    <tbody>
 
                         <?php foreach ($departments as $d):?>
                             <tr>
@@ -130,12 +129,11 @@
                                 <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                             </tr>
                         <?php endforeach; ?>
-                                    
-                        </tbody>
-                    </table>
+                                
+                    </tbody>
+                </table>
 
             <?php elseif($action == 'Edit'): 
-                
                 
                 $depID = filter_input(INPUT_GET, 'depID');
                 $depart = $depObj->getDepartment($depID);

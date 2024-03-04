@@ -40,9 +40,9 @@
             <ul id="controlPanel">
                 <li><a class="controlPanelWidget" href="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">User Manager</a></li>
                 <li><a class="controlPanelWidget" href="departments.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Department Manager</a></li>
-                <li><a class="controlPanelWidget" href="organizations.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Organization Manager</a></li>
+                <li><a class="controlPanelWidget" href="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>">Organization Manager</a></li>
                 <li><a class="controlPanelWidget" href="loginAttempts.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Login Attempts Manager</a></li>
-                <li><a class="controlPanelWidget" href="userAccount.php?action=validateUser&orgID=<?= $_SESSION['orgID']; ?>">Validiate New Users</a></li>
+                <li><a class="controlPanelWidget" href="userAccount.php?action=Validator&orgID=<?= $_SESSION['orgID']; ?>">Validiate New Users</a></li>
             </ul>
         </div>
     </div>

@@ -37,19 +37,25 @@ class UserDB {
     }
 
     //this function will get all users within a given org id (loginAttempt Function)
-    public function getAllUsersInOrg($orgID){
+    public function getAllUsersInOrg($orgID) {
         $results = [];
         $userTable = $this->userData;
-
-        $sqlString = $userTable->prepare("SELECT * FROM users WHERE orgID = :o");
+    
+        // Changed prepare statement to use correct table name and added alias
+        $sqlString = $userTable->prepare("SELECT * FROM users 
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID
+                                            WHERE users.orgID = :o
+                                            ORDER BY users.lastName");
+    
         $sqlString->bindValue(":o", $orgID);
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
+    
+        if ($sqlString->execute()) { // Removed unnecessary check for rowCount
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
         }
-
+    
         return $results;
     }
+    
 
     public function getAllUnvalidatedUsersInOrg($orgID) {
         $results = [];
@@ -461,16 +467,19 @@ class UserDB {
     }
 
     public function validateUser($userID) {
-        $results = [];
+        $results = "";
         $userTable = $this->userData;
+    
+        $sqlString = $userTable->prepare("UPDATE users SET isVerified = 1 WHERE userID = :id");
 
-        $sqlString = $userTable->prepare("UPDATE users isVerified = 1 WHERE userID = :id");
         $boundParams = array(
             ":id" => $userID,
         );
-
+    
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
             $results = "User Updated Successfully";
+        } else {
+            $results = "User Update Failed";
         }
         
         return $results;

@@ -75,10 +75,71 @@
         <div class="pageContent container-fluid">
             
             <?php if($action == "ViewAll"): 
-                if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
-                    
+                if($_SESSION['isTrainer']): ?>
+
                     <h3>Training Module Viewer</h3>
                     <a class="btn btn-light form-control mb-2" href="trainingModules.php?action=Create">Create Training Module</a>
+
+                    <form method="POST">
+
+                        <div style="display: flex;">
+                            <input class="form-control" type="text" name="courseName" placeholder="Course Name">
+                            <select class="form-control col-md-4" type="text" name="category">
+                                <option value="">Select Category</option>
+                                <?php 
+                                    $uniqueCategories = array();
+                                    foreach($modules as $m): 
+                                        if(!in_array($m['category'], $uniqueCategories)) {
+                                            $uniqueCategories[] = $m['category']; ?>
+                                            <option value="<?= $m['category']; ?>"><?= $m['category']; ?></option>
+                                        <?php 
+                                        } 
+                                    endforeach; ?>
+                            </select>
+                            
+                            <input type="submit" name="submitSearchModules" class="form-control btn btn-light col-sm-1">
+                        </div>
+
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark mt-4">
+
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Course Name</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Credit Hours</th>
+                                <th>Website URL</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($modules as $m): ?>
+                                <tr>
+                                    <td>
+                                        <form action="trainingModules.php?action=ViewAll" method="POST">
+                                            <input type="hidden" name="moduleID" value="<?= $m['moduleID']; ?>" />
+                                            <input class="btn btn-light" type="submit" name="deleteModule" value="Delete" />
+                                        </form>
+                                    </td>                                 
+                                    <td><?= $m['courseName']; ?></td>
+                                    <td><?= $m['description']; ?></td>
+                                    <td><?= $m['category']; ?></td>
+                                    <td><?= $m['creditHours']; ?></td>
+                                    <td><?= $m['websiteURL']; ?></td>
+                                    <td><a class="btn btn-light" href="trainingModules.php?action=Edit&moduleID=<?= $m['moduleID']; ?>">Edit</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+
+                    </table>
+
+                <?php elseif($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): ?>
+                    
+                    <h3>Training Module Viewer</h3>
 
                     <form method="POST">
 

@@ -49,23 +49,23 @@
             <ul>
                 <li>
                     <img src="..\assets\images\atlasPhotos\ModifyOrganization.png" alt="Modify Organizations">
-                    <a href="organizations.php?action=Viewer">Modify Organizations</a>
+                    <a href="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>">Modify Organization</a>
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\ModifyDepartments.png" alt="Modify Organizations">
-                    <a href="departments.php?action=Viewer">Modify Departments</a>
+                    <a href="departments.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Modify Departments</a>
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\ModifyExistingUsers.png" alt="Modify Organizations">
-                    <a href="userAccount.php?action=Viewer">Modify User Accounts</a>
+                    <a href="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Modify User Accounts</a>
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\ValidateManageNewUsers.png" alt="Modify Organizations">
-                    <a href="userAccount.php?action=Validator">Validate New Users</a>
+                    <a href="userAccount.php?action=Validator&orgID=<?= $_SESSION['orgID']; ?>">Validate New Users</a>
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\LoginDashboard.png" alt="Modify Organizations">
-                    <a href="loginAttempts.php?action=Viewer">Login Dashboard</a>
+                    <a href="loginAttempts.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Login Dashboard</a>
                 </li>
             </ul>
         <?php endif; ?>

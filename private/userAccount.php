@@ -24,6 +24,13 @@
 
     if(isset($_GET['orgID'])){
         $orgID = filter_input(INPUT_GET, 'orgID');
+        $deps = $depObj->GetAllDepartments($_SESSION['orgID']);
+    }
+
+    if($_SESSION['isSiteAdmin']){
+        if(!isset($_GET['orgID'])){
+            unset($_SESSION['orgID']); // This will remove the 'orgID' session variable
+        }
     }
 
     if(isset($_GET['userID'])){
@@ -31,8 +38,6 @@
     }
 
     $orgs = $orgObj->getAllOrganizations();
-    $deps = $depObj->GetAllDepartments($_SESSION['orgID']);
-    $users = $userObj->getAllUsers();
 
     if(isset($_POST['submitSiteAdminCreateUser'])) {
         $orgID = filter_input(INPUT_POST, 'orgID');
@@ -173,8 +178,10 @@
 
         if($isVerified == 1) {
             $userObj->validateUser($userID);
-        } else {
+        } elseif($isVerified == 0) {
             $userObj->deleteUser($userID);
+        } else {
+
         }
     }
 
@@ -204,7 +211,8 @@
 
                 <h2>Manage User Accounts</h2>
 
-                <?php if($_SESSION['isSiteAdmin']): ?>
+                <?php if($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])): 
+                    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
                     
                     <a class="form-control btn btn-light mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
 
@@ -334,11 +342,142 @@
                         </tbody>
                     </table>
 
+                <?php elseif($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
+                    $users = $userObj->getAllUsers(); ?>
+
+                    <a class="form-control btn btn-light mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
+
+                    <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
+                        <div style="display: flex;">
+                            <div class="">
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">Username field is valid!</div>
+                                <div class="invalid-feedback">Username field cannot be blank!</div>
+                            </div>
+
+                            <div class="">
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Email field is valid!</div>
+                                <div class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
+
+                            <select class="form-control text-dark" style="height: 40px;" type="text" name="organization" required>
+                                <option value="">Select Organization</option>
+                                <?php foreach($orgs as $o): ?>
+                                    <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <div class="mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
+
+                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="female">Female</label>
+
+                                <div class="valid-feedback mv-up">You selected a gender!</div>
+                                <div class="invalid-feedback mv-up">Please select a gender!</div>
+                            </div>
+
+                            <div class=" mt-3">
+                                <label class="mb-3 mr-1" for="isSiteAdmin">Site Admin: </label>
+
+                                <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteAdminYes" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="siteAdminYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteAdminNo" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="siteAdminNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected site admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select site admin status!</div>
+                            </div>
+
+                            <div class=" mt-3">
+                                <label class="mb-3 mr-1" for="isOrgAdmin">Org Admin: </label>
+
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgAdminYes" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="orgAdminYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgAdminNo" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="orgAdminNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected org admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select org admin status!</div>
+                            </div>
+
+                            <div class=" mt-3">
+                                <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
+
+                                <input type="radio" class="btn-check" name="isTrainer" value=1 id="trainerYes" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="trainerYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="isTrainer" value=0 id="trainerNo" autocomplete="off" required>
+                                <label class="btn btn-sm btn-outline-light" for="trainerNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected trainer status!</div>
+                                <div class="invalid-feedback mv-up">Please select trainer status!</div>
+                            </div>
+
+                            <input type="submit" class="btn btn-light" style="height: 40px;" name="searchButton" value="Search" />
+                        </div>
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Organization</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Birth Date</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>Username</th>
+                                <th>Website Admin</th>
+                                <th>Organization Admin</th>
+                                <th>Training Manager</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($users as $u): ?>
+                                <tr>
+                                    <td>
+                                        <form method="POST">
+                                            <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
+                                            <input class="btn btn-light" type="submit" name="deleteUser" value="Delete" />
+                                        </form>
+                                    </td>
+                                    
+                                    <td><?= $u['orgName']; ?></td>
+                                    <td><?= $u['firstName']; ?></td>
+                                    <td><?= $u['lastName']; ?></td>
+                                    <td><?= $u['email']; ?></td>
+                                    <td><?= $u['birthDate']; ?></td>
+                                    <td><?= $u['phoneNumber']; ?></td>
+                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                    <td><?= $u['username'];?></td>
+                                    <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
                     
-                    <a href="userAccount.php?action=createUser">Create an Account</a>
+                    <a class="form-control btn btn-light" href="userAccount.php?action=createUser">Create an Account</a>
 
-                    <?php var_dump($users[1]); ?>
+                    <?php $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
 
                     <table class="table table-striped table-hover table-dark">
                         <thead>
@@ -515,7 +654,7 @@
                         <h4><?= $organization[0]['orgName']; ?></h4>
                     </div>
 
-                    <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation" novalidate method="POST">
 
                         <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
@@ -1495,10 +1634,16 @@
             <?php elseif($action == 'Validator'): ?>
                 <h3>Validate New Users</h3>
                 
+<<<<<<< Updated upstream
+                <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):                 
+=======
+                <?php if($_SESSION['isSiteAdmin'] && ); ?>
+
                 <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']):                 
+>>>>>>> Stashed changes
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
 
-                    <form method="POST" action="userAccount.php?action=ViewAll">
+                    <form method="POST" action="userAccount.php?action=Viewer">
 
                         <table class="table table-striped table-hover table-dark">
                             <thead>
@@ -1514,6 +1659,7 @@
                                     <th>Organization Admin</th>
                                     <th>Training Manager</th>
                                     <th>Verified</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1538,12 +1684,44 @@
                                                 <option value="0">No</option>
                                             </select>
                                         </td>
+                                        <td><input type="hidden" name="userID" value="<?= $u['userID']; ?>"></td>
                                         <td><input type="submit" class="btn btn-light" name="submitValidation" value="Validate"></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                     </form>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const validationForm = document.getElementById("validationForm");
+                            const validateButtons = validationForm.querySelectorAll(".validateBtn");
+
+                            validateButtons.forEach(button => {
+                                button.addEventListener("click", function(event) {
+                                    const row = event.target.closest("tr");
+                                    const isValidated = row.querySelector("select[name='isValidated']").value;
+                                    const userID = row.querySelector("input[name='userID']").value;
+
+                                    const formData = new FormData();
+                                    formData.append("isValidated", isValidated);
+                                    formData.append("userID", userID);
+
+                                    fetch("userAccount.php?action=Viewer", {
+                                        method: "POST",
+                                        body: formData
+                                    }).then(response => {
+                                        // Handle response if needed
+                                    }).catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                                });
+                            });
+                        });
+                    </script>
+
+                <?php else: 
+                    header('Location: userAccount.php?action=Viewer'); ?>    
                     
                 <?php endif; ?>
             
