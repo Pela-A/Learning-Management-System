@@ -968,7 +968,7 @@
 
                 <?php if($_SESSION['isSiteAdmin']):
                     $account = $userObj->getUser($userID);
-                    $organization = $orgObj->getOrganization($_SESSION['orgID']);
+                    $organization = $orgObj->getOrganization($account['orgID']);
 
                     if($account != null){
                         $firstName = $account['firstName'];
@@ -1382,7 +1382,7 @@
                 <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):                 
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
 
-                    <form method="POST" action="userAccount.php?action=Viewer">
+                    <form method="POST" action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">
 
                         <table class="table table-striped table-hover table-dark">
                             <thead>
