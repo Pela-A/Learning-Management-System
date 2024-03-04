@@ -86,8 +86,7 @@
             </ul>
         <?php endif; ?>
 
-        <?php if(!$_SESSION['isSiteAdmin']): ?>
-        
+        <?php if($_SESSION['isSiteAdmin'] == false): ?>
             <h4>Personal Training</h4>
             <ul>
                 <li>
@@ -102,12 +101,12 @@
                     <img src="..\assets\images\atlasPhotos\PastTraining.png" alt="Past Training">
                     <a href="trainingEntry.php?action=ViewAll">View Past Training</a>
                 </li>
-
                 <li>
                     <img src="..\assets\images\atlasPhotos\LoginDashboard.png" alt="Login Dashboard">
                     <a href="loginAttempts.php?action=Viewer">Login Dashboard</a>
                 </li>
             </ul>
+
         <?php endif; ?>
 
         </div>

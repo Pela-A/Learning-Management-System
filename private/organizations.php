@@ -10,6 +10,10 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
+    if($_SESSION['isSiteAdmin'] && !isset($_GET['orgID'])){
+        unset($_SESSION['orgID']);
+    }
+
     if(isset($_POST['edit'])){        
         echo("edit button pressed");
 
@@ -166,7 +170,7 @@
                 <?php endif; ?>
 
             <?php elseif($action == 'Edit'):
-                if($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])):
+                if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])):
                     $orgID = filter_input(INPUT_GET, 'orgID');
                     $organization = $orgDB->getOrganization($orgID);
 
