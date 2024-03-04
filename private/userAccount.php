@@ -756,12 +756,10 @@
 
                 <h2>Account Settings</h2>
 
-                <?php 
+                <?php $account = $userObj->getUser($_SESSION['userID']); ?>
+
+                <a class="form-control btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                 
-                $account = $userObj->getUser($_SESSION['userID']);
-                
-                ?>
-                <a href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
                     <div style="display: flex;">
@@ -814,7 +812,7 @@
                         <p><?= $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                    <a href="userAccount.php?action=changePassword">Change Password</a>
+                    <a class="form-control btn btn-light" href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
 
