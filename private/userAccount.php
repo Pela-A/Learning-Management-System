@@ -1379,7 +1379,13 @@
             <?php elseif($action == 'Validator'): ?>
                 <h3>Validate New Users</h3>
                 
+<<<<<<< Updated upstream
                 <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):                 
+=======
+                <?php if($_SESSION['isSiteAdmin'] && ); ?>
+
+                <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']):                 
+>>>>>>> Stashed changes
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
 
                     <form method="POST" action="userAccount.php?action=Viewer">
