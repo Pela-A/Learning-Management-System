@@ -14,7 +14,6 @@ aside {
     min-width: 400px;
     height: auto;
     background-color: rgb(36, 36, 36);
-    border-right: 1px solid #555555;
 }
 
 aside h2 {
@@ -22,7 +21,6 @@ aside h2 {
     padding-bottom: 10px;
     padding-left: 15px;
     font-size: 32px;
-    border-bottom: 1px solid #555555;
 }
 
 aside h4 {
@@ -60,13 +58,12 @@ aside li:hover {
 }
 
 aside a:hover {
-    color: #7000FF;
+    color: #9e56fd;
 }
 
 footer {
     bottom: 0;
     background-color: rgba(48,49,52,.7);
-    border-top: 1px solid #555555;
 }
 
 .mainContent {
@@ -87,4 +84,13 @@ a.dropdown-item img{
 
 .profilePhoto{
     height: 30px;
+}
+
+.aside-options div {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.aside-options div:hover {
+    background-color: #000000;
 }

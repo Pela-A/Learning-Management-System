@@ -121,6 +121,7 @@
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
+        $_SESSION['profilePicture'] = $profilePicture;
 
         $userObj->siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer, $profilePicture);
     }
@@ -138,6 +139,7 @@
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
+        $_SESSION['profilePicture'] = $profilePicture;
 
         $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
     }
@@ -152,6 +154,7 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $username = filter_input(INPUT_POST, 'username');
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
+        $_SESSION['profilePicture'] = $profilePicture;
 
         //$error = validateUserInformation();
 
@@ -1196,10 +1199,6 @@
                             </div>
 
                         </div>
-
-
-
-
 
                         <div class="form-button mt-3">
                             <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>

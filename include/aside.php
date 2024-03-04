@@ -110,17 +110,14 @@
         <?php endif; ?>
 
         </div>
-        
-
-        
             
-        <div class="row">
-            <div class="col-7">
+        <div class="row mb-3 aside-options">
+            <div class="">
                 <img src="..\assets\images\atlasPhotos\Settings.png" alt="Settings">
                 <a href="userAccount.php?action=personalSettings">Account Settings</a>
             </div>
 
-            <div class="col-5">
+            <div class="">
                 <img src="..\assets\images\atlasPhotos\LogoutIcon.png" alt="Logout">
                 <a href="logout.php">Sign out</a>
             </div>
