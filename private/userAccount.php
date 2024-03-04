@@ -24,6 +24,13 @@
 
     if(isset($_GET['orgID'])){
         $orgID = filter_input(INPUT_GET, 'orgID');
+        $deps = $depObj->GetAllDepartments($_SESSION['orgID']);
+    }
+
+    if($_SESSION['isSiteAdmin']){
+        if(!isset($_GET['orgID'])){
+            unset($_SESSION['orgID']); // This will remove the 'orgID' session variable
+        }
     }
 
     if(isset($_GET['userID'])){
@@ -31,7 +38,6 @@
     }
 
     $orgs = $orgObj->getAllOrganizations();
-    $deps = $depObj->GetAllDepartments($_SESSION['orgID']);
 
     if(isset($_POST['submitSiteAdminCreateUser'])) {
         $orgID = filter_input(INPUT_POST, 'orgID');
@@ -465,9 +471,9 @@
                     
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
                     
-                    <a href="userAccount.php?action=createUser">Create an Account</a>
+                    <a class="form-control btn btn-light" href="userAccount.php?action=createUser">Create an Account</a>
 
-                    <?php var_dump($users[1]); ?>
+                    <?php $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
 
                     <table class="table table-striped table-hover table-dark">
                         <thead>
@@ -644,7 +650,7 @@
                         <h4><?= $organization[0]['orgName']; ?></h4>
                     </div>
 
-                    <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation" novalidate method="POST">
 
                         <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
@@ -1398,8 +1404,7 @@
                             </thead>
 
                             <tbody>
-                                <?php foreach ($users as $u): 
-                                    var_dump($u['userID']); ?>
+                                <?php foreach ($users as $u): ?>
                                     <tr>                                  
                                         <td><?= $u['orgName']; ?></td>
                                         <td><?= $u['firstName']; ?></td>
@@ -1425,6 +1430,34 @@
                             </tbody>
                         </table>
                     </form>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const validationForm = document.getElementById("validationForm");
+                            const validateButtons = validationForm.querySelectorAll(".validateBtn");
+
+                            validateButtons.forEach(button => {
+                                button.addEventListener("click", function(event) {
+                                    const row = event.target.closest("tr");
+                                    const isValidated = row.querySelector("select[name='isValidated']").value;
+                                    const userID = row.querySelector("input[name='userID']").value;
+
+                                    const formData = new FormData();
+                                    formData.append("isValidated", isValidated);
+                                    formData.append("userID", userID);
+
+                                    fetch("userAccount.php?action=Viewer", {
+                                        method: "POST",
+                                        body: formData
+                                    }).then(response => {
+                                        // Handle response if needed
+                                    }).catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                                });
+                            });
+                        });
+                    </script>
 
                 <?php else: 
                     header('Location: userAccount.php?action=Viewer'); ?>    

@@ -482,8 +482,6 @@ class UserDB {
         
         return $results;
     }
-    
-
 
 }
 

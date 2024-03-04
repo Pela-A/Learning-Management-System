@@ -16,6 +16,12 @@
         $action = filter_input(INPUT_GET, 'action');
     }
 
+    if($_SESSION['isSiteAdmin']){
+        if(!isset($_GET['orgID'])){
+            unset($_SESSION['orgID']); // This will remove the 'orgID' session variable
+        }
+    }
+
     //if edit comment
     if(isset($_POST['edit'])){        
         $comments = filter_input(INPUT_POST, 'comments');
@@ -179,6 +185,7 @@
                         <thead>
                             <tr>
                                 <th>Full Name</th>
+                                <th>Email</th>
                                 <th>Attempt Date</th>
                                 <th>Successful</th>
                                 <th>Comments</th>
@@ -191,6 +198,7 @@
                             <?php foreach ($logins as $l):?>
                                 <tr>
                                     <td><?= $l['firstName'] . " " . $l['lastName']; ?></td>
+                                    <td><?= $l['email']; ?></td>
                                     <td><?= $l['attemptDate']; ?></td>
                                     <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
                                     <td><?= $l['comments']; ?></td>
