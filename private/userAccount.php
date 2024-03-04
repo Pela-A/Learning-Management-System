@@ -757,9 +757,7 @@
                 <h2>Account Settings</h2>
 
                 <?php $account = $userObj->getUser($_SESSION['userID']); ?>
-
                 <a class="form-control btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
-                
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
                     <div style="display: flex;">
