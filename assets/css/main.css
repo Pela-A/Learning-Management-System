@@ -84,3 +84,7 @@ a.dropdown-item img{
     margin-right: 8px;
     max-height: 30px;
 }
+
+.profilePhoto{
+    height: 30px;
+}

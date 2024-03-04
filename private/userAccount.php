@@ -102,6 +102,7 @@
     }
 
     if(isset($_POST['submitSiteAdminUpdateUser'])){
+        $userID = filter_input(INPUT_POST, 'userID');
         $department = filter_input(INPUT_POST, 'department');
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
@@ -114,11 +115,13 @@
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
+        $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
 
-        $userObj->siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer);
+        $userObj->siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer, $profilePicture);
     }
 
     if(isset($_POST['submitOrgAdminUpdateUser'])){
+        $userID = filter_input(INPUT_POST, 'userID');
         $department = filter_input(INPUT_POST, 'department');
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
@@ -129,8 +132,9 @@
         $gender = filter_input(INPUT_POST, 'gender');
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
+        $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
 
-        $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer);
+        $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
     }
 
     if(isset($_POST['submitUpdateUser'])){
@@ -142,7 +146,7 @@
         $birthDate = filter_input(INPUT_POST, 'birthDate');
         $gender = filter_input(INPUT_POST, 'gender');
         $username = filter_input(INPUT_POST, 'username');
-        $profilePicture = filter_input(INPUT_POST, 'profilePicture');
+        $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
 
         //$error = validateUserInformation();
 
@@ -848,6 +852,7 @@
                         $isOrgAdmin = $account['isOrgAdmin'];
                         $isTrainer = $account['isTrainer'];
                         $isVerified = $account['isVerified'];
+                        $profilePicture = $account['profilePicture'];
                     } else {
                         $firstName = "";
                         $lastName = "";
@@ -861,6 +866,7 @@
                         $isOrgAdmin = "";
                         $isTrainer = "";
                         $isVerified = "";
+                        $profilePicture = "";
                     } ?>
 
                     <div style="display: flex;">
@@ -979,6 +985,87 @@
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
                         </div>
 
+                        <div class="row col-4 ml-2 mb-2">
+                            <label class="form-label">Profile Pictures:</label>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\BunnyProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile2" value="..\assets\images\profilePhotos\DefaultProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DefaultProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DefaultProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile3" value="..\assets\images\profilePhotos\DogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile4" value="..\assets\images\profilePhotos\ElephantProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\ElephantProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\ElephantProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile5" value="..\assets\images\profilePhotos\FrogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\FrogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\FrogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile6" value="..\assets\images\profilePhotos\HamsterProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\HamsterProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\HamsterProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile7" value="..\assets\images\profilePhotos\IceAgeProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\IceAgeProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\IceAgeProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile8" value="..\assets\images\profilePhotos\LlamaProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\LlamaProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\LlamaProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile9" value="..\assets\images\profilePhotos\PenguinProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PenguinProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PenguinProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile10" value="..\assets\images\profilePhotos\PolarBear.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PolarBear.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PolarBear.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile11" value="..\assets\images\profilePhotos\Porcupine.png" <?php if($profilePicture == "..\assets\images\profilePhotos\Porcupine.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\Porcupine.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile12" value="..\assets\images\profilePhotos\WalrusProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\WalrusProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\WalrusProfile.png" alt="">
+                                </label>
+                            </div>
+
+                        </div>
+
+
+
+
+
                         <div class="form-button mt-3">
                             <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
                         </div>
@@ -1000,6 +1087,7 @@
                         $isOrgAdmin = $account['isOrgAdmin'];
                         $isTrainer = $account['isTrainer'];
                         $isVerified = $account['isVerified'];
+                        $profilePicture = $account['profilePicture'];
                     } else {
                         $firstName = "";
                         $lastName = "";
@@ -1011,6 +1099,7 @@
                         $isOrgAdmin = "";
                         $isTrainer = "";
                         $isVerified = "";
+                        $profilePicture = "";
                     }?>
 
                     <div style="display: flex;">
@@ -1026,6 +1115,8 @@
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
                             <?php endforeach; ?>
                         </select>
+
+                        <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
 
                         <div class="col-md-12" >
                             <label>First Name: </label>
@@ -1108,6 +1199,86 @@
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
                         </div>
 
+
+
+                        <div class="row col-4 ml-2 mb-2">
+                            <label class="form-label">Profile Pictures:</label>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\BunnyProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile2" value="..\assets\images\profilePhotos\DefaultProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DefaultProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DefaultProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile3" value="..\assets\images\profilePhotos\DogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile4" value="..\assets\images\profilePhotos\ElephantProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\ElephantProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\ElephantProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile5" value="..\assets\images\profilePhotos\FrogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\FrogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\FrogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile6" value="..\assets\images\profilePhotos\HamsterProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\HamsterProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\HamsterProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile7" value="..\assets\images\profilePhotos\IceAgeProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\IceAgeProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\IceAgeProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile8" value="..\assets\images\profilePhotos\LlamaProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\LlamaProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\LlamaProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile9" value="..\assets\images\profilePhotos\PenguinProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PenguinProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PenguinProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile10" value="..\assets\images\profilePhotos\PolarBear.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PolarBear.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PolarBear.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile11" value="..\assets\images\profilePhotos\Porcupine.png" <?php if($profilePicture == "..\assets\images\profilePhotos\Porcupine.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\Porcupine.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile12" value="..\assets\images\profilePhotos\WalrusProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\WalrusProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\WalrusProfile.png" alt="">
+                                </label>
+                            </div>
+
+                        </div>
+
+
                         <div class="form-button mt-3">
                             <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
                         </div>
@@ -1126,6 +1297,7 @@
                         $birthDate = $account['birthDate'];
                         $gender = $account['gender'];
                         $username = $account['username'];
+                        $profilePicture = $account['profilePicture'];
                     } else {
                         $firstName = "";
                         $lastName = "";
@@ -1134,6 +1306,7 @@
                         $birthDate = "";
                         $gender = "";
                         $username = "";
+                        $profilePicture = "";
                     }?>
 
                     <div style="display: flex;">
@@ -1143,6 +1316,8 @@
 
                     <form action="userAccount.php?action=personalSettings" class="requires-validation" novalidate method="POST">
 
+
+                        <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
                         <div class="col-md-12" >
                             <label>Username: </label>
                             <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" required>
@@ -1196,6 +1371,83 @@
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
+                        </div>
+
+                        <div class="row col-4 ml-2 mb-2">
+                            <label class="form-label">Profile Pictures:</label>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\BunnyProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile2" value="..\assets\images\profilePhotos\DefaultProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DefaultProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DefaultProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile3" value="..\assets\images\profilePhotos\DogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\DogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\DogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile4" value="..\assets\images\profilePhotos\ElephantProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\ElephantProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\ElephantProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile5" value="..\assets\images\profilePhotos\FrogProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\FrogProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\FrogProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile6" value="..\assets\images\profilePhotos\HamsterProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\HamsterProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\HamsterProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile7" value="..\assets\images\profilePhotos\IceAgeProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\IceAgeProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\IceAgeProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile8" value="..\assets\images\profilePhotos\LlamaProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\LlamaProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\LlamaProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile9" value="..\assets\images\profilePhotos\PenguinProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PenguinProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PenguinProfile.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile10" value="..\assets\images\profilePhotos\PolarBear.png" <?php if($profilePicture == "..\assets\images\profilePhotos\PolarBear.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\PolarBear.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile11" value="..\assets\images\profilePhotos\Porcupine.png" <?php if($profilePicture == "..\assets\images\profilePhotos\Porcupine.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\Porcupine.png" alt="">
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline col-3">
+                                <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile12" value="..\assets\images\profilePhotos\WalrusProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\WalrusProfile.png") echo('checked') ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    <img class="profilePhoto" src="..\assets\images\profilePhotos\WalrusProfile.png" alt="">
+                                </label>
+                            </div>
+
                         </div>
 
                         <div class="form-button mt-3">

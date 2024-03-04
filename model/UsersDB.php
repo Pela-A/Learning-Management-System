@@ -193,15 +193,14 @@ class UserDB {
         return ($results);
     }
 
-    public function siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer){
+    public function siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer, $profilePicture){
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, letterDate = :letter, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, username = :username, isOrgAdmin = :OrgAdmin, isSiteAdmin = :SiteAdmin, isTrainer = :trainer WHERE userID = :id");
+        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, letterDate = :letter, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, username = :username, isOrgAdmin = :OrgAdmin, isSiteAdmin = :SiteAdmin, isTrainer = :trainer, profilePicture = :pr WHERE userID = :id");
 
         $boundParams = array(
             ":id"           =>$userID,
-            ":dep"          =>$department,
             ":first"        =>$firstName,
             ":last"         =>$lastName,
             ":letter"       =>$letterDate,
@@ -212,7 +211,8 @@ class UserDB {
             ":username"     =>$username,
             ":OrgAdmin"     =>$isOrgAdmin,
             ":SiteAdmin"    =>$isSiteAdmin,
-            ":trainer"      =>$isTrainer
+            ":trainer"      =>$isTrainer,
+            ":pr"           =>$profilePicture
         );
 
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
@@ -222,11 +222,11 @@ class UserDB {
         return $results;
     }
 
-    public function orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer){
+    public function orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture){
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, letterDate = :letter, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, isOrgAdmin = :OrgAdmin, isTrainer = :trainer WHERE userID = :id");
+        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, letterDate = :letter, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, isOrgAdmin = :OrgAdmin, isTrainer = :trainer, profilePicture = :pr WHERE userID = :id");
 
         $boundParams = array(
             ":id" =>$userID,
@@ -238,7 +238,8 @@ class UserDB {
             ":phone" =>$phoneNumber,
             ":gender" =>$gender,
             ":OrgAdmin" =>$isOrgAdmin,
-            ":Trainer" =>$isTrainer
+            ":Trainer" =>$isTrainer,
+            ":pr" => $profilePicture
         );
 
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
@@ -248,11 +249,11 @@ class UserDB {
         return $results;
     }
 
-    public function generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username){
+    public function generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username, $profilePicture){
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, username = :username WHERE userID = :id");
+        $sqlString = $userTable->prepare("UPDATE users SET firstName = :first, lastName = :last, email = :email, birthDate = :birth, phoneNumber = :phone, gender = :gender, username = :username, profilePicture = :pr WHERE userID = :id");
 
         $boundParams = array(
             ":id"       =>$userID,
@@ -262,7 +263,8 @@ class UserDB {
             ":birth"    =>$birthDate,
             ":phone"    =>$phoneNumber,
             ":gender"   =>$gender,
-            ":username" =>$username
+            ":username" =>$username,
+            ":pr" => $profilePicture
         );
 
         if ($sqlString->execute($boundParams) && $sqlString->rowCount() > 0) {
