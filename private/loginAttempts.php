@@ -11,6 +11,18 @@
     $userObj = new UserDB();
     $orgObj = new OrganizationDB();
 
+    if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])) {
+        $users = $userObj->getAllUsers();
+        $logins = $loginObj->getAllLogins();
+        $orgs = $orgObj->getAllOrganizations();
+    } elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']){
+        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+        $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']); 
+        $org = $orgObj->getOrganization($_SESSION['orgID']); 
+    } else {
+        $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']);
+    }
+
     //get action variable
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
@@ -31,10 +43,9 @@
 
     //if search or coming to first time
     if(isset($_POST['searchLogins'])){
-        $userID = filter_input(INPUT_POST, 'userID');
         $successful = filter_input(INPUT_POST, 'successful');
 
-        $logins = $loginObj->searchLogins($successful, $userID, $_SESSION['orgID']);
+        $logins = $loginObj->searchLogins($successful, $_SESSION['userID'], $_SESSION['orgID']);
     }
     //otherwise loading into page first time.
 ?>
@@ -61,10 +72,7 @@
         <div class="pageContent container-fluid">
             <?php if($action == "Viewer"): ?>
                 <h3>User Login Attempts</h3>
-                <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
-                    $users = $userObj->getAllUsers();
-                    $logins = $loginObj->getAllLogins();
-                    $orgs = $orgObj->getAllOrganizations(); ?>
+                <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): ?>
 
                     <form method="POST" name="search" class="col-lg-10 offset-lg-1">
 
@@ -152,10 +160,7 @@
                         });
                     </script>
 
-                <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):
-                    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
-                    $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']); 
-                    $org = $orgObj->getOrganization($_SESSION['orgID']); ?>
+                <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']): ?>
 
                     <form method="POST" name="search" class="col-lg-10 offset-lg-1">
 
@@ -210,8 +215,7 @@
                         </tbody>
                     </table>
 
-                <?php else: 
-                    $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']); ?>
+                <?php else: ?>
 
                     <form method="POST">
                         <div style="display: flex; justify-content: space-between;" class="mt-2">

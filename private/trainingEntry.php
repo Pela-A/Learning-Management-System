@@ -27,23 +27,13 @@
         $entryID = filter_input(INPUT_GET, 'entryID');
     }
 
-    if(isset($_POST['searchUserButton'])){
-        $courseName = filter_input(INPUT_POST, 'courseName');
-        $completeDate = filter_input(INPUT_POST, 'completionDate');
-        $entryDate = filter_input(INPUT_POST, 'entryDate');
-        $category = filter_input(INPUT_POST, 'category');
-
-        $entries = $entryObj->searchUserTrainingEntry($_SESSION['userID'], $courseName, $entryDate, $completeDate, $category);
-    }
-
     if(isset($_POST['searchAllButton'])){
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
-        $completeDate = filter_input(INPUT_POST, 'completeDate');
-        $entryDate = filter_input(INPUT_POST, 'entryDate');
+        $courseName = filter_input(INPUT_POST, 'courseName');
         $category = filter_input(INPUT_POST, 'category');
 
-        $entries = $entryObj->searchAllTrainingEntry($_SESSION['orgID'], $firstName, $lastName, $entryDate, $completeDate, $category);
+        $entries = $entryObj->searchAllTrainingEntry($_SESSION['orgID'], $firstName, $lastName, $courseName, $category);
     }
 
     if(isset($_POST['submitTrainingForUserFromModule'])) {
@@ -219,11 +209,18 @@
                         </tbody>
                     </table>
 
-                <?php else: 
+                <?php else:
 
-                    $entries = $entryObj->getAllUserTrainingEntries($_SESSION['userID']); ?>
+                    if(isset($_POST['searchUserButton'])){
+                        $courseName = filter_input(INPUT_POST, 'courseName');
+                        $category = filter_input(INPUT_POST, 'category');
+
+                        $entries = $entryObj->searchUserTrainingEntry($_SESSION['userID'], $courseName, $category);
+                    } else {
+                        $entries = $entryObj->getAllUserTrainingEntries($_SESSION['userID']);
+                    } ?>
                     
-                    <a class="btn btn-purple" style="margin-bottom: 5px;" href="trainingEntry.php?action=Create">Create new training entry</a>
+                    <a class="btn btn-purple" style="margin-bottom: 10px;" href="trainingEntry.php?action=Create">Create new training entry</a>
 
                     <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
                         <div style="display: flex;">
@@ -244,38 +241,8 @@
                                         <?php 
                                         } endforeach; ?>
                             </select>
-                        </div>
 
-                        <div style="display: flex; margin-top: 10px;">
-                            <div style="display: flex;">
-                                <label style="width: 120px; margin-top: 7px;">Entry Date:</label>
-                                <input style="max-height: 40px;" class="form-control" type="date" name="entryDate" placeholder="Entry Date" required>
-                                <div class="valid-feedback">Entry Date field is valid!</div>
-                                <div class="invalid-feedback">EntryDate field cannot be blank!</div>
-                            </div>
-
-                            <div style="display: flex;">
-                                <label style="width: 200px; margin-top: 7px;">Completion Date:</label>
-                                <input style="max-height: 40px;" class="form-control" type="date" name="completeDate" placeholder="Completion Date" required>
-                                <div class="valid-feedback">Completion Date field is valid!</div>
-                                <div class="invalid-feedback">Completion Date field cannot be blank!</div>
-                            </div>
-
-                            <div class="mt-3">
-                                <label class="" for="validated">Validated: </label>
-
-                                <input type="radio" class="btn-check" name="validated" value=1 id="valYes" autocomplete="off" required>
-                                <label class="btn  btn-outline-purple" for="valYes">Yes</label>
-
-                                <input type="radio" class="btn-check" name="validated" value=0 id="valNo" autocomplete="off" required>
-                                <label class="btn  btn-outline-purple" for="valNo">No</label>
-
-                                <div class="valid-feedback mv-up">You selected a validation status!</div>
-                                <div class="invalid-feedback mv-up">Please select a validation status!</div>
-                            </div>
-
-                            <input type="submit" class="btn  btn-purple" id="searchBtn" name="searchUserButton" value="Search" />
-
+                            <input type="submit" style="max-height: 40px;" class="btn btn-purple" name="searchUserButton" value="Search" />
                         </div>
                     </form>
 

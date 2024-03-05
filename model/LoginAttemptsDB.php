@@ -61,7 +61,7 @@ class LoginDB {
 
         $sqlString = $loginTable->prepare("SELECT * FROM loginattempts 
                                             INNER JOIN users ON loginAttempts.userID = users.userID
-                                            WHERE userID = :u 
+                                            WHERE loginAttempts.userID = :u 
                                             ORDER BY attemptDate DESC");
         $sqlString->bindValue(':u', $userID);
         if($sqlString->execute() && $sqlString->rowCount() > 0) {
@@ -93,29 +93,32 @@ class LoginDB {
     public function searchLogins($successful, $userID, $orgID) {
         $results = [];
         $loginTable = $this->loginData;
-
+    
         $sqlString = "SELECT * FROM ((loginattempts 
                         INNER JOIN users ON loginattempts.userID = users.userID) 
                         INNER JOIN organizations ON users.orgID = organizations.orgID)
                         WHERE organizations.orgID = :oi";
-        $binds = [":oi", $orgID];
-
-        if($successful != '') {
-            $sqlString .= "AND isSuccessful = :s";
+    
+        $binds = [":oi" => $orgID];
+    
+        if($successful !== '') {
+            $sqlString .= " AND loginattempts.isSuccessful = :s";
             $binds[':s'] = $successful;
         }
-        if ($userID != '') {
+    
+        if ($userID !== '') {
             $sqlString .= " AND loginattempts.userID = :u";
             $binds[':u'] = $userID;
         }
-
-        $sqlString = $loginTable->prepare($sqlString);
-        if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+    
+        $stmt = $loginTable->prepare($sqlString);
+        if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-
-        return ($results);
+    
+        return $results;
     }
+    
 
     public function addLoginAttempt($userID, $attemptDate, $isSuccessful, $ip) {
         $results = "";
