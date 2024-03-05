@@ -48,6 +48,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="..\assets\css\main.css">
 
     <title>Login Manager</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -87,13 +88,13 @@
                                 <label>Successful Login: </label>
 
                                 <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+                                <label class="btn btn-outline-purple" for="successfulYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                                <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="form-control btn btn-light" type="submit" name="search" value="Search" />
+                                <input class="form-control btn btn-purple" type="submit" name="search" value="Search" />
                             </div>
                         </div>
                     </form>
@@ -118,7 +119,7 @@
                                     <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
                                     <td><?= $l['comments']; ?></td>
                                     <td><?= $l['ipAddress']; ?></td>
-                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                    <td><a class="btn btn-purple" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -170,13 +171,13 @@
                                 <label>Successful Login: </label>
 
                                 <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+                                <label class="btn btn-outline-purple" for="successfulYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                                <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="form-control btn btn-light" type="submit" name="searchLogins" value="Search" />
+                                <input class="form-control btn btn-purple" type="submit" name="searchLogins" value="Search" />
                             </div>
                         </div>
                     </form>
@@ -203,7 +204,7 @@
                                     <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
                                     <td><?= $l['comments']; ?></td>
                                     <td><?= $l['ipAddress']; ?></td>
-                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                    <td><a class="btn btn-purple" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -218,13 +219,13 @@
                                 <label>Successful Login: </label>
 
                                 <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulYes">Yes</label>
+                                <label class="btn btn-outline-purple" for="successfulYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                                <label class="btn btn-outline-light" for="successfulNo">No</label>
+                                <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="form-control btn btn-light" type="submit" name="searchLogins" value="Search" />
+                                <input class="form-control btn btn-purple" type="submit" name="searchLogins" value="Search" />
                             </div>
                         </div>
                     </form>
@@ -249,7 +250,7 @@
                                     <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
                                     <td><?= $l['comments']; ?></td>
                                     <td><?= $l['ipAddress']; ?></td>
-                                    <td><a class="btn btn-light" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                    <td><a class="btn btn-purple" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -292,8 +293,8 @@
                     <input class="form-control" type="hidden" name="loginID" value="<?=$loginID;?>" readonly>
 
                     <div style="display: flex;">
-                        <input class="form-control btn btn-light" type="submit" name="edit" value="Update Login Comments">
-                        <a class="form-control btn btn-light" href="loginAttempts.php?action=Viewer">Go Back</a>
+                        <input class="form-control btn btn-purple" type="submit" name="edit" value="Update Login Comments">
+                        <a class="form-control btn btn-purple" href="loginAttempts.php?action=Viewer">Go Back</a>
                     </div>
 
                 </form>

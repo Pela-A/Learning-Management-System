@@ -63,6 +63,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="..\assets\css\main.css">
 
     <title>Training Modules</title>
 </head>
@@ -78,7 +79,7 @@
                 if($_SESSION['isTrainer']): ?>
 
                     <h3>Training Module Viewer</h3>
-                    <a class="btn btn-light form-control mb-2" href="trainingModules.php?action=Create">Create Training Module</a>
+                    <a class="btn btn-purple form-control mb-2" href="trainingModules.php?action=Create">Create Training Module</a>
 
                     <form method="POST">
 
@@ -97,7 +98,7 @@
                                     endforeach; ?>
                             </select>
                             
-                            <input type="submit" name="submitSearchModules" class="form-control btn btn-light col-sm-1">
+                            <input type="submit" name="submitSearchModules" class="form-control btn btn-purple col-sm-1">
                         </div>
 
                     </form>
@@ -122,7 +123,7 @@
                                     <td>
                                         <form action="trainingModules.php?action=ViewAll" method="POST">
                                             <input type="hidden" name="moduleID" value="<?= $m['moduleID']; ?>" />
-                                            <input class="btn btn-light" type="submit" name="deleteModule" value="Delete" />
+                                            <input class="btn btn-purple" type="submit" name="deleteModule" value="Delete" />
                                         </form>
                                     </td>                                 
                                     <td><?= $m['courseName']; ?></td>
@@ -130,7 +131,7 @@
                                     <td><?= $m['category']; ?></td>
                                     <td><?= $m['creditHours']; ?></td>
                                     <td><?= $m['websiteURL']; ?></td>
-                                    <td><a class="btn btn-light" href="trainingModules.php?action=Edit&moduleID=<?= $m['moduleID']; ?>">Edit</a></td>
+                                    <td><a class="btn btn-purple" href="trainingModules.php?action=Edit&moduleID=<?= $m['moduleID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -158,7 +159,7 @@
                                     endforeach; ?>
                             </select>
                             
-                            <input type="submit" name="submitSearchModules" class="form-control btn btn-light col-sm-1">
+                            <input type="submit" name="submitSearchModules" class="form-control btn btn-purple col-sm-1">
                         </div>
 
                     </form>
@@ -183,7 +184,7 @@
                                     <td>
                                         <form action="trainingModules.php?action=ViewAll" method="POST">
                                             <input type="hidden" name="moduleID" value="<?= $m['moduleID']; ?>" />
-                                            <input class="btn btn-light" type="submit" name="deleteModule" value="Delete" />
+                                            <input class="btn btn-purple" type="submit" name="deleteModule" value="Delete" />
                                         </form>
                                     </td>                                 
                                     <td><?= $m['courseName']; ?></td>
@@ -191,7 +192,7 @@
                                     <td><?= $m['category']; ?></td>
                                     <td><?= $m['creditHours']; ?></td>
                                     <td><?= $m['websiteURL']; ?></td>
-                                    <td><a class="btn btn-light" href="trainingModules.php?action=Edit&moduleID=<?= $m['moduleID']; ?>">Edit</a></td>
+                                    <td><a class="btn btn-purple" href="trainingModules.php?action=Edit&moduleID=<?= $m['moduleID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -252,7 +253,7 @@
                         <label for="urlInput">URL:</label>
                         <input type="text" class="form-control" id="urlInput" name="websiteURL" placeholder="Enter URL">
 
-                        <input class="btn btn-light mt-3" type="submit" name="submitCreateModule">
+                        <input class="btn btn-purple mt-3" type="submit" name="submitCreateModule">
 
                     </form>
 
@@ -314,7 +315,7 @@
 
                         <input type="hidden" name="moduleID" value="<?= $module[0]['moduleID']; ?>">
 
-                        <input class="btn btn-light mt-3" type="submit" name="submitUpdateModule">
+                        <input class="btn btn-purple mt-3" type="submit" name="submitUpdateModule">
 
                     </form>
 

@@ -118,9 +118,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../assets/css/accordion.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="..\assets\css\main.css">
 
     <title>Training Entries</title>
 </head>
@@ -137,7 +137,7 @@
                 <h3>Training Entry Viewer</h3>
 
                 <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
-                    <a class="form-control btn btn-light" href="trainingEntry.php?action=Create">Create new training entry</a>
+                    <a class="form-control btn btn-purple" href="trainingEntry.php?action=Create">Create new training entry</a>
 
                     <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries">
                         <div style="display: flex;" class="my-2">
@@ -179,7 +179,7 @@
                                 <div class="invalid-feedback">Completion Date field cannot be blank!</div>
                             </div>
 
-                            <input type="submit" class="btn btn-light" id="searchAllBtn" name="searchAllButton" value="Search" />
+                            <input type="submit" class="btn btn-purple" id="searchAllBtn" name="searchAllButton" value="Search" />
                         </div>
                     </form>
 
@@ -263,16 +263,16 @@
                             <label class="mb-3 mr-1" for="validated">Validated: </label>
 
                             <input type="radio" class="btn-check" name="validated" value=1 id="valYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-light" for="valYes">Yes</label>
+                            <label class="btn  btn-outline-purple" for="valYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="validated" value=0 id="valNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-light" for="valNo">No</label>
+                            <label class="btn  btn-outline-purple" for="valNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a validation status!</div>
                             <div class="invalid-feedback mv-up">Please select a validation status!</div>
                         </div>
 
-                        <input type="submit" class="btn btn-sm btn-light" id="searchBtn" name="searchUserButton" value="Search" />
+                        <input type="submit" class="btn  btn-purple" id="searchBtn" name="searchUserButton" value="Search" />
 
                     </form>
 
@@ -378,7 +378,7 @@
 
                                             <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
 
-                                            <input type="submit" class="btn btn-sm btn-light" id="submitTrainingForUserFromModule" name="submitTrainingForUserFromModule" value="Submit Training" />
+                                            <input type="submit" class="btn  btn-purple" id="submitTrainingForUserFromModule" name="submitTrainingForUserFromModule" value="Submit Training" />
                                         </div>
 
                                     </form>
@@ -443,7 +443,7 @@
 
                                         <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
 
-                                        <input type="submit" class="btn btn-sm btn-light" id="submitManualTrainingForUser" name="submitManualTrainingForUser" value="Submit Training" />
+                                        <input type="submit" class="btn  btn-purple" id="submitManualTrainingForUser" name="submitManualTrainingForUser" value="Submit Training" />
 
                                     </form>
                                 </div>
@@ -493,7 +493,7 @@
                                             <?php endforeach; ?>
                                         </select>
 
-                                        <input type="submit" class="btn btn-sm btn-light" id="submitTraining" name="submitTraining" value="Submit Training" />
+                                        <input type="submit" class="btn  btn-purple" id="submitTraining" name="submitTraining" value="Submit Training" />
 
                                     </form>
                                 </div>
@@ -542,7 +542,7 @@
                                         
                                         <input type="hidden" name="entryDate" value="<?= date('Y-m-d'); ?>">
 
-                                        <input type="submit" class="btn btn-sm btn-light" id="submitTrainingManually" name="submitTraining" value="Submit Training" />
+                                        <input type="submit" class="btn  btn-purple" id="submitTrainingManually" name="submitTraining" value="Submit Training" />
 
                                     </form>
                                 </div>
@@ -587,7 +587,7 @@
                             </div>
                         </div>
 
-                        <input type="submit" class="btn btn-sm btn-light" id="searchAllBtn" name="searchAllButton" value="Search" />
+                        <input type="submit" class="btn  btn-purple" id="searchAllBtn" name="searchAllButton" value="Search" />
 
                     </form>
 
@@ -621,7 +621,7 @@
                                     <td><?= $e['creditHours']; ?></td>
                                     <td><?= $e['category']; ?></td>
                                     <td><?= $e['description']; ?></td>
-                                    <td><a class="btn btn-light" href="trainingEntry.php?action=ValidateTraining&entryID=<?= $e['entryID']; ?>">Validate</a></td>
+                                    <td><a class="btn btn-purple" href="trainingEntry.php?action=ValidateTraining&entryID=<?= $e['entryID']; ?>">Validate</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -672,7 +672,7 @@
                                     <td><?= $e['creditHours']; ?></td>
                                     <td><?= $e['category']; ?></td>
                                     <td><?= $e['description']; ?></td>
-                                    <td><input class="btn btn-light" type="submit" name="submitValidation"></td>
+                                    <td><input class="btn btn-purple" type="submit" name="submitValidation"></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

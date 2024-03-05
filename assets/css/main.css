@@ -94,3 +94,72 @@ a.dropdown-item img{
 .aside-options div:hover {
     background-color: #000000;
 }
+
+.btn-purple {
+    max-width: 250px;
+    background-color: #9e56fd;
+    color: white;
+}
+
+.btn-purple:link {
+    background-color: #9e56fd;
+    color: white;
+}
+
+.btn-purple:visited {
+    background-color: #9e56fd;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #b983ff;
+    color: black;
+}
+
+.btn-purple:active {
+    background-color: #9e56fd;
+    color:white;
+}
+
+.btn-outline-purple {
+    color: #b983ff;
+    border-color: #b983ff;
+}
+
+.btn-outline-purple:hover {
+    color: white;
+    background: #9e56fd;
+}
+
+.btn-check:focus+.btn, .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem #9e56fd69;
+}
+
+input.form-control {
+    color: #b983ff;
+    background-color: #222222;
+    border: 1px solid #b983ff;
+}
+
+input.form-control:focus {
+    color: #b983ff;
+    background-color: #222222;
+    border: 1px solid #b983ff;
+    box-shadow: 0 0 0 0.25rem #b983ff25;
+}
+
+select.form-control {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #606060;
+    height: 38px;
+}
+
+select.form-control:focus {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #b983ff;
+}
+
+

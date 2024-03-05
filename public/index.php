@@ -276,11 +276,6 @@
 
                     <div class="row formContent pt-4 pb-5">
 
-
-                
-
-
-                
                         <h2>Login</h2>
 
                         <?php if($error != ""):?>

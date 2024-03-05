@@ -58,7 +58,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="..\assets\css\main.css">
+    
     <title>Organization Manager</title>
 </head>
 <body>
@@ -130,7 +131,7 @@
                                 <option value="WY">Wyoming</option>
                             </select>
 
-                            <input class="btn btn-light" type="submit" name="submitSearch" />
+                            <input class="btn btn-purple" type="submit" name="submitSearch" />
                         </div>
                     </form>
 
@@ -159,7 +160,7 @@
                                 <td><?= $o['state']; ?></td>
                                 <td><?= $o['zipCode']; ?></td>
                                 <td><?= $o['orgCode']; ?></td>
-                                <td><a class="btn btn-light" href="organizations.php?action=Edit&orgID=<?=$o['orgID']?>">Edit</a></td>
+                                <td><a class="btn btn-purple" href="organizations.php?action=Edit&orgID=<?=$o['orgID']?>">Edit</a></td>
                                 <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                             </tr>
                         <?php endforeach; ?>
@@ -271,9 +272,9 @@
                         <input class="form-control" type="hidden" name="orgID" value="<?=$orgID;?>" readonly>
 
                         <div style="display:flex;">
-                            <input class="form-control btn btn-light m-2" type="submit" name="edit" value="Submit Changes">
-                            <a class="form-control btn btn-light m-2" href="organizations.php?action=Viewer">Go Back</a>
-                            <a class="btn btn-light form-control m-2" href="orgControlPanel.php?action=Landing&orgID=<?= $orgID; ?>">Access Organization Controller</a>
+                            <input class="form-control btn btn-purple m-2" type="submit" name="edit" value="Submit Changes">
+                            <a class="form-control btn btn-purple m-2" href="organizations.php?action=Viewer">Go Back</a>
+                            <a class="btn btn-purple form-control m-2" href="orgControlPanel.php?action=Landing&orgID=<?= $orgID; ?>">Access Organization Controller</a>
                         </div> 
                     </form>
 
@@ -378,8 +379,8 @@
                         <input class="form-control" type="hidden" name="orgID" value="<?=$orgID;?>" readonly>
 
                         <div style="display:flex;">
-                            <input class="form-control btn btn-light m-2" type="submit" name="edit" value="Submit Changes">
-                            <a class="form-control btn btn-light m-2" href="landingPage.php">Go Back</a>
+                            <input class="form-control btn btn-purple m-2" type="submit" name="edit" value="Submit Changes">
+                            <a class="form-control btn btn-purple m-2" href="landingPage.php">Go Back</a>
                         </div> 
                     </form>
 

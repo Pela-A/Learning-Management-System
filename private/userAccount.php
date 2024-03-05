@@ -123,6 +123,8 @@
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
         $_SESSION['profilePicture'] = $profilePicture;
 
+        header('Location: userAccount.php?action=Viewer');
+
         $userObj->siteAdminUpdateUser($userID, $department, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $username, $isOrgAdmin, $isSiteAdmin, $isTrainer, $profilePicture);
     }
 
@@ -141,6 +143,8 @@
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
         $_SESSION['profilePicture'] = $profilePicture;
 
+        header('Location: userAccount.php?action=Viewer');
+
         $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
     }
 
@@ -155,6 +159,8 @@
         $username = filter_input(INPUT_POST, 'username');
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
         $_SESSION['profilePicture'] = $profilePicture;
+
+        header('Location: userAccount.php?action=personalSettings');
 
         //$error = validateUserInformation();
 
@@ -199,6 +205,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="..\assets\css\main.css">
 
     <title>Account Settings</title>
 </head>
@@ -217,7 +224,7 @@
                 <?php if($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])): 
                     $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
                     
-                    <a class="form-control btn btn-light mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
+                    <a class="form-control btn btn-purple mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
 
                     <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
@@ -233,7 +240,7 @@
                                 <div class="invalid-feedback">Email field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control text-dark" style="height: 40px;" type="text" name="organization" required>
+                            <select class="form-control" type="text" name="organization" required>
                                 <option value="">Select Organization</option>
                                 <?php foreach($orgs as $o): ?>
                                     <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
@@ -246,10 +253,10 @@
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                                 <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="male">Male</label>
+                                <label class="btn   btn-outline-purple" for="male">Male</label>
 
                                 <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="female">Female</label>
+                                <label class="btn btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
                                 <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -259,10 +266,10 @@
                                 <label class="mb-3 mr-1" for="isSiteAdmin">Site Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="siteAdminYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="siteAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="siteAdminNo">No</label>
+                                <label class="btn   btn-outline-purple" for="siteAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected site admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select site admin status!</div>
@@ -272,10 +279,10 @@
                                 <label class="mb-3 mr-1" for="isOrgAdmin">Org Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="orgAdminYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="orgAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="orgAdminNo">No</label>
+                                <label class="btn   btn-outline-purple" for="orgAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected org admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select org admin status!</div>
@@ -285,16 +292,16 @@
                                 <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=1 id="trainerYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="trainerYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="trainerYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=0 id="trainerNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="trainerNo">No</label>
+                                <label class="btn   btn-outline-purple" for="trainerNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected trainer status!</div>
                                 <div class="invalid-feedback mv-up">Please select trainer status!</div>
                             </div>
 
-                            <input type="submit" class="btn btn-light" style="height: 40px;" name="searchButton" value="Search" />
+                            <input type="submit" class="btn btn-purple" style="height: 40px; margin-top: 13px;" name="searchButton" value="Search" />
                         </div>
                     </form>
 
@@ -323,7 +330,7 @@
                                     <td>
                                         <form method="POST">
                                             <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                            <input class="btn btn-light" type="submit" name="deleteUser" value="Delete" />
+                                            <input class="btn btn-purple" type="submit" name="deleteUser" value="Delete" />
                                         </form>
                                     </td>
                                     
@@ -339,7 +346,7 @@
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -348,7 +355,7 @@
                 <?php elseif($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
                     $users = $userObj->getAllUsers(); ?>
 
-                    <a class="form-control btn btn-light mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
+                    <a class="form-control btn btn-purple mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
 
                     <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
@@ -364,7 +371,7 @@
                                 <div class="invalid-feedback">Email field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control text-dark" style="height: 40px;" type="text" name="organization" required>
+                            <select class="form-control "  type="text" name="organization" required>
                                 <option value="">Select Organization</option>
                                 <?php foreach($orgs as $o): ?>
                                     <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
@@ -377,10 +384,10 @@
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                                 <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="male">Male</label>
+                                <label class="btn   btn-outline-purple" for="male">Male</label>
 
                                 <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="female">Female</label>
+                                <label class="btn   btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
                                 <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -390,10 +397,10 @@
                                 <label class="mb-3 mr-1" for="isSiteAdmin">Site Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="siteAdminYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="siteAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="siteAdminNo">No</label>
+                                <label class="btn   btn-outline-purple" for="siteAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected site admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select site admin status!</div>
@@ -403,10 +410,10 @@
                                 <label class="mb-3 mr-1" for="isOrgAdmin">Org Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgAdminYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="orgAdminYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="orgAdminYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgAdminNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="orgAdminNo">No</label>
+                                <label class="btn   btn-outline-purple" for="orgAdminNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected org admin status!</div>
                                 <div class="invalid-feedback mv-up">Please select org admin status!</div>
@@ -416,16 +423,16 @@
                                 <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=1 id="trainerYes" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="trainerYes">Yes</label>
+                                <label class="btn   btn-outline-purple" for="trainerYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=0 id="trainerNo" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-light" for="trainerNo">No</label>
+                                <label class="btn   btn-outline-purple" for="trainerNo">No</label>
 
                                 <div class="valid-feedback mv-up">You selected trainer status!</div>
                                 <div class="invalid-feedback mv-up">Please select trainer status!</div>
                             </div>
 
-                            <input type="submit" class="btn btn-light" style="height: 40px;" name="searchButton" value="Search" />
+                            <input type="submit" class="btn btn-purple" style="height: 40px; margin-top: 13px;" name="searchButton" value="Search" />
                         </div>
                     </form>
 
@@ -454,7 +461,7 @@
                                     <td>
                                         <form method="POST">
                                             <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                            <input class="btn btn-light" type="submit" name="deleteUser" value="Delete" />
+                                            <input class="btn btn-purple" type="submit" name="deleteUser" value="Delete" />
                                         </form>
                                     </td>
                                     
@@ -470,7 +477,7 @@
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -478,7 +485,7 @@
                     
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
                     
-                    <a class="form-control btn btn-light" href="userAccount.php?action=createUser">Create an Account</a>
+                    <a class="form-control btn btn-purple" href="userAccount.php?action=createUser">Create an Account</a>
 
                     <?php $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
 
@@ -505,7 +512,7 @@
                                 <td>
                                     <form method="POST">
                                         <input type="hidden" name="userID" value="<?= $u['userID']; ?>" />
-                                        <input class="btn btn-light btn-sm" type="submit" name="deleteUser" value="Delete" />
+                                        <input class="btn btn-purple  " type="submit" name="deleteUser" value="Delete" />
                                     </form>
                                 </td>
                                 <td><?= $u['firstName']; ?></td>
@@ -518,7 +525,7 @@
                                 <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-light btn-sm text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-purple   text-light" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -534,14 +541,14 @@
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="orgID" name="orgID" required>
+                        <select class="form-control  col-md-12" type="text" id="orgID" name="orgID" required>
                             <option value="">Select Organization</option>
                             <?php foreach($orgs as $o): ?>
                                 <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
                             <?php endforeach; ?>
                         </select>
                         
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control  col-md-12" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             
                             <?php foreach($deps as $d): ?>
@@ -595,10 +602,10 @@
                             <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                             <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="male">Male</label>
+                            <label class="btn   btn-outline-purple" for="male">Male</label>
 
                             <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="female">Female</label>
+                            <label class="btn   btn-outline-purple" for="female">Female</label>
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -608,10 +615,10 @@
                             <label class="mb-3 mr-1" for="siteAdmin">Site Admin: </label>
 
                             <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="siteYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="siteYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="siteNo">No</label>
+                            <label class="btn   btn-outline-purple" for="siteNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a site admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a site admin status!</div>
@@ -621,10 +628,10 @@
                             <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgNo">No</label>
+                            <label class="btn   btn-outline-purple" for="orgNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a organization admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
@@ -634,17 +641,17 @@
                             <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=1 id="trYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="trYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=0 id="trNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trNo">No</label>
+                            <label class="btn   btn-outline-purple" for="trNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a training manager status!</div>
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitSiteAdminCreateUser" type="submit" class="btn btn-light">Create New User</button>
+                            <button name="submitSiteAdminCreateUser" type="submit" class="btn btn-purple">Create New User</button>
                         </div>
 
                     </form>
@@ -659,7 +666,7 @@
 
                     <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control  col-md-12" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -712,10 +719,10 @@
                             <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                             <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="male">Male</label>
+                            <label class="btn   btn-outline-purple" for="male">Male</label>
 
                             <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="female">Female</label>
+                            <label class="btn   btn-outline-purple" for="female">Female</label>
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -725,10 +732,10 @@
                             <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
 
                             <input type="radio" class="btn-check" name="orgAdmin" value=1 id="orgYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="orgAdmin" value=0 id="orgNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgNo">No</label>
+                            <label class="btn   btn-outline-purple" for="orgNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a organization admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
@@ -738,17 +745,17 @@
                             <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
 
                             <input type="radio" class="btn-check" name="trainer" value=1 id="trYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="trYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="trainer" value=0 id="trNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trNo">No</label>
+                            <label class="btn   btn-outline-purple" for="trNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a training manager status!</div>
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
                         </div>
 
                         <div class="form-button mt-3">
-                            <button id="submit" name="submitOrgAdminCreateUser" type="submit" class="btn btn-light">Create New User</button>
+                            <button id="submit" name="submitOrgAdminCreateUser" type="submit" class="btn btn-purple">Create New User</button>
                         </div>
 
                     </form>
@@ -760,7 +767,7 @@
                 <h2>Account Settings</h2>
 
                 <?php $account = $userObj->getUser($_SESSION['userID']); ?>
-                <a class="form-control btn btn-light" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
+                <a class="form-control btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
                     <div style="display: flex;">
@@ -813,7 +820,7 @@
                         <p><?= $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                    <a class="form-control btn btn-light" href="userAccount.php?action=changePassword">Change Password</a>
+                    <a class="form-control btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
 
@@ -1013,7 +1020,7 @@
 
                     <form action="userAccount.php?action=Viewer" class="row requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" name="department" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control  col-md-12" name="department" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -1075,10 +1082,10 @@
                             <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                             <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="male">Male</label>
+                            <label class="btn   btn-outline-purple" for="male">Male</label>
 
                             <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==0?"checked":""?> id="female" id="female" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="female">Female</label>
+                            <label class="btn   btn-outline-purple" for="female">Female</label>
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -1088,10 +1095,10 @@
                             <label class="mb-3 mr-1" for="isSiteAdmin">Website Admin: </label>
 
                             <input type="radio" class="btn-check" name="isSiteAdmin" value=1 <?= $isSiteAdmin==1?"checked":""?> id="siteYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="siteYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="siteYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isSiteAdmin" value=0 <?= $isSiteAdmin==0?"checked":""?> id="siteNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="siteNo">No</label>
+                            <label class="btn   btn-outline-purple" for="siteNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a website admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a website admin status!</div>
@@ -1101,10 +1108,10 @@
                             <label class="mb-3 mr-1" for="isOrgAdmin">Organization Admin: </label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=1 <?= $isOrgAdmin==1?"checked":""?> id="orgYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=0 <?= $isOrgAdmin==0?"checked":""?> id="orgNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="orgNo">No</label>
+                            <label class="btn   btn-outline-purple" for="orgNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a organization admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
@@ -1114,10 +1121,10 @@
                             <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=1 <?= $isTrainer==1?"checked":""?> id="trYes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trYes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="trYes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=0 <?= $isTrainer==0?"checked":""?> id="trNo" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="trNo">No</label>
+                            <label class="btn   btn-outline-purple" for="trNo">No</label>
 
                             <div class="valid-feedback mv-up">You selected a training manager status!</div>
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
@@ -1201,7 +1208,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
+                            <button name="submitSiteAdminUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
                         </div>
 
                     </form>
@@ -1243,7 +1250,7 @@
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control text-dark col-md-12" name="department" style="height: 40px;" type="text" id="depID" name="depID" required>
+                        <select class="form-control  col-md-12" name="department" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -1298,10 +1305,10 @@
                             <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                             <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="male">Male</label>
+                            <label class="btn   btn-outline-purple" for="male">Male</label>
 
                             <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="female">Female</label>
+                            <label class="btn   btn-outline-purple" for="female">Female</label>
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -1311,10 +1318,10 @@
                             <label class="mb-3 mr-1" for="isOrgAdmin">Organization Admin: </label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=1 <?= $isOrgAdmin==1?"checked":""?> id="Yes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="Yes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="Yes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isOrgAdmin" value=0 <?= $isOrgAdmin==0?"checked":""?> id="No" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="No">No</label>
+                            <label class="btn   btn-outline-purple" for="No">No</label>
 
                             <div class="valid-feedback mv-up">You selected a organization admin status!</div>
                             <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
@@ -1324,10 +1331,10 @@
                             <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=1 <?= $isTrainer==1?"checked":""?> id="Yes" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="Yes">Yes</label>
+                            <label class="btn   btn-outline-purple" for="Yes">Yes</label>
 
                             <input type="radio" class="btn-check" name="isTrainer" value=0 <?= $isTrainer==0?"checked":""?> id="No" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="No">No</label>
+                            <label class="btn   btn-outline-purple" for="No">No</label>
 
                             <div class="valid-feedback mv-up">You selected a training manager status!</div>
                             <div class="invalid-feedback mv-up">Please select a training manager status!</div>
@@ -1414,7 +1421,7 @@
 
 
                         <div class="form-button mt-3">
-                            <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-light">Update Information</button>
+                            <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
                         </div>
 
                     </form>
@@ -1498,10 +1505,10 @@
                             <label class="mb-3 mr-1" for="gender">Gender: </label>
 
                             <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="male">Male</label>
+                            <label class="btn   btn-outline-purple" for="male">Male</label>
 
                             <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
-                            <label class="btn btn-sm btn-outline-secondary" for="female">Female</label>
+                            <label class="btn   btn-outline-purple" for="female">Female</label>
 
                             <div class="valid-feedback mv-up">You selected a gender!</div>
                             <div class="invalid-feedback mv-up">Please select a gender!</div>
@@ -1585,7 +1592,7 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitUpdateUser" type="submit" class="btn btn-light">Update Information</button>
+                            <button name="submitUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
                         </div>
 
                     </form>
@@ -1621,7 +1628,7 @@
                     <?php ?>
 
                     <div class="form-button mt-3">
-                        <button name="submiteChangePassword" type="submit" class="btn btn-light">Change Password</button>
+                        <button name="submiteChangePassword" type="submit" class="btn btn-purple">Change Password</button>
                     </div>
 
                 </form>
@@ -1674,7 +1681,7 @@
                                             </select>
                                         </td>
                                         <td><input type="hidden" name="userID" value="<?= $u['userID']; ?>"></td>
-                                        <td><input type="submit" class="btn btn-light" name="submitValidation" value="Validate"></td>
+                                        <td><input type="submit" class="btn btn-purple" name="submitValidation" value="Validate"></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
