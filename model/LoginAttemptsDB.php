@@ -90,27 +90,23 @@ class LoginDB {
         return $results;
     }
 
-    public function searchLogins($successful, $userID, $orgID) {
+    public function searchLogins($successful, $userID) {
         $results = [];
         $loginTable = $this->loginData;
     
-        $sqlString = "SELECT * FROM ((loginattempts 
-                        INNER JOIN users ON loginattempts.userID = users.userID) 
-                        INNER JOIN organizations ON users.orgID = organizations.orgID)
-                        WHERE organizations.orgID = :oi";
+        // Modified the SQL query to fix the table name and WHERE clause
+        $sqlString = "SELECT * FROM loginattempts 
+                        INNER JOIN users ON loginattempts.userID = users.userID 
+                        WHERE loginattempts.userID = :ui";
     
-        $binds = [":oi" => $orgID];
+        $binds = [":ui" => $userID];
     
         if($successful !== '') {
             $sqlString .= " AND loginattempts.isSuccessful = :s";
             $binds[':s'] = $successful;
         }
     
-        if ($userID !== '') {
-            $sqlString .= " AND loginattempts.userID = :u";
-            $binds[':u'] = $userID;
-        }
-    
+        // Modified the prepare statement to use the correct SQL query
         $stmt = $loginTable->prepare($sqlString);
         if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -119,7 +115,6 @@ class LoginDB {
         return $results;
     }
     
-
     public function addLoginAttempt($userID, $attemptDate, $isSuccessful, $ip) {
         $results = "";
         $loginTable = $this->loginData;

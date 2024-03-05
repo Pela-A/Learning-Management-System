@@ -45,7 +45,7 @@
     if(isset($_POST['searchLogins'])){
         $successful = filter_input(INPUT_POST, 'successful');
 
-        $logins = $loginObj->searchLogins($successful, $_SESSION['userID'], $_SESSION['orgID']);
+        $logins = $loginObj->searchLogins($successful, $_SESSION['userID']);
     }
     //otherwise loading into page first time.
 ?>
@@ -229,7 +229,7 @@
                                 <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="form-control btn btn-purple" type="submit" name="searchLogins" value="Search" />
+                                <input class="btn btn-purple" type="submit" name="searchLogins" value="Search" />
                             </div>
                         </div>
                     </form>

@@ -767,7 +767,12 @@
                 <h2>Account Settings</h2>
 
                 <?php $account = $userObj->getUser($_SESSION['userID']); ?>
-                <a class="form-control btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
+                <div style="display: flex; margin-bottom: 10px;">
+            
+                    <a class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
+                    <a style="margin-left: 10px;" class="btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
+
+                </div>
                 <?php if($_SESSION['isSiteAdmin']): ?>
 
                     <div style="display: flex;">
@@ -820,7 +825,7 @@
                         <p><?= $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                    <a class="form-control btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
+                    <a class="btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php elseif($_SESSION['isOrgAdmin']): ?>
 
@@ -874,7 +879,7 @@
                         <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                    <a href="userAccount.php?action=changePassword">Change Password</a>
+                    <a class="btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php elseif($_SESSION['isTrainer']): ?>
 
@@ -923,7 +928,7 @@
                         <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                    <a href="userAccount.php?action=changePassword">Change Password</a>
+                    <a class="btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php else: ?>
 
@@ -971,8 +976,6 @@
                         <label for="">Organization Administrator: </label>
                         <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
-
-                    <a href="userAccount.php?action=changePassword">Change Password</a>
 
                 <?php endif; ?>
 
