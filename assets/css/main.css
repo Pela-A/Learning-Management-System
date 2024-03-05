@@ -162,4 +162,16 @@ select.form-control:focus {
     color: #b983ff;
 }
 
+textarea.form-control {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #606060;
+}
+
+textarea.form-control:focus {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #b983ff;
+}
+
 

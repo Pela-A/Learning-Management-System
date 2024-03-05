@@ -1614,24 +1614,93 @@
                     </ul>
 
                     <div class="col-md-12" >
-                        <input class="form-control" type="text" name="password" placeholder="New Password" required>
+                        <input class="form-control" type="password" name="password" placeholder="New Password" required>
                         <div class="valid-feedback">Password field is valid!</div>
                         <div class="invalid-feedback">Password field cannot be blank!</div>
+                        <div id="passwordCriteriaError"></div>
                     </div>
 
                     <div class="col-md-12" >
-                        <input class="form-control" type="text" name="validatePassword" placeholder="Confirm Password" required>
+                        <input class="form-control" type="password" name="validatePassword" placeholder="Confirm Password" required>
                         <div class="valid-feedback">First name field is valid!</div>
                         <div class="invalid-feedback">First name field cannot be blank!</div>
+                        <div id="passwordError"></div>
                     </div>
 
                     <?php ?>
 
                     <div class="form-button mt-3">
-                        <button name="submiteChangePassword" type="submit" class="btn btn-purple">Change Password</button>
+                        <button name="submitChangePassword" onclick="return validateForm()" type="submit" class="btn btn-purple">Change Password</button>
                     </div>
 
                 </form>
+
+                <script>
+                    function validatePassword(password) {
+                        // Password length should be between 8 and 20 characters
+                        if (password.length < 8 || password.length > 20) {
+                            return false;
+                        }
+
+                        // Password should contain at least one uppercase letter
+                        if (!/[A-Z]/.test(password)) {
+                            return false;
+                        }
+
+                        // Password should contain at least one lowercase letter
+                        if (!/[a-z]/.test(password)) {
+                            return false;
+                        }
+
+                        // Password should contain at least one digit
+                        if (!/\d/.test(password)) {
+                            return false;
+                        }
+
+                        // Password should contain at least one special character
+                        if (!/[^a-zA-Z0-9]/.test(password)) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                    // Function to check if passwords match
+                    function checkPasswordMatch() {
+                        var password = document.getElementsByName("password")[0].value;
+                        var confirmPassword = document.getElementsByName("validatePassword")[0].value;
+                        var errorDiv = document.getElementById("passwordError");
+
+                        if (password !== confirmPassword) {
+                            errorDiv.innerHTML = "Passwords do not match!";
+                            errorDiv.style.color = "red";
+                            return false;
+                        } else {
+                            errorDiv.innerHTML = "";
+                            return true;
+                        }
+                    }
+
+                    // Function to validate password criteria
+                    function validatePasswordCriteria() {
+                        var password = document.getElementsByName("password")[0].value;
+                        var isValid = validatePassword(password);
+
+                        if (!isValid) {
+                            document.getElementById("passwordCriteriaError").innerHTML = "Password must be between 8 and 20 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+                            document.getElementById("passwordCriteriaError").style.color = "red";
+                            return false;
+                        } else {
+                            document.getElementById("passwordCriteriaError").innerHTML = "";
+                            return true;
+                        }
+                    }
+
+                    // Function to validate all criteria before allowing submission
+                    function validateForm() {
+                        return checkPasswordMatch() && validatePasswordCriteria();
+                    }
+                </script>
             
             <?php elseif($action == 'Validator'): ?>
                 <h3>Validate New Users</h3>

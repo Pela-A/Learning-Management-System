@@ -220,19 +220,20 @@
                     </table>
 
                 <?php else: 
+
                     $entries = $entryObj->getAllUserTrainingEntries($_SESSION['userID']); ?>
                     
-                    <a href="trainingEntry.php?action=Create">Create new training entry</a>
+                    <a class="btn btn-purple" style="margin-bottom: 5px;" href="trainingEntry.php?action=Create">Create new training entry</a>
 
                     <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
                         <div style="display: flex;">
-                            <div class="col-md-6">
+                            <div class="">
                                 <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
                                 <div class="valid-feedback">Course name field is valid!</div>
                                 <div class="invalid-feedback">Course name field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control text-dark col-md-12" style="height: 40px;" type="text" name="category" required>
+                            <select class="form-control" type="text" name="category" required>
                                 <option value="">Select Category</option>
                                 <?php 
                                     $uniqueCategories = array();
@@ -245,35 +246,37 @@
                             </select>
                         </div>
 
-                        <div style="display: flex;">
-                            <div class="col-md-6">
-                                <input class="form-control" type="date" name="entryDate" placeholder="Entry Date" required>
+                        <div style="display: flex; margin-top: 10px;">
+                            <div style="display: flex;">
+                                <label style="width: 120px; margin-top: 7px;">Entry Date:</label>
+                                <input style="max-height: 40px;" class="form-control" type="date" name="entryDate" placeholder="Entry Date" required>
                                 <div class="valid-feedback">Entry Date field is valid!</div>
                                 <div class="invalid-feedback">EntryDate field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-6">
-                                <input class="form-control" type="date" name="completeDate" placeholder="Completion Date" required>
+                            <div style="display: flex;">
+                                <label style="width: 200px; margin-top: 7px;">Completion Date:</label>
+                                <input style="max-height: 40px;" class="form-control" type="date" name="completeDate" placeholder="Completion Date" required>
                                 <div class="valid-feedback">Completion Date field is valid!</div>
                                 <div class="invalid-feedback">Completion Date field cannot be blank!</div>
                             </div>
+
+                            <div class="mt-3">
+                                <label class="" for="validated">Validated: </label>
+
+                                <input type="radio" class="btn-check" name="validated" value=1 id="valYes" autocomplete="off" required>
+                                <label class="btn  btn-outline-purple" for="valYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="validated" value=0 id="valNo" autocomplete="off" required>
+                                <label class="btn  btn-outline-purple" for="valNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected a validation status!</div>
+                                <div class="invalid-feedback mv-up">Please select a validation status!</div>
+                            </div>
+
+                            <input type="submit" class="btn  btn-purple" id="searchBtn" name="searchUserButton" value="Search" />
+
                         </div>
-
-                        <div class="mt-3">
-                            <label class="mb-3 mr-1" for="validated">Validated: </label>
-
-                            <input type="radio" class="btn-check" name="validated" value=1 id="valYes" autocomplete="off" required>
-                            <label class="btn  btn-outline-purple" for="valYes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="validated" value=0 id="valNo" autocomplete="off" required>
-                            <label class="btn  btn-outline-purple" for="valNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a validation status!</div>
-                            <div class="invalid-feedback mv-up">Please select a validation status!</div>
-                        </div>
-
-                        <input type="submit" class="btn  btn-purple" id="searchBtn" name="searchUserButton" value="Search" />
-
                     </form>
 
                     <table class="table table-striped table-hover table-dark">
