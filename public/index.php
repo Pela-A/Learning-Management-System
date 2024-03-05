@@ -229,7 +229,7 @@
 
         <div class="row pageContent">
             
-            <div class="col-xl-8 col-md-12 py-4">
+            <div class="col-xl-8 col-md-12">
 
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
@@ -272,7 +272,7 @@
             </div>
             
             <?php if($action == ''): ?>
-                <div class=" col-xl-4 col-md-12 py-4 special">
+                <div class=" col-xl-4 col-md-12 d-flex flex-column justify-content-between special ">
 
                     <div class="row formContent pt-4 pb-5">
 
@@ -324,7 +324,7 @@
                 </div>
             <?php elseif($action == 'createOrg'): ?>
 
-                <div class=" col-xl-4 col-md-12 py-4">
+                <div class=" col-xl-4 col-md-12">
 
                     <div class="row formContent pt-4 pb-5">
 
@@ -390,9 +390,6 @@
                                         <label class="form-check-label" for="flexRadioDefault2">
                                             Female
                                         </label>
-                                        <div id="birthdayFeedback" class="invalid-feedback">
-                                            Provide a Gender
-                                        </div>
                                     </div>
 
                                 </div>
@@ -805,7 +802,7 @@
                 </script>
             <?php elseif($action == 'joinOrg'): ?>
 
-                <div class=" col-xl-4 col-md-12 py-4">
+                <div class=" col-xl-4 col-md-12">
                 
                     <div class="row formContent pt-4 pb-5">
 
@@ -883,7 +880,6 @@
                                         <label class="form-check-label" for="flexRadioDefault2">
                                             Female
                                         </label>
-                                        <div id="genderFeedback" class="invalid-feedback">More example invalid feedback text</div>
                                     </div>
                                     
                                     
