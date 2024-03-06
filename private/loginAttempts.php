@@ -42,12 +42,27 @@
     }
 
     //if search or coming to first time
-    if(isset($_POST['searchLogins'])){
+    if(isset($_POST['searchUserLogins'])){
         $successful = filter_input(INPUT_POST, 'successful');
 
-        $logins = $loginObj->searchLogins($successful, $_SESSION['userID']);
+        $logins = $loginObj->searchUserLogins($successful, $_SESSION['userID']);
     }
-    //otherwise loading into page first time.
+
+    if(isset($_POST['searchAllLogins'])) {
+        $orgID = filter_input(INPUT_POST, 'orgID');
+        $userID = filter_input(INPUT_POST, 'userID');
+        $successful = filter_input(INPUT_POST, 'successful');
+
+        $logins = $loginObj->searchAllLogins($orgID, $userID, $successful);
+    }
+
+    if(isset($_POST['searchAllOrgLogins'])){
+        $userID = filter_input(INPUT_POST, 'userID');
+        $successful = filter_input(INPUT_POST, 'successful');
+
+        $logins = $loginObj->searchAllLogins($_SESSION['orgID'], $userID, $successful);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -74,24 +89,24 @@
                 <h3>User Login Attempts</h3>
                 <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): ?>
 
-                    <form method="POST" name="search" class="col-lg-10 offset-lg-1">
+                    <form method="POST" name="search">
 
-                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="orgID" id='organization_select'>
-                            <option value="">Select Organization</option>
-                            <?php foreach($orgs as $o): ?>
-                                <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="mb-3" style="display: flex; justify-content: space-between;">
+                            <select class="form-control text-secondary" style="height: 40px; width: 500px;" type="text" name="orgID" id='organization_select'>
+                                <option value="">Select Organization</option>
+                                <?php foreach($orgs as $o): ?>
+                                    <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
 
-                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="userID" id='option_select'>
-                            <option value="">Select Organization ID to populate</option>
-                            <option value="">Select a User ID</option>
-                            <?php foreach($users as $u): ?>
-                                <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
-                            <?php endforeach; ?>  
-                        </select>
+                            <select class="form-control text-secondary" style="height: 40px; width: 500px;" type="text" name="userID" id='option_select'>
+                                <option value="">Select Organization ID to populate</option>
+                                <option value="">Select a User ID</option>
+                                <?php foreach($users as $u): ?>
+                                    <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
+                                <?php endforeach; ?>  
+                            </select>
 
-                        <div style="display: flex; justify-content: space-between;" class="mt-2">
                             <div>
                                 <label>Successful Login: </label>
 
@@ -101,10 +116,10 @@
                                 <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
                                 <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
-                            <div>
-                                <input class="form-control btn btn-purple" type="submit" name="search" value="Search" />
-                            </div>
+
+                            <input class="btn btn-purple" style="width: 150px;" type="submit" name="searchAllLogins" value="Search" />
                         </div>
+
                     </form>
 
                     <table class="table table-striped table-hover table-dark">
@@ -182,7 +197,7 @@
                                 <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="form-control btn btn-purple" type="submit" name="searchLogins" value="Search" />
+                                <input class="form-control btn btn-purple" type="submit" name="searchAllOrgLogins" value="Search" />
                             </div>
                         </div>
                     </form>
@@ -229,7 +244,7 @@
                                 <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
                             <div>
-                                <input class="btn btn-purple" type="submit" name="searchLogins" value="Search" />
+                                <input class="btn btn-purple" type="submit" name="searchUserLogins" value="Search" />
                             </div>
                         </div>
                     </form>

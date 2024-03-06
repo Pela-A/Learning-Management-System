@@ -11,7 +11,7 @@ header, footer {
 }
 
 aside { 
-    min-width: 400px;
+    min-width: 300px;
     height: auto;
     background-color: rgb(36, 36, 36);
 }

@@ -77,7 +77,7 @@
                         <div style="display:flex;">
                             <input class="form-control" type="text" name="orgName" value="<?=$orgName;?>" placeholder="Organization Name"/>
                             
-                            <select class="form-control text-secondary" type="text" name="state" value="<?=$state?>">
+                            <select class="form-control text-secondary mx-2" type="text" name="state" value="<?=$state?>">
                                 <option value="">State</option>
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
