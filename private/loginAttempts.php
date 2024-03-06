@@ -91,15 +91,15 @@
 
                     <form method="POST" name="search">
 
-                        <div class="mb-3" style="display: flex; justify-content: space-between;">
-                            <select class="form-control text-secondary" style="height: 40px; width: 500px;" type="text" name="orgID" id='organization_select'>
+                        <div class="" style="display: flex; justify-content: space-between;">
+                            <select class="form-control text-secondary col-md-3" style="height: 40px; width: 500px;" type="text" name="orgID" id='organization_select'>
                                 <option value="">Select Organization</option>
                                 <?php foreach($orgs as $o): ?>
                                     <option value="<?=$o['orgID']?>"><?="(". $o['orgID'] . ") " . $o['orgName'] ?></option>
                                 <?php endforeach; ?>
                             </select>
 
-                            <select class="form-control text-secondary" style="height: 40px; width: 500px;" type="text" name="userID" id='option_select'>
+                            <select class="form-control text-secondary col-md-3" style="height: 40px; width: 500px;" type="text" name="userID" id='option_select'>
                                 <option value="">Select Organization ID to populate</option>
                                 <option value="">Select a User ID</option>
                                 <?php foreach($users as $u): ?>
@@ -107,7 +107,7 @@
                                 <?php endforeach; ?>  
                             </select>
 
-                            <div>
+                            <div class="col-md-3">
                                 <label>Successful Login: </label>
 
                                 <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
@@ -117,7 +117,7 @@
                                 <label class="btn btn-outline-purple" for="successfulNo">No</label>
                             </div>
 
-                            <input class="btn btn-purple" style="width: 150px;" type="submit" name="searchAllLogins" value="Search" />
+                            <input class="btn btn-purple col-md-3" style="width: 150px;" type="submit" name="searchAllLogins" value="Search" />
                         </div>
 
                     </form>

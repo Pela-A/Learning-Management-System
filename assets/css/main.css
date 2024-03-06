@@ -181,4 +181,13 @@ textarea.form-control:focus {
     color: #666;
 }
 
+.accordion-button:focus{
+    box-shadow: 0 0 0 0.25rem #9e56fd50;
+    border-color: #9e56fd;
+}
 
+.accordion-button:not(.collapsed) {
+    color: black;
+    background-color: #9e56fd50;
+    box-shadow: inset 0 -1px 0 #9e56fd50;
+}
