@@ -11,7 +11,7 @@ header, footer {
 }
 
 aside { 
-    min-width: 300px;
+    min-width: 400px;
     height: auto;
     background-color: rgb(36, 36, 36);
 }
@@ -112,8 +112,8 @@ a.dropdown-item img{
 }
 
 .btn-purple:hover {
-    background-color: #b983ff;
-    color: black;
+    background-color: #882dff;
+    color: rgb(255, 255, 255);
 }
 
 .btn-purple:active {
@@ -134,6 +134,8 @@ a.dropdown-item img{
 .btn-check:focus+.btn, .btn:focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem #9e56fd69;
+    background-color: #9e56fd;
+    color: white;
 }
 
 input.form-control {
@@ -172,6 +174,11 @@ textarea.form-control:focus {
     background-color: #222;
     border: 1px solid #b983ff;
     color: #b983ff;
+}
+
+.form-control:disabled {
+    background-color: #222;
+    color: #666;
 }
 
 

@@ -177,28 +177,29 @@
 
                 <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']): ?>
 
-                    <form method="POST" name="search" class="col-lg-10 offset-lg-1">
+                    <form method="POST" name="search">
 
-                        <select class="form-control text-secondary" style="height: 40px;" type="text" name="userID" id='option_select'>
-                            <option value="">Select User Account</option>
-                            <?php foreach($users as $u): ?>
-                                <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
-                            <?php endforeach; ?>  
-                        </select>
+                        <div style="display: flex;" class="mb-3">
+                            <select class="col-md-6 form-control text-secondary mr-5" style="height: 40px;" type="text" name="userID" id='option_select'>
+                                <option value="">Select User Account</option>
+                                <?php foreach($users as $u): ?>
+                                    <option value="<?=$u['userID']?>"><?="(". $u['userID'] . ") " . $u['firstName'] . " " . $u['lastName'] ?></option>
+                                <?php endforeach; ?>  
+                            </select>
 
-                        <div style="display: flex; justify-content: space-between;" class="mt-2">
-                            <div>
-                                <label>Successful Login: </label>
+                            <div style="display: flex; justify-content: space-between;" class="col-md-4">
+                                <div>
+                                    <label class="mr-2">Successful Login: </label>
 
-                                <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
-                                <label class="btn btn-outline-purple" for="successfulYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="successful" value="1" id="successfulYes" autocomplete="off">
+                                    <label class="btn btn-outline-purple" for="successfulYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
-                                <label class="btn btn-outline-purple" for="successfulNo">No</label>
+                                    <input type="radio" class="btn-check" name="successful" value="0" id="successfulNo" autocomplete="off">
+                                    <label class="btn btn-outline-purple" for="successfulNo">No</label>
+                                </div>
                             </div>
-                            <div>
-                                <input class="form-control btn btn-purple" type="submit" name="searchAllOrgLogins" value="Search" />
-                            </div>
+
+                            <input class="form-control btn btn-purple" type="submit" name="searchAllOrgLogins" value="Search" />
                         </div>
                     </form>
 

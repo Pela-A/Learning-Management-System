@@ -308,19 +308,16 @@
                     <table class="table table-striped table-hover table-dark">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th></th>
                                 <th>Organization</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Birth Date</th>
-                                <th>Phone</th>
                                 <th>Gender</th>
-                                <th>Username</th>
                                 <th>Website Admin</th>
                                 <th>Organization Admin</th>
                                 <th>Training Manager</th>
                                 <th>Verified</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -335,13 +332,9 @@
                                     </td>
                                     
                                     <td><?= $u['orgName']; ?></td>
-                                    <td><?= $u['firstName']; ?></td>
-                                    <td><?= $u['lastName']; ?></td>
+                                    <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
-                                    <td><?= $u['birthDate']; ?></td>
-                                    <td><?= $u['phoneNumber']; ?></td>
                                     <td><?= $u['gender']==1?"Male":"Female" ?></td>
-                                    <td><?= $u['username'];?></td>
                                     <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
@@ -439,19 +432,16 @@
                     <table class="table table-striped table-hover table-dark">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th></th>
                                 <th>Organization</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Birth Date</th>
+                                <th>Full Name</th>
                                 <th>Phone</th>
                                 <th>Gender</th>
-                                <th>Username</th>
                                 <th>Website Admin</th>
                                 <th>Organization Admin</th>
                                 <th>Training Manager</th>
                                 <th>Verified</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -466,13 +456,9 @@
                                     </td>
                                     
                                     <td><?= $u['orgName']; ?></td>
-                                    <td><?= $u['firstName']; ?></td>
-                                    <td><?= $u['lastName']; ?></td>
+                                    <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
-                                    <td><?= $u['birthDate']; ?></td>
-                                    <td><?= $u['phoneNumber']; ?></td>
                                     <td><?= $u['gender']==1?"Male":"Female" ?></td>
-                                    <td><?= $u['username'];?></td>
                                     <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
@@ -493,11 +479,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Birth Date</th>
-                                <th>Phone</th>
                                 <th>Gender</th>
                                 <th>Username</th>
                                 <th>Organization Admin</th>
@@ -515,13 +498,9 @@
                                         <input class="btn btn-purple  " type="submit" name="deleteUser" value="Delete" />
                                     </form>
                                 </td>
-                                <td><?= $u['firstName']; ?></td>
-                                <td><?= $u['lastName']; ?></td>
+                                <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                 <td><?= $u['email']; ?></td>
-                                <td><?= $u['birthDate']; ?></td>
-                                <td><?= $u['phoneNumber']; ?></td>
                                 <td><?= $u['gender']==1?"Male":"Female" ?></td>
-                                <td><?= $u['username'];?></td>
                                 <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                 <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
@@ -541,113 +520,123 @@
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
 
-                        <select class="form-control  col-md-12" type="text" id="orgID" name="orgID" required>
-                            <option value="">Select Organization</option>
-                            <?php foreach($orgs as $o): ?>
-                                <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        
-                        <select class="form-control  col-md-12" type="text" id="depID" name="depID" required>
-                            <option value="">Select Department</option>
+                        <div style="display: flex;">
+                            <select class="form-control col-md-6" type="text" id="orgID" name="orgID" required>
+                                <option value="">Select Organization</option>
+                                <?php foreach($orgs as $o): ?>
+                                    <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             
-                            <?php foreach($deps as $d): ?>
-                                <option value="<?= $d['depID']; ?>"><?= $d['depName'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                            <select class="form-control col-md-6" type="text" id="depID" name="depID" required>
+                                <option value="">Select Department</option>
+                                
+                                <?php foreach($deps as $d): ?>
+                                    <option value="<?= $d['depID']; ?>"><?= $d['depName'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex;" class="mt-3 mb-3">
+                            <div class="col-md-4" >
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
-                            <div class="valid-feedback">First name field is valid!</div>
-                            <div class="invalid-feedback">First name field cannot be blank!</div>
+                            <div class="col-md-4" >
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-4" >
+                                <input class="form-control" type="email" name="email" placeholder="Email Address" required>
+                                <div class="valid-feedback">Email field is valid!</div>
+                                <div class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex;">
+                    
+                            <div class="col-md-3" >
+                                <input class="form-control" type="date" name="birthDate" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
+                                <div class="valid-feedback">Phone number field is valid!</div>
+                                <div class="invalid-feedback">Phone number field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="password" name="password" placeholder="Enter password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
+                        <div style="display: flex;">
+                            <div class="col-md-3 mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="email" name="email" placeholder="Email Address" required>
-                            <div class="valid-feedback">Email field is valid!</div>
-                            <div class="invalid-feedback">Email field cannot be blank!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="male">Male</label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="date" name="birthDate" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="female">Female</label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
-                            <div class="valid-feedback">Phone number field is valid!</div>
-                            <div class="invalid-feedback">Phone number field cannot be blank!</div>
-                        </div>
+                                <div class="valid-feedback mv-up">You selected a gender!</div>
+                                <div class="invalid-feedback mv-up">Please select a gender!</div>
+                            </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="password" name="password" placeholder="Enter password" required>
-                            <div class="valid-feedback">Password field is valid!</div>
-                            <div class="invalid-feedback">Password field cannot be blank!</div>
-                        </div>
+                            <div class="col-md-3 mt-3">
+                                <label class="mb-3 mr-1" for="siteAdmin">Site Admin: </label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
-                            <div class="valid-feedback">Password field is valid!</div>
-                            <div class="invalid-feedback">Password field cannot be blank!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="siteYes">Yes</label>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="gender">Gender: </label>
+                                <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="siteNo">No</label>
 
-                            <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="male">Male</label>
+                                <div class="valid-feedback mv-up">You selected a site admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select a site admin status!</div>
+                            </div>
 
-                            <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="female">Female</label>
+                            <div class="col-md-3 mt-3">
+                                <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
 
-                            <div class="valid-feedback mv-up">You selected a gender!</div>
-                            <div class="invalid-feedback mv-up">Please select a gender!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="siteAdmin">Site Admin: </label>
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgNo">No</label>
 
-                            <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteYes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="siteYes">Yes</label>
+                                <div class="valid-feedback mv-up">You selected a organization admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
+                            </div>
 
-                            <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteNo" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="siteNo">No</label>
+                            <div class="col-md-3 mt-3">
+                                <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
 
-                            <div class="valid-feedback mv-up">You selected a site admin status!</div>
-                            <div class="invalid-feedback mv-up">Please select a site admin status!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="isTrainer" value=1 id="trYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trYes">Yes</label>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
+                                <input type="radio" class="btn-check" name="isTrainer" value=0 id="trNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trNo">No</label>
 
-                            <input type="radio" class="btn-check" name="isOrgAdmin" value=1 id="orgYes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="isOrgAdmin" value=0 id="orgNo" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="orgNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a organization admin status!</div>
-                            <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
-
-                            <input type="radio" class="btn-check" name="isTrainer" value=1 id="trYes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="trYes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="isTrainer" value=0 id="trNo" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="trNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a training manager status!</div>
-                            <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                                <div class="valid-feedback mv-up">You selected a training manager status!</div>
+                                <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                            </div>
+                    
                         </div>
 
                         <div class="form-button mt-3">
@@ -673,85 +662,91 @@
                             <?php endforeach; ?>
                         </select>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
-                            <div class="valid-feedback">First name field is valid!</div>
-                            <div class="invalid-feedback">First name field cannot be blank!</div>
+                        <div style="display: flex;">
+                            <div class="col-md-4" >
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-4" >
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-4" >
+                                <input class="form-control" type="email" name="email" placeholder="Email Address" required>
+                                <div class="valid-feedback">Email field is valid!</div>
+                                <div class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
+                        <div style="display: flex;">
+                            <div class="col-md-3" >
+                                <input class="form-control" type="date" name="birthDate" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
+                                <div class="valid-feedback">Phone number field is valid!</div>
+                                <div class="invalid-feedback">Phone number field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="password" name="password" placeholder="Enter password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="email" name="email" placeholder="Email Address" required>
-                            <div class="valid-feedback">Email field is valid!</div>
-                            <div class="invalid-feedback">Email field cannot be blank!</div>
-                        </div>
+                        <div style="display: flex;">
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="date" name="birthDate" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="male">Male</label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
-                            <div class="valid-feedback">Phone number field is valid!</div>
-                            <div class="invalid-feedback">Phone number field cannot be blank!</div>
-                        </div>
+                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="female">Female</label>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="password" name="password" placeholder="Enter password" required>
-                            <div class="valid-feedback">Password field is valid!</div>
-                            <div class="invalid-feedback">Password field cannot be blank!</div>
-                        </div>
+                                <div class="valid-feedback mv-up">You selected a gender!</div>
+                                <div class="invalid-feedback mv-up">Please select a gender!</div>
+                            </div>
 
-                        <div class="col-md-12" >
-                            <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
-                            <div class="valid-feedback">Password field is valid!</div>
-                            <div class="invalid-feedback">Password field cannot be blank!</div>
-                        </div>
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="gender">Gender: </label>
+                                <input type="radio" class="btn-check" name="orgAdmin" value=1 id="orgYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="male">Male</label>
+                                <input type="radio" class="btn-check" name="orgAdmin" value=0 id="orgNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgNo">No</label>
 
-                            <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="female">Female</label>
+                                <div class="valid-feedback mv-up">You selected a organization admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
+                            </div>
 
-                            <div class="valid-feedback mv-up">You selected a gender!</div>
-                            <div class="invalid-feedback mv-up">Please select a gender!</div>
-                        </div>
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
+                                <input type="radio" class="btn-check" name="trainer" value=1 id="trYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="orgAdmin" value=1 id="orgYes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
+                                <input type="radio" class="btn-check" name="trainer" value=0 id="trNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trNo">No</label>
 
-                            <input type="radio" class="btn-check" name="orgAdmin" value=0 id="orgNo" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="orgNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a organization admin status!</div>
-                            <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
-
-                            <input type="radio" class="btn-check" name="trainer" value=1 id="trYes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="trYes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="trainer" value=0 id="trNo" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="trNo">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a training manager status!</div>
-                            <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                                <div class="valid-feedback mv-up">You selected a training manager status!</div>
+                                <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                            </div>
                         </div>
 
                         <div class="form-button mt-3">
@@ -1616,23 +1611,23 @@
                         <li>Password should contain at least one special character</li>
                     </ul>
 
-                    <div class="col-md-12" >
-                        <input class="form-control" type="password" name="password" placeholder="New Password" required>
-                        <div class="valid-feedback">Password field is valid!</div>
-                        <div class="invalid-feedback">Password field cannot be blank!</div>
-                        <div id="passwordCriteriaError"></div>
+                    <div style="display: flex;">
+                        <div class="col-md-6" >
+                            <input class="form-control" type="password" name="password" placeholder="New Password" required>
+                            <div class="valid-feedback">Password field is valid!</div>
+                            <div class="invalid-feedback">Password field cannot be blank!</div>
+                            <div id="passwordCriteriaError"></div>
+                        </div>
+
+                        <div class="col-md-6" >
+                            <input class="form-control" type="password" name="validatePassword" placeholder="Confirm Password" required>
+                            <div class="valid-feedback">First name field is valid!</div>
+                            <div class="invalid-feedback">First name field cannot be blank!</div>
+                            <div id="passwordError"></div>
+                        </div>
                     </div>
 
-                    <div class="col-md-12" >
-                        <input class="form-control" type="password" name="validatePassword" placeholder="Confirm Password" required>
-                        <div class="valid-feedback">First name field is valid!</div>
-                        <div class="invalid-feedback">First name field cannot be blank!</div>
-                        <div id="passwordError"></div>
-                    </div>
-
-                    <?php ?>
-
-                    <div class="form-button mt-3">
+                    <div class="form-button mt-3 ml-3">
                         <button name="submitChangePassword" onclick="return validateForm()" type="submit" class="btn btn-purple">Change Password</button>
                     </div>
 

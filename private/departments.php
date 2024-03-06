@@ -63,20 +63,6 @@
         $depObj->deleteDepBridge($depID);
     }
 
-        //siteADMIN
-        //Alexander
-        //AlexanderPela
-
-        //orgADMIN
-        //NewGuy13
-        //Pelaman12
-
-
-        //general USER
-        //JoinUser215125
-        //PelaMan12
-
-
 ?>
 
 <!DOCTYPE html>
@@ -107,7 +93,7 @@
             <?php if($action == 'Viewer'):
                 $departments = $depObj->getAllDepartments($orgID); ?>
 
-                <a class="form-control btn btn-purple" href="departments.php?action=Add">Create New Department</a>
+                <a class="form-control btn btn-purple mb-3" href="departments.php?action=Add">Create New Department</a>
 
                 <table class="table table-striped table-hover table-dark">
                     <thead>
@@ -126,7 +112,7 @@
                                 <td><?= $d['depID']; ?></td>
                                 <td><?= $d['depName']; ?></td>
                                 <td><?= $d['depEmail']; ?></td>
-                                <td><a href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
+                                <td><a class="btn btn-purple" href="departments.php?action=Edit&depID=<?=$d['depID']?>">Edit</a></td>
                                 <!-- LINK FOR UPDATE FUNCTIONALITY -> Look at how we are passing in our ID using PHP! -->
                             </tr>
                         <?php endforeach; ?>
@@ -168,19 +154,16 @@
                 
                 <form method="post" action="departments.php?action=Viewer" name="Department_CRUD">
 
-                    <label>Department Name</label>
-                    <input class="form-control" type="text" name="name" value='<?=$name?>'>
-                    </br>
-                
-                    <label>Department Email</label>
-                    <input class="form-control" type="text" name="email" value='<?=$email?>'>
-                    </br>
+                    <div class="mb-3" style="display: flex;">
+                        <input class="form-control col-md-4" type="text" name="name" value='<?=$name?>' placeholder="Department Name">
+                        <input class="form-control col-md-5 ml-3" type="text" name="email" value='<?=$email?>' placeholder="Department Email">
+                        <input class="form-control col-md-2 ml-3 btn btn-purple" type="submit" name="create" value="Create Department">
+                    </div>
 
                     <input class="form-control" type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
 
                     <div style="display: flex;">
                 
-                        <input class="form-control btn btn-purple" type="submit" name="create" value="Create Department">
                         <a class="form-control btn btn-purple" href="departments.php?action=Viewer">Go Back</a>
 
                     </div>
