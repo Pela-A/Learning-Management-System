@@ -195,8 +195,6 @@
         $state = "";
         $zipcode = "";
         $enterOrgCode = "";
-
-        
     }
 
 ?>
@@ -208,88 +206,111 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="..\assets\css\indexPage.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>Atlas</title>
 
+    <link rel="stylesheet" href="..\assets\css\indexPage.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <title>Atlas | Home Page</title>
+
+    <style>
+
+        .navbar {
+            position: fixed;
+            background-color: rgb(32, 33, 36, 0.75);
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure the navbar has a higher z-index */
+        }
+
+        .indexContent {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: 999; /* Lower z-index for the carousel */
+        }
+
+        .carousel-item img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Ensure the image covers the entire area */
+            object-position: center; /* Center the image within the carousel item */
+        }
+
+    </style>
     
 </head>
 <body>
 
-    <nav class="navbar pageContent">
-        <a class="navbar-brand" href="index.php">
-            <img src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
+    <nav class="navbar">
+        <a class="navbar-brand" style="margin: 0px;" href="index.php">
+            <img style="height: 50px;" src="../assets/images/atlasPhotos/ATLAS_Logo.png" alt="Logo">
             <strong>ATLAS</strong>
         </a>
     </nav>
 
-    <div class="container-fluid text-light mt-4">
+    <div class="container-fluid">
 
-        <div class="row pageContent">
-            
-            <div class="col-xl-8 col-md-12">
-
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg1.png" alt="First slide">
+        <div class="indexContent" style="display: flex;">
+            <div id="carouselExampleCaptions" class="carousel slide carousel-fade col-7" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="..\assets\images\atlasPhotos\testImg1.png" class="" alt="...">
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>Picture 1</h5>
-                            <p>Description Pic 1</p>
-                        </div>
-                        </div>
-                        <div class="carousel-item">
-                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg2.png" alt="Second slide">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Picture 2</h5>
-                            <p>Description Pic 2</p>
-                        </div>
-                        </div>
-                        <div class="carousel-item">
-                        <img class="d-block w-100" src="../assets/images/atlasPhotos/testImg3.png" alt="Third slide">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Picture 3</h5>
-                            <p>Description Pic 3</p>
-                        </div>
+                            <h5>Log in/Sign up</h5>
+                            <p>Choose whether you want to create your own organization, or join another!</p>
                         </div>
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+                    <div class="carousel-item">
+                        <img src="..\assets\images\atlasPhotos\testImg2.png" class="" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Manage your Organization</h5>
+                            <p>Accept users into your organization, or modify settings and user access rights for any of its users!</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="..\assets\images\atlasPhotos\testImg3.png" class="" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Manage Trainings</h5>
+                            <p>Enter and track your trainings for your organization! Keep track of Credit Hours.</p>
+                        </div>
+                    </div>
                 </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
             
             <?php if($action == ''): ?>
-                <div class=" col-xl-4 col-md-12 d-flex flex-column justify-content-between special ">
+                <div class="col-5 text-light" style="display: flex; flex-direction: column; justify-content: center;">
 
-                    <div class="row formContent pt-4 pb-5">
+                    <div class="formContent">
 
                         <h2>Login</h2>
 
                         <?php if($error != ""):?>
                             <div class="row">
-
-                                <div class="col-sm">
-                                    <div class="error">
-                                        <?php echo($error); ?>
-                                    </div>
+                                <div class="error">
+                                    <?php echo($error); ?>
                                 </div>
                             </div>
                         <?php endif; ?>
 
-                        <form name="login_form" method="post" class="px-4 pb-2 pt-2">
+                        <form name="login_form" method="post" class="">
                             <div class="form-group">
                                 <label class="form-label" >Username</label>
                                 <input name="username" type="text" class="form-control" placeholder="Username" value="<?=$username?>" maxlength="50">
@@ -303,17 +324,17 @@
                         </form>
                     </div>
 
-                    <div class="row formContent py-4">
-  
-                            <div class="col-12 py-1">
+                    <div class="formContent">
+
+                            <div class="">
                                 <a href="index.php?action=createOrg">
                                     <button class="btn btn-block">
                                         Register Organization
                                     </button>
                                 </a>
                             </div>
-     
-                            <div class="col-12 py-1">
+
+                            <div class="">
                                 <a href="index.php?action=joinOrg"> 
                                     <button class="btn btn-block">Join Organization</button>
                                 </a>
@@ -324,7 +345,7 @@
                 </div>
             <?php elseif($action == 'createOrg'): ?>
 
-                <div class=" col-xl-4 col-md-12">
+                <div class="">
 
                     <div class="row formContent pt-4 pb-5">
 
@@ -802,7 +823,7 @@
                 </script>
             <?php elseif($action == 'joinOrg'): ?>
 
-                <div class=" col-xl-4 col-md-12">
+                <div class="">
                 
                     <div class="row formContent pt-4 pb-5">
 
@@ -1124,7 +1145,7 @@
 
             <?php elseif($action == 'notVerified'): ?>
 
-                <div class=" col-xl-4 col-md-12 py-4 special">
+                <div class="">
 
                     <div class="row formContent pt-4 pb-5">
 
@@ -1137,13 +1158,11 @@
                 </div>
                 
             <?php endif; ?>
-
         </div>
-
     </div>
     <?php //include __DIR__ . '/../include/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
 </body>
