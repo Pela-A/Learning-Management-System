@@ -75,7 +75,7 @@
 
         //if valid input create the new department
         if($error ==''){
-            $userObj->orgAdminCreateUser($_SESSION['orgID'], $depID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer);
+            $userObj->orgAdminCreateUser($_SESSION['orgID'], $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer);
         }
     }
 
@@ -88,7 +88,15 @@
     if(isset($_POST['searchButton'])){
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
-        $organization = filter_input(INPUT_POST, 'organization');
+        if($_SESSION['isOrgAdmin']){
+            $orgDetails = $orgObj->getOrganization($_SESSION['orgID']);
+            $organization = $orgDetails['orgName'];
+        }
+        else{
+            $organizationID = filter_input(INPUT_POST, 'organization');
+            $orgDetails = $orgObj->getOrganization($organizationID);
+            $organization = $orgDetails['orgName'];
+        }
         $gender = filter_input(INPUT_POST, 'gender');
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
@@ -143,9 +151,11 @@
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
         $_SESSION['profilePicture'] = $profilePicture;
 
+        $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
+        
         header('Location: userAccount.php?action=Viewer');
 
-        $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
+        
     }
 
     if(isset($_POST['submitUpdateUser'])){
@@ -160,13 +170,12 @@
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
         $_SESSION['profilePicture'] = $profilePicture;
 
+        $users = $userObj->generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username, $profilePicture);
         header('Location: userAccount.php?action=personalSettings');
 
         //$error = validateUserInformation();
 
-        if($error == ''){
-            $users = $userObj->generalUpdateUser($userID, $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $username, $profilePicture);
-        }
+        
     }
 
     if(isset($_POST['submitChangePassword'])){
@@ -221,8 +230,11 @@
 
                 <h2>Manage User Accounts</h2>
 
-                <?php if($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])): 
-                    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); ?>
+                <?php if($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])):
+                    if(!isset($_POST['searchButton'])){
+                        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']);
+                    }
+                    ?>
                     
                     <div style="display: flex;" class="mb-3">
                         <a class="form-control btn btn-purple mr-2" href="userAccount.php?action=createUser">Create New User Account</a>
@@ -244,9 +256,9 @@
                             </div>
 
                             <select class="form-control" type="text" name="organization" required>
-                                <option value="">Select Organization</option>
-                                <?php foreach($orgs as $o): ?>
-                                    <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
+                                <option value="">Select Department</option>
+                                <?php foreach($deps as $d): ?>
+                                    <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -337,7 +349,7 @@
                                     <td><?= $u['orgName']; ?></td>
                                     <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
-                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                    <td><?= $u['gender']==0?"Male":"Female" ?></td>
                                     <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
@@ -349,11 +361,14 @@
                     </table>
 
                 <?php elseif($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
-                    $users = $userObj->getAllUsers(); ?>
+                    if(!isset($_POST['searchButton'])){
+                        $users = $userObj->getAllUsers();
+                    }
+                    ?>
 
                     <a class="form-control btn btn-purple mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
 
-                    <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
+                    <form class="requires-validation searchContent" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
                             <div class="">
                                 <input style="width: 300px;" class="form-control" type="text" name="firstName" placeholder="First Name" required>
@@ -461,7 +476,7 @@
                                     <td><?= $u['orgName']; ?></td>
                                     <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
-                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                    <td><?= $u['gender']==0?"Male":"Female" ?></td>
                                     <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
@@ -473,26 +488,23 @@
                     </table>
                     
                 <?php elseif($_SESSION['isOrgAdmin']):
-                    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+                    if(!isset($_POST['searchButton'])){
+                        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+                    }
                     $deps = $depObj->getAllDepartments($_SESSION['orgID']); ?>
                     
                     <div style="display: flex;" class="mb-3">
                         <a class="form-control btn btn-purple mr-2" href="userAccount.php?action=createUser">Create New User Account</a>
-                        <a class="form-control btn btn-purple" href="orgControlPanel.php?action=Landing&ordID=<?= $orgID; ?>">Go Back</a>
                     </div>
 
                     <form class="requires-validation" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
                             <div class="">
                                 <input style="width: 300px;" class="form-control" type="text" name="firstName" placeholder="First Name" required>
-                                <div class="valid-feedback">First name field is valid!</div>
-                                <div class="invalid-feedback">First name field cannot be blank!</div>
                             </div>
 
                             <div class="">
                                 <input style="width: 300px;" class="form-control mx-2" type="text" name="lastName" placeholder="Last Name" required>
-                                <div class="valid-feedback">Last name field is valid!</div>
-                                <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
                             <select class="form-control" type="text" name="organization" required>
@@ -507,27 +519,14 @@
                             <div class="mt-3">
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
-                                <label class="btn   btn-outline-purple" for="male">Male</label>
+                                <input type="radio" class="btn-check" name="gender" value=0 id="male" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="male">Male</label>
 
-                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=1 id="female" autocomplete="off" required>
                                 <label class="btn btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
                                 <div class="invalid-feedback mv-up">Please select a gender!</div>
-                            </div>
-
-                            <div class=" mt-3">
-                                <label class="mb-3 mr-1" for="isSiteAdmin">Site Admin: </label>
-
-                                <input type="radio" class="btn-check" name="isSiteAdmin" value=1 id="siteAdminYes" autocomplete="off" required>
-                                <label class="btn   btn-outline-purple" for="siteAdminYes">Yes</label>
-
-                                <input type="radio" class="btn-check" name="isSiteAdmin" value=0 id="siteAdminNo" autocomplete="off" required>
-                                <label class="btn   btn-outline-purple" for="siteAdminNo">No</label>
-
-                                <div class="valid-feedback mv-up">You selected site admin status!</div>
-                                <div class="invalid-feedback mv-up">Please select site admin status!</div>
                             </div>
 
                             <div class=" mt-3">
@@ -589,7 +588,7 @@
                                     <td><?= $u['orgName']; ?></td>
                                     <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
-                                    <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                    <td><?= $u['gender']==0?"Male":"Female" ?></td>
                                     <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
@@ -609,7 +608,7 @@
                 <?php if($_SESSION['isSiteAdmin']): 
                     $orgs = $orgObj->getAllOrganizations(); ?>
 
-                    <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer" class="requires-validation formContent mt-3" novalidate method="POST">
 
                         <div style="display: flex;">
                             <select class="form-control col-md-6" type="text" name="orgID" id='organization_select' required>
@@ -619,7 +618,7 @@
                                 <?php endforeach; ?>
                             </select>
                             
-                            <select class="form-control col-md-6" type="text" id="depID" name="depID" id='option_select' required>
+                            <select class="form-control col-md-6" type="text" name="depID" id='option_select' required>
                                 <option value="">Select a Department</option>
                                 
                                 <?php foreach($deps as $d): ?>
@@ -679,10 +678,10 @@
                             <div class="col-md-3 mt-3">
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=0 id="male" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="male">Male</label>
 
-                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=1 id="female" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
@@ -746,10 +745,12 @@
                                     data: {orgID: organization_id}, // Corrected organization ID parameter name
                                     dataType: 'json',
                                     success:function(response){
+                                        console.log(response);
                                         var len = response.length;
                                         $("#option_select").empty();
                                         $("#option_select").append("<option value=''>Select Department</option>");
                                         response.forEach(function(item) {
+                                            console.log($("#option_select").length)
                                             $("#option_select").append("<option value='" + item.depID + "'>" + item.depName +"</option>"); // Adjusted option format
                                         });
                                     },
@@ -772,55 +773,55 @@
                         <h4 style="margin-left: 10px;"><?= $organization['orgName']; ?></h4>
                     </div>
 
-                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation formContent mt-3" novalidate method="POST">
 
-                        <select class="form-control  col-md-12" type="text" id="depID" name="depID" required>
+                        <select class="form-control col-md-12" type="text" id="depID" name="depID" required>
                             <option value="">Select Department</option>
                             <?php foreach($deps as $d): ?>
                                 <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
                             <?php endforeach; ?>
                         </select>
 
-                        <div style="display: flex;">
-                            <div class="col-md-4" >
+                        <div class="row">
+                            <div class="col-6 mt-4 mb-2" >
                                 <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
                                 <div class="valid-feedback">First name field is valid!</div>
                                 <div class="invalid-feedback">First name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-4" >
+                            <div class="col-6 mt-4 mb-2" >
                                 <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
                                 <div class="valid-feedback">Last name field is valid!</div>
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-4" >
+                            <div class="col-6 my-2" >
                                 <input class="form-control" type="email" name="email" placeholder="Email Address" required>
                                 <div class="valid-feedback">Email field is valid!</div>
                                 <div class="invalid-feedback">Email field cannot be blank!</div>
                             </div>
                         </div>
 
-                        <div style="display: flex;">
-                            <div class="col-md-3" >
+                        <div class="row">
+                            <div class="col-3 my-2" >
                                 <input class="form-control" type="date" name="birthDate" required>
                                 <div class="valid-feedback">Last name field is valid!</div>
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-6 my-2" >
                                 <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
                                 <div class="valid-feedback">Phone number field is valid!</div>
                                 <div class="invalid-feedback">Phone number field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-md-6 my-2" >
                                 <input class="form-control" type="password" name="password" placeholder="Enter password" required>
                                 <div class="valid-feedback">Password field is valid!</div>
                                 <div class="invalid-feedback">Password field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-md-6 my-2" >
                                 <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
                                 <div class="valid-feedback">Password field is valid!</div>
                                 <div class="invalid-feedback">Password field cannot be blank!</div>
@@ -831,10 +832,10 @@
                             <div class="col-md-4 mt-3">
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                                <input type="radio" class="btn-check" name="gender" value=1 id="male" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=0 id="male" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="male">Male</label>
 
-                                <input type="radio" class="btn-check" name="gender" value=0 id="female" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=1 id="female" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
@@ -876,216 +877,83 @@
 
                 <?php endif; ?>
 
-            <?php elseif($action == 'personalSettings'): ?>
+            <?php elseif($action == 'personalSettings'):
+                $account = $userObj->getUser($_SESSION['userID']);
+                ?>
 
                 <h2>Account Settings</h2>
 
-                <?php $account = $userObj->getUser($_SESSION['userID']); ?>
-                <div style="display: flex; margin-bottom: 10px;">
+                <div style="display: flex; margin-left: 10px; margin-bottom: 10px; margin-top: 10px;">
             
                     <a class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $account['userID']; ?>">Make Changes to Account</a>
                     <a style="margin-left: 10px;" class="btn btn-purple" href="userAccount.php?action=changePassword">Change Password</a>
 
                 </div>
-                <?php if($_SESSION['isSiteAdmin']): ?>
+                
+                <div class="accountSettingsInfo row py-4 px-3">
 
+                
                     <div style="display: flex;">
-                        <label for="">Username: </label>
-                        <p><?= $account["username"]; ?></p>
+                        <p>Username: <?=$account["username"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Full Name: </label>
-                        <p><?= $account["firstName"] . " " . $account["lastName"]; ?></p>
+                        <p>Full Name: <?=$account["firstName"] . " " . $account["lastName"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Account Created: </label>
-                        <p><?= $account["letterDate"]; ?></p>
+                        <p>Account Created: <?=$account["letterDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Email: </label>
-                        <p><?= $account["email"]; ?></p>
+                        <p>Email: <?=$account["email"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Birth Date: </label>
-                        <p><?= $account["birthDate"]; ?></p>
+                        <p>Birthdate: <?= $account["birthDate"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Phone Number: </label>
-                        <p><?= $account["phoneNumber"]; ?></p>
+                        <p>Phone Number: <?=$account["phoneNumber"]; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Gender: </label>
-                        <p><?= $account['gender']==1?"Male":"Female"; ?></p>
+                        <p>Gender: <?=$account['gender']==0?"Male":"Female"; ?></p>
+                    </div>
+
+                    <?php if($_SESSION['isSiteAdmin']): ?>
+                    <div style="display: flex;">
+                        <p>Website Administrator: <?=$account['isSiteAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Website Administrator: </label>
-                        <p><?= $account['isSiteAdmin']==1?"Yes":"No"; ?></p>
+                        <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Organization Administrator: </label>
-                        <p><?= $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
+                    </div>
+
+                    <?php elseif($_SESSION['isOrgAdmin']): ?>
+                    <div style="display: flex;">
+                        <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
                     </div>
 
                     <div style="display: flex;">
-                        <label for="">Training Manager: </label>
-                        <p><?= $account['isTrainer']==1?"Yes":"No"; ?></p>
+                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
 
-                <?php elseif($_SESSION['isOrgAdmin']): ?>
-
+                    <?php elseif($_SESSION['isTrainer']): ?>
                     <div style="display: flex;">
-                        <label for="">Username: </label>
-                        <p><?= " " . $account["username"]; ?></p>
+                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
                     </div>
+                    <?php endif; ?>
 
-                    <div style="display: flex;">
-                        <label for="">Full Name: </label>
-                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
-                    </div>
-                    
-                    <div style="display: flex;">
-                        <label for="">Organization: </label>
-                        <p><?= " " . $account["orgName"]; ?></p>
-                    </div>
+                </div>
 
-                    <div style="display: flex;">
-                        <label for="">Account Created: </label>
-                        <p><?= " " . $account["letterDate"]; ?></p>
-                    </div>
+                
 
-                    <div style="display: flex;">
-                        <label for="">Email: </label>
-                        <p><?= " " . $account["email"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Birth Date: </label>
-                        <p><?= " " . $account["birthDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Phone Number: </label>
-                        <p><?= " " . $account["phoneNumber"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Gender: </label>
-                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Organization Administrator: </label>
-                        <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Training Manager: </label>
-                        <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                <?php elseif($_SESSION['isTrainer']): ?>
-
-                    <div style="display: flex;">
-                        <label for="">Username: </label>
-                        <p><?= " " . $account["username"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Full Name: </label>
-                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
-                    </div>
-                    
-                    <div style="display: flex;">
-                        <label for="">Organization: </label>
-                        <p><?= " " . $account["orgName"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Account Created: </label>
-                        <p><?= " " . $account["letterDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Email: </label>
-                        <p><?= " " . $account["email"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Birth Date: </label>
-                        <p><?= " " . $account["birthDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Phone Number: </label>
-                        <p><?= " " . $account["phoneNumber"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Gender: </label>
-                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Training Manager: </label>
-                        <p><?= " " . $account['isTrainer']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                <?php else: ?>
-
-                    <div style="display: flex;">
-                        <label for="">Username: </label>
-                        <p><?= " " . $account["username"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Full Name: </label>
-                        <p><?= " " . $account["firstName"] . " " . $account["lastName"]; ?></p>
-                    </div>
-                    
-                    <div style="display: flex;">
-                        <label for="">Organization: </label>
-                        <p><?= " " . $account["orgName"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Account Created: </label>
-                        <p><?= " " . $account["letterDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Email: </label>
-                        <p><?= " " . $account["email"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Birth Date: </label>
-                        <p><?= " " . $account["birthDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Phone Number: </label>
-                        <p><?= " " . $account["phoneNumber"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Gender: </label>
-                        <p><?= " " . $account['gender']==1?"Male":"Female"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <label for="">Organization Administrator: </label>
-                        <p><?= " " . $account['isOrgAdmin']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                <?php endif; ?>
+                
 
             <?php elseif($action == 'updateUser'): ?>
 
@@ -1125,10 +993,11 @@
                         $profilePicture = "";
                     } ?>
 
-                    <form action="userAccount.php?action=Viewer" class="row requires-validation" novalidate method="POST">
+                    <p>Organization: <?=$organization['orgName']?> </p>
+                    <form action="userAccount.php?action=Viewer" class="requires-validation row" novalidate method="POST">
 
-                        <div style="col-md-12">
-                            <p>Organization: <?=$organization['orgName']?> </p>
+                        <div class="row formContent col-7 mr-4">
+                            <h3>User Information</h3>
                         
                             <select class="form-control" name="department" type="text" id="depID" name="depID" required>
                                 <option value="">Select Department</option>
@@ -1138,76 +1007,73 @@
                             </select>
 
                             <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
-                        </div>
+                        
 
-                        <div style="display: flex;">
-                            <div class="col-md-4" >
+                            
+                            <div class="col-8" >
                                 <label style="margin-top: 15px;">Username:</label>
-                                <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" required>
+                                <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" readonly>
                                 <div class="valid-feedback">Username field is valid!</div>
                                 <div class="invalid-feedback">Username field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-4" >
+                            <div class="col-6 mt-2" >
                                 <label>First Name: </label>
                                 <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" placeholder="First Name" required>
                                 <div class="valid-feedback">First name field is valid!</div>
                                 <div class="invalid-feedback">First name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-4" >
+                            <div class="col-6 mt-2" >
                                 <label>Last Name: </label>
                                 <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" placeholder="Last Name" required>
                                 <div class="valid-feedback">Last name field is valid!</div>
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
-                        </div>
-
-                        <div style="display: flex;">
-                            <div class="col-md-3" >
+         
+                            <div class="col-md-6" >
                                 <label>Letter Date:</label>
                                 <input class="form-control" type="date" value="<?= $letterDate; ?>" name="letterDate" placeholder="Letter Date" required>
                                 <div class="valid-feedback">Letter date field is valid!</div>
                                 <div class="invalid-feedback">Letter date field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-md-6" >
                                 <label>Email:</label>
-                                <input class="form-control" type="email" value="<?= $email; ?>" name="email" placeholder="Email Address" required>
+                                <input class="form-control" type="email" value="<?= $email; ?>" name="email" placeholder="Email Address" readonly>
                                 <div class="valid-feedback">Email field is valid!</div>
                                 <div class="invalid-feedback">Email field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-md-6" >
                                 <label>Birth Date:</label>
                                 <input class="form-control" type="date" value="<?= $birthDate; ?>" name="birthDate" required>
                                 <div class="valid-feedback">Last name field is valid!</div>
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
-                            <div class="col-md-3" >
+                            <div class="col-md-6" >
                                 <label>Phone Number:</label>
                                 <input class="form-control" type="text" value="<?= $phoneNumber; ?>" name="phoneNumber" placeholder="Phone Number" required>
                                 <div class="valid-feedback">Phone number field is valid!</div>
                                 <div class="invalid-feedback">Phone number field cannot be blank!</div>
                             </div>
-                        </div>
+                            
 
-                        <div style="display:flex;" class="mt-3">
-                            <div class="col-md-3">
+                            <div class="col-md-6 mt-2">
                                 <label class="mb-3 mr-1" for="gender">Gender: </label>
 
-                                <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==0?"checked":""?> id="male" id="male" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="male">Male</label>
 
-                                <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==0?"checked":""?> id="female" id="female" autocomplete="off" required>
+                                <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
                                 <label class="btn   btn-outline-purple" for="female">Female</label>
 
                                 <div class="valid-feedback mv-up">You selected a gender!</div>
                                 <div class="invalid-feedback mv-up">Please select a gender!</div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="mb-3 mr-1" for="isSiteAdmin">Website Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isSiteAdmin" value=1 <?= $isSiteAdmin==1?"checked":""?> id="siteYes" autocomplete="off" required>
@@ -1220,7 +1086,7 @@
                                 <div class="invalid-feedback mv-up">Please select a website admin status!</div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="mb-3 mr-1" for="isOrgAdmin">Organization Admin: </label>
 
                                 <input type="radio" class="btn-check" name="isOrgAdmin" value=1 <?= $isOrgAdmin==1?"checked":""?> id="orgYes" autocomplete="off" required>
@@ -1233,7 +1099,7 @@
                                 <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
 
                                 <input type="radio" class="btn-check" name="isTrainer" value=1 <?= $isTrainer==1?"checked":""?> id="trYes" autocomplete="off" required>
@@ -1245,10 +1111,11 @@
                                 <div class="valid-feedback mv-up">You selected a training manager status!</div>
                                 <div class="invalid-feedback mv-up">Please select a training manager status!</div>
                             </div>
+
                         </div>
 
-                        <div class="row col-4 ml-2 mb-2">
-                            <label class="form-label">Profile Pictures:</label>
+                        <div class="formContent col-4 ml-2">
+                            <h3>Profile Pictures:</h3>
                             <div class="form-check form-check-inline col-3">
                                 <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
                                 <label class="form-check-label" for="flexRadioDefault1">
@@ -1366,102 +1233,108 @@
                         <p><?= $organization['orgName']; ?></p>
                     </div>
 
-                    <form action="userAccount.php?action=Viewer" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer" class="requires-validation row" novalidate method="POST">
 
-                        <select class="form-control  col-md-12" name="department" type="text" id="depID" name="depID" required>
-                            <option value="">Select Department</option>
-                            <?php foreach($deps as $d): ?>
-                                <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class=" formContent col-7">
 
-                        <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
+                
+                            <select class="form-select col-8" name="department" type="text" id="depID" name="depID" required>
+                                <option value="">Select Department</option>
+                                <?php foreach($deps as $d): ?>
+                                    <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
 
-                        <div class="col-md-12" >
-                            <label>First Name: </label>
-                            <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" placeholder="First Name" required>
-                            <div class="valid-feedback">First name field is valid!</div>
-                            <div class="invalid-feedback">First name field cannot be blank!</div>
+                            <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
+
+                            <div class="col-8" >
+                                <label>First Name: </label>
+                                <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Last Name: </label>
+                                <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Letter Date: </label>
+                                <input class="form-control" type="date" value="<?= $letterDate; ?>" name="letterDate" placeholder="Letter Date" required>
+                                <div class="valid-feedback">Letter date field is valid!</div>
+                                <div class="invalid-feedback">Letter date field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Email: </label>
+                                <input class="form-control" type="email" value="<?= $email; ?>" name="email" placeholder="Email Address" readonly>
+                                <div class="valid-feedback">Email field is valid!</div>
+                                <div class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Birth Date: </label>
+                                <input class="form-control" type="date" value="<?= $birthDate; ?>" name="birthDate" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Phone Number: </label>
+                                <input class="form-control" type="text" value="<?= $phoneNumber; ?>" name="phoneNumber" placeholder="Phone Number" required>
+                                <div class="valid-feedback">Phone number field is valid!</div>
+                                <div class="invalid-feedback">Phone number field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8 mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
+
+                                <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==0?"checked":""?> id="male" id="male" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="female">Female</label>
+
+                                <div class="valid-feedback mv-up">You selected a gender!</div>
+                                <div class="invalid-feedback mv-up">Please select a gender!</div>
+                            </div>
+
+                            <div class="col-8 mt-3">
+                                <label class="mb-3 mr-1" for="isOrgAdmin">Organization Admin: </label>
+
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=1 <?= $isOrgAdmin==1?"checked":""?> id="YesOrgAdmin" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="YesOrgAdmin">Yes</label>
+
+                                <input type="radio" class="btn-check" name="isOrgAdmin" value=0 <?= $isOrgAdmin==0?"checked":""?> id="NoOrgAdmin" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="NoOrgAdmin">No</label>
+
+                                <div class="valid-feedback mv-up">You selected a organization admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
+                            </div>
+
+                            <div class="col-8 mt-3">
+                                <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
+
+                                <input type="radio" class="btn-check" name="isTrainer" value=1 <?= $isTrainer==1?"checked":""?> id="YesTrainer" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="YesTrainer">Yes</label>
+
+                                <input type="radio" class="btn-check" name="isTrainer" value=0 <?= $isTrainer==0?"checked":""?> id="NoTrainer" autocomplete="off" required>
+                                <label class="btn btn-outline-purple" for="NoTrainer">No</label>
+
+                                <div class="valid-feedback mv-up">You selected a training manager status!</div>
+                                <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                            </div>
+
                         </div>
 
-                        <div class="col-md-12" >
-                            <label>Last Name: </label>
-                            <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" placeholder="Last Name" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Letter Date: </label>
-                            <input class="form-control" type="date" value="<?= $letterDate; ?>" name="letterDate" placeholder="Letter Date" required>
-                            <div class="valid-feedback">Letter date field is valid!</div>
-                            <div class="invalid-feedback">Letter date field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Email: </label>
-                            <input class="form-control" type="email" value="<?= $email; ?>" name="email" placeholder="Email Address" required>
-                            <div class="valid-feedback">Email field is valid!</div>
-                            <div class="invalid-feedback">Email field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Birth Date: </label>
-                            <input class="form-control" type="date" value="<?= $birthDate; ?>" name="birthDate" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Phone Number: </label>
-                            <input class="form-control" type="text" value="<?= $phoneNumber; ?>" name="phoneNumber" placeholder="Phone Number" required>
-                            <div class="valid-feedback">Phone number field is valid!</div>
-                            <div class="invalid-feedback">Phone number field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="gender">Gender: </label>
-
-                            <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="male">Male</label>
-
-                            <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="female">Female</label>
-
-                            <div class="valid-feedback mv-up">You selected a gender!</div>
-                            <div class="invalid-feedback mv-up">Please select a gender!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="isOrgAdmin">Organization Admin: </label>
-
-                            <input type="radio" class="btn-check" name="isOrgAdmin" value=1 <?= $isOrgAdmin==1?"checked":""?> id="Yes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="Yes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="isOrgAdmin" value=0 <?= $isOrgAdmin==0?"checked":""?> id="No" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="No">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a organization admin status!</div>
-                            <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="isTrainer">Training Manager: </label>
-
-                            <input type="radio" class="btn-check" name="isTrainer" value=1 <?= $isTrainer==1?"checked":""?> id="Yes" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="Yes">Yes</label>
-
-                            <input type="radio" class="btn-check" name="isTrainer" value=0 <?= $isTrainer==0?"checked":""?> id="No" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="No">No</label>
-
-                            <div class="valid-feedback mv-up">You selected a training manager status!</div>
-                            <div class="invalid-feedback mv-up">Please select a training manager status!</div>
-                        </div>
 
 
-
-                        <div class="row col-4 ml-2 mb-2">
-                            <label class="form-label">Profile Pictures:</label>
+                        <div class="formContent col-4 ml-2">
+                            <h3>Profile Pictures:</h3>
+                            
                             <div class="form-check form-check-inline col-3">
                                 <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
                                 <label class="form-check-label" for="flexRadioDefault1">
@@ -1568,72 +1441,68 @@
                         $profilePicture = "";
                     }?>
 
-                    <div style="display: flex;">
-                        <p>Organization: </p>
-                        <p><?= $organization['orgName']; ?></p>
-                    </div>
+                    
+                    
+                    
 
-                    <form action="userAccount.php?action=personalSettings" class="requires-validation" novalidate method="POST">
+                    <form action="userAccount.php?action=personalSettings" class="needs-validation row" novalidate method="POST">
 
+                        <p>Organization: <?= $organization['orgName']; ?></p>
 
-                        <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
-                        <div class="col-md-12" >
-                            <label>Username: </label>
-                            <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" required>
-                            <div class="valid-feedback">Username field is valid!</div>
-                            <div class="invalid-feedback">Username field cannot be blank!</div>
+                        <div class=" formContent col-7">
+
+                        
+
+                            <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID">
+                            <h3>User Information</h3>
+                            <div class="col-8" >
+                                <label>Username: </label>
+                                <input class="form-control" type="text" value="<?= $username; ?>" name="username" placeholder="Username" readonly>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>First Name:</label>
+                                <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" id="firstName" placeholder="First Name" onchange="validateFirstName(); checkInputs();">
+                                <div id="firstFeedback" class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Last Name:</label>
+                                <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" id="lastName" placeholder="Last Name" onchange="validateLastName(); checkInputs();">
+                                <div id="lastFeedback" class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Email:</label>
+                                <input class="form-control" type="text" value="<?= $email; ?>" name="email" id="email" placeholder="Email Address" readonly>
+                                <div id="emailFeedback" class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Birth Date:</label>
+                                <input class="form-control" type="date" value="<?= $birthDate; ?>" name="birthDate" id="birthdate" onchange="validateBirthday(); checkInputs();">
+                                <div id="birthdayFeedback" class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8" >
+                                <label>Phone Number: </label>
+                                <input class="form-control" type="text" value="<?= $phoneNumber; ?>" name="phoneNumber" id="phoneNum" placeholder="Phone Number" onchange="validatePhoneNumber(); checkInputs();">
+                                <div id="phoneFeedback" class="invalid-feedback">Phone number field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-8 mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
+
+                                <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==0 ? "checked": ""?> id="male">
+                                <label class="btn btn-outline-purple" for="male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1 ? "checked": ""?> id="female">
+                                <label class="btn btn-outline-purple" for="female">Female</label>
+
+                            </div>
                         </div>
-
-                        <div class="col-md-12" >
-                            <label>First Name:</label>
-                            <input class="form-control" type="text" value="<?= $firstName; ?>" name="firstName" placeholder="First Name" required>
-                            <div class="valid-feedback">First name field is valid!</div>
-                            <div class="invalid-feedback">First name field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Last Name:</label>
-                            <input class="form-control" type="text" value="<?= $lastName; ?>" name="lastName" placeholder="Last Name" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Email:</label>
-                            <input class="form-control" type="email" value="<?= $email; ?>" name="email" placeholder="Email Address" required>
-                            <div class="valid-feedback">Email field is valid!</div>
-                            <div class="invalid-feedback">Email field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Birth Date:</label>
-                            <input class="form-control" type="date" value="<?= $birthDate; ?>" name="birthDate" required>
-                            <div class="valid-feedback">Last name field is valid!</div>
-                            <div class="invalid-feedback">Last name field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12" >
-                            <label>Phone Number: </label>
-                            <input class="form-control" type="text" value="<?= $phoneNumber; ?>" name="phoneNumber" placeholder="Phone Number" required>
-                            <div class="valid-feedback">Phone number field is valid!</div>
-                            <div class="invalid-feedback">Phone number field cannot be blank!</div>
-                        </div>
-
-                        <div class="col-md-12 mt-3">
-                            <label class="mb-3 mr-1" for="gender">Gender: </label>
-
-                            <input type="radio" class="btn-check" name="gender" value=1 <?= $gender==1?"checked":""?> id="male" id="male" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="male">Male</label>
-
-                            <input type="radio" class="btn-check" name="gender" value=0 <?= $gender==1?"checked":""?> id="female" id="female" autocomplete="off" required>
-                            <label class="btn   btn-outline-purple" for="female">Female</label>
-
-                            <div class="valid-feedback mv-up">You selected a gender!</div>
-                            <div class="invalid-feedback mv-up">Please select a gender!</div>
-                        </div>
-
-                        <div class="row col-4 ml-2 mb-2">
-                            <label class="form-label">Profile Pictures:</label>
+                        <div class="formContent col-4 ml-2">
+                            <h3>Profile Pictures</h3>
                             <div class="form-check form-check-inline col-3">
                                 <input class="form-check-input firstHalf" type="radio" name="profilePhoto" id="profile1" value="..\assets\images\profilePhotos\BunnyProfile.png" <?php if($profilePicture == "..\assets\images\profilePhotos\BunnyProfile.png") echo('checked') ?>>
                                 <label class="form-check-label" for="flexRadioDefault1">
@@ -1710,10 +1579,124 @@
                         </div>
 
                         <div class="form-button mt-3">
-                            <button name="submitUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
+                            <button name="submitUpdateUser" id="update" type="submit" class="btn btn-purple">Update Information</button>
                         </div>
 
                     </form>
+
+                    <script>
+
+                        // Example starter JavaScript for disabling form submissions if there are invalid fields
+                        (function () {
+                        'use strict'
+
+                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                        var forms = document.querySelectorAll('.needs-validation')
+
+                        // Loop over them and prevent submission
+                        Array.prototype.slice.call(forms)
+                            .forEach(function (form) {
+                            form.addEventListener('submit', async function (event) {
+                                
+                                await validateFirstName() 
+                                await validateLastName() 
+                                await validatePhoneNumber() 
+                                await validateBirthday() 
+                                
+                                checkInputs()
+                                
+                                
+                                
+                            }, false)
+                        })
+                        })()
+
+                        //validate birthday function
+                        function validateBirthday(){
+                            var birthday = $('#birthdate').val();
+                            if(birthday == ""){
+                                $('#birthdate').removeClass('is-valid').addClass('is-invalid');
+                                $('#birthdayFeedback').html('Enter a Birthday.').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }else{
+                                $('#birthdate').removeClass('is-invalid').addClass('is-valid');
+                                $('#birthdayFeedback').html('Valid Birthday.').removeClass('invalid-feedback').addClass('valid-feedback');
+                            }
+                        }
+
+                        function validateFirstName(){
+                            var firstName = $('#firstName').val()
+                            pattern = /^[A-Za-z]+$/
+                            if(firstName != ""){
+                                if(pattern.test(firstName)){
+                                    $('#firstName').removeClass('is-invalid').addClass('is-valid');
+                                    $('#firstFeedback').html('Valid First Name!').removeClass('invalid-feedback').addClass('valid-feedback');
+                                }
+                                else{
+                                    $('#firstName').removeClass('is-valid').addClass('is-invalid');
+                                    $('#firstFeedback').html('Invalid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                }
+                            }else{
+                                $('#firstName').removeClass('is-valid').addClass('is-invalid');
+                                $('#firstFeedback').html('Enter a First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+                            
+                        }
+
+                        function validateLastName(){
+                            var lastName = $('#lastName').val()
+                            pattern = /^[A-Za-z]+$/
+                            if(lastName != ""){
+                                if(pattern.test(lastName)){
+                                    $('#lastName').removeClass('is-invalid').addClass('is-valid');
+                                    $('#lastFeedback').html('Valid First Name!').removeClass('invalid-feedback').addClass('valid-feedback');
+                                }
+                                else{
+                                    $('#lastName').removeClass('is-valid').addClass('is-invalid');
+                                    $('#lastFeedback').html('Invalid First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                                }
+                            }else{
+                                $('#lastName').removeClass('is-valid').addClass('is-invalid');
+                                $('#lastFeedback').html('Enter a First Name!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+                        }
+
+                        function validatePhoneNumber(){
+                            var phoneNum = $('#phoneNum').val()
+                            pattern = /[0-9]{10}/
+                            if(phoneNum != ""){
+                                if(pattern.test(phoneNum)){
+                                    $('#phoneNum').removeClass('is-invalid').addClass('is-valid');
+                                    $('#phoneFeedback').html('Valid Phone Number!').removeClass('invalid-feedback').addClass('valid-feedback');
+                                }
+                                else{
+                                    $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
+                                    $('#phoneFeedback').html('Invalid Phone Number! (10 Digits Only)').removeClass('valid-feedback').addClass('invalid-feedback');
+                                }
+                            }else{
+                                $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
+                                $('#phoneFeedback').html('Enter a Phone Number!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            }
+
+                        }
+
+                        //check inputs and disable button if error.
+                        function checkInputs(){
+                            var form = document.querySelector('.needs-validation')
+                            var inputs = form.getElementsByTagName("input");
+                            for (var i = 0; i < inputs.length; i++) {
+                                // Check if the current input element has the specified class
+                                if (inputs[i].classList.contains("is-invalid")) {
+                                    $('#update').prop('disabled', true); 
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                    break;
+                                }else {
+                                    // Class is not applied to this input element
+                                    $('#update').prop('disabled', false); 
+                                }
+                            }
+                        }
+                    </script>
 
                 <?php endif; ?>
 
@@ -1826,8 +1809,10 @@
                 <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):                 
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
 
-                    <a class="form-control btn btn-purple mb-3" href="orgControlPanel.php?action=Landing&ordID=<?= $_SESSION['orgID']; ?>">Go Back</a>
+                    <?php if($_SESSION['isSiteAdmin']): ?>
+                    <a class="form-control btn btn-purple mb-3" style="display:block;" href="orgControlPanel.php?action=Landing&ordID=<?= $_SESSION['orgID']; ?>">Go Back</a>
 
+                    <?php endif; ?>
                     <form method="POST" action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">
 
                         <table class="table table-striped table-hover table-dark">
@@ -1858,7 +1843,7 @@
                                         <td><?= $u['email']; ?></td>
                                         <td><?= $u['birthDate']; ?></td>
                                         <td><?= $u['phoneNumber']; ?></td>
-                                        <td><?= $u['gender']==1?"Male":"Female" ?></td>
+                                        <td><?= $u['gender']==0?"Male":"Female" ?></td>
                                         <td><?= $u['username'];?></td>
                                         <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                         <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>

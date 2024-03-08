@@ -49,6 +49,9 @@
 
         $modules = $moduleObj->searchTrainingModule($_SESSION['orgID'], $courseName, $category);      
     }
+    else{
+        $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
+    }
 
 ?>
 
@@ -67,24 +70,23 @@
 </head>
 <body>
     
-    <div class="mainContent"">
+    <div class="mainContent">
 
         <?php include __DIR__ . '/../include/aside.php'; ?>
 
         <div class="pageContent container-fluid">
             
             <?php if($action == "ViewAll"): 
-                if($_SESSION['isTrainer']): 
-                    $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']); ?>
+                if($_SESSION['isTrainer']):  ?>
 
-                    <h3>Training Module Viewer</h3>
-                    <a class="btn btn-purple form-control mb-2" href="trainingModules.php?action=Create">Create Training Module</a>
+                    <h2>Training Module Viewer</h2>
+                    <a class="btn btn-purple form-control mb-2" style="display: block;"href="trainingModules.php?action=Create">Create Training Module</a>
 
                     <form method="POST">
 
-                        <div style="display: flex;">
-                            <input class="form-control" type="text" name="courseName" placeholder="Course Name">
-                            <select class="form-control col-md-4" type="text" name="category">
+                        <div style="display: flex; justify-content: space-between;" class="searchContent">
+                            <input class="form-control col-4" type="text" name="courseName" placeholder="Course Name">
+                            <select class="form-control col-4" type="text" name="category">
                                 <option value="">Select Category</option>
                                 <?php 
                                     $uniqueCategories = array();
@@ -97,7 +99,7 @@
                                     endforeach; ?>
                             </select>
                             
-                            <input type="submit" name="submitSearchModules" class="form-control btn btn-purple col-sm-1">
+                            <input type="submit" name="submitSearchModules" class="btn btn-purple col-sm-1">
                         </div>
 
                     </form>
@@ -136,14 +138,68 @@
                         </tbody>
 
                     </table>
+                <?php else:  ?>
+
+                    <h2>Training Module Viewer</h2>
+                    
+                    <form method="POST">
+
+                        <div style="display: flex; justify-content: space-between;" class="searchContent">
+                
+                            <input class="form-control col-4" type="text" name="courseName" placeholder="Course Name">
+                            <select class="form-control col-4" type="text" name="category">
+                                <option value="">Select Category</option>
+                                <?php 
+                                    $uniqueCategories = array();
+                                    foreach($modules as $m): 
+                                        if(!in_array($m['category'], $uniqueCategories)) {
+                                            $uniqueCategories[] = $m['category']; ?>
+                                            <option value="<?= $m['category']; ?>"><?= $m['category']; ?></option>
+                                        <?php 
+                                        } 
+                                    endforeach; ?>
+                            </select>
+                            
+                            
+                            
+                            <input type="submit" name="submitSearchModules" class="btn btn-purple col-sm-1">
+                        </div>
+
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark mt-4">
+
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Credit Hours</th>
+                                <th>Website URL</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($modules as $m): ?>
+                                <tr>                             
+                                    <td><?= $m['courseName']; ?></td>
+                                    <td><?= $m['description']; ?></td>
+                                    <td><?= $m['category']; ?></td>
+                                    <td><?= $m['creditHours']; ?></td>
+                                    <td><?= $m['websiteURL']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+
+                    </table>
                 <?php endif; ?>
 
             <?php elseif($action == "Create"): 
                 if($_SESSION['isTrainer']): ?>
 
-                    <h3>Create Training Module</h3>
+                    <h2>Create Training Module</h2>
 
-                    <form method="POST" action="trainingModules.php?action=ViewAll">
+                    <form method="POST" action="trainingModules.php?action=ViewAll" class="formContent mt-3">
 
                         <label>Course Name: </label>
                         <input class="form-control" type="text" placeholder="Course Name" name="courseName">

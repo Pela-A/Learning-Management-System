@@ -34,6 +34,7 @@ class OrganizationDB {
         }
 
         return $results;
+        
     }
 
     public function getAllOrganizations() {

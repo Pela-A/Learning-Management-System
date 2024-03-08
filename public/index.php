@@ -772,11 +772,11 @@
                             }
                             else{
                                 $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
-                                $('#phoneFeedback').html(' Invalid Phone Number! (10 Digits Only)').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#phoneFeedback').html('Invalid Phone Number! (10 Digits Only)').removeClass('valid-feedback').addClass('invalid-feedback');
                             }
                         }else{
                             $('#phoneNum').removeClass('is-valid').addClass('is-invalid');
-                            $('#phoneFeedback').html(' Enter a Phone Number!').removeClass('valid-feedback').addClass('invalid-feedback');
+                            $('#phoneFeedback').html('Enter a Phone Number!').removeClass('valid-feedback').addClass('invalid-feedback');
                         }
 
                     }

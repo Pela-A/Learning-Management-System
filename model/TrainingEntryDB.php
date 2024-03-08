@@ -92,7 +92,7 @@ class TrainingEntryDB {
             ":vc" => null,
             ":ch" => $creditHours,
             ":cg" => $category,
-            ":dp" => $description,
+            ":dp" => $description
         );
 
         if($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
@@ -164,7 +164,7 @@ class TrainingEntryDB {
         }
 
         if ($courseName != '') {
-            $sqlString .= " AND courseName LIKE :courseName";
+            $sqlString .= " AND te.courseName LIKE :courseName";
             $binds['courseName'] = '%'.$courseName.'%';
         }
     
@@ -218,7 +218,14 @@ class TrainingEntryDB {
         
         // Bind parameters
         $sqlString->bindParam(":iv", $isValidated);
-        $sqlString->bindParam(":vd", $validateDate);
+        if($validateDate !=""){
+            $sqlString->bindParam(":vd", $validateDate);
+        }
+        else{
+            $sqlString->bindValue(":vd", null, PDO::PARAM_NULL);
+            
+        }
+        
         $sqlString->bindParam(":vc", $validationComments);
         $sqlString->bindParam(":id", $entryID);
     

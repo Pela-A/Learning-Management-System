@@ -10,6 +10,44 @@ header, footer {
     width: 100%;
 }
 
+h2{
+    display: inline-block;
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    background-color: #222222;
+    border-radius: 8px;
+}
+
+.accountSettingsInfo{
+    display: inline-block;
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    min-width: 350px;
+    background-color: #222222;
+    border-radius: 8px;
+    margin-left: 10px;
+}
+
+.formContent{
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    min-width: 350px;
+    background-color: #222222;
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 20px;
+}
+
+.searchContent{
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    min-width: 350px;
+    background-color: #222222;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 40px;
+}
 aside { 
     min-width: 400px;
     height: auto;
@@ -83,7 +121,7 @@ a.dropdown-item img{
 }
 
 .profilePhoto{
-    height: 30px;
+    height: 60px;
 }
 
 .aside-options div {
@@ -151,10 +189,17 @@ input.form-control:focus {
     box-shadow: 0 0 0 0.25rem #b983ff25;
 }
 
-select.form-control {
+select.form-control{
     background-color: #222;
     border: 1px solid #b983ff;
     color: #606060;
+    height: 38px;
+}
+
+select.form-select{
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #b983ff;
     height: 38px;
 }
 
@@ -162,6 +207,12 @@ select.form-control:focus {
     background-color: #222;
     border: 1px solid #b983ff;
     color: #b983ff;
+}
+select.form-select:focus {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #b983ff;
+    box-shadow: 0 0 0 0.25rem #b983ff25;
 }
 
 textarea.form-control {
@@ -171,6 +222,11 @@ textarea.form-control {
 }
 
 textarea.form-control:focus {
+    background-color: #222;
+    border: 1px solid #b983ff;
+    color: #b983ff;
+}
+textarea.form-control:not(:focus) {
     background-color: #222;
     border: 1px solid #b983ff;
     color: #b983ff;
@@ -185,9 +241,29 @@ textarea.form-control:focus {
     box-shadow: 0 0 0 0.25rem #9e56fd50;
     border-color: #9e56fd;
 }
-
-.accordion-button:not(.collapsed) {
-    color: black;
-    background-color: #9e56fd50;
+.accordion-button.collapsed {
+    color: white;
+    background-color: #222;
     box-shadow: inset 0 -1px 0 #9e56fd50;
 }
+.accordion-button:not(.collapsed) {
+    color: rgb(255, 255, 255);
+    background-color: #9e56fd;
+    box-shadow: inset 0 -1px 0 #9e56fd50;
+}
+
+.btn-check:checked + .btn-outline-purple {
+    background-color: #9e56fd; /* Change to the desired solid color */
+    color: white; /* Change to the desired text color */
+}
+
+.form-control[readonly]{
+    background-color: transparent;
+}
+
+
+.accordion-body{
+    background-color: #222;
+    border-color: #222;
+}
+

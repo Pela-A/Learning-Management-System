@@ -107,7 +107,7 @@ class TrainingModuleDB {
         $sqlString = $moduleTable->prepare($sqlString);
         if ($sqlString->execute($binds) && $sqlString->rowCount() > 0) {
             $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
-    }
+        }
 
     return $results;
 }

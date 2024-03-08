@@ -24,7 +24,7 @@
 
     <aside class="text-light d-flex flex-column justify-content-between">
         <div class="">
-        <h2><?= $pageName; ?></h2>
+        <h2 style="background-color: transparent; box-shadow: 0 0 0 0rem #9e56fd50;"><?= $pageName; ?></h2>
 
         <?php if($_SESSION['isSiteAdmin']): ?>
             <h4>Site Admin Controller</h4>
@@ -92,7 +92,7 @@
             </ul>
         <?php endif; ?>
 
-        <?php if($_SESSION['isSiteAdmin'] == false): ?>
+        <?php if($_SESSION['isSiteAdmin'] == false && ($_SESSION['isOrgAdmin']) == false): ?>
             <h4>Personal Training</h4>
             <ul>
                 <li>

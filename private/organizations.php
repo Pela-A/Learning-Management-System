@@ -15,7 +15,6 @@
     }
 
     if(isset($_POST['edit'])){        
-        echo("edit button pressed");
 
         $orgID = filter_input(INPUT_POST, 'orgID');
         $orgName = filter_input(INPUT_POST, 'orgName');
@@ -27,7 +26,6 @@
         $orgDB->updateOrganization($orgID, $orgName, $address, $city, $state, $zipCode);
     }
     elseif(isset($_POST['delete'])){
-        echo("delete button pressed");
         
         $orgID = filter_input(INPUT_POST, 'orgID');
         $feedback = $orgDB->deleteOrganization($orgID);
@@ -70,11 +68,11 @@
         <div class="pageContent container-fluid">
             <?php if($action == 'Viewer'): ?>
 
-                <h3>Organization Viewer</h3>
+                <h2>Organization Viewer</h2>
 
                 <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): ?>
 
-                    <form class="searchForms" method="post" action="organizations.php?action=Viewer" name="Organization_Search">
+                    <form class="searchForms searchContent" method="post" action="organizations.php?action=Viewer" name="Organization_Search">
                         <div style="display:flex;">
                             <input class="form-control" type="text" name="orgName" value="<?=$orgName;?>" placeholder="Organization Name"/>
                             
@@ -173,7 +171,7 @@
 
             <?php elseif($action == 'Edit'): ?>
 
-                <h3>Organization Editor</h3>
+                <h2>Organization Editor</h2>
 
                 <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])):
                     $orgID = filter_input(INPUT_GET, 'orgID');
@@ -276,7 +274,8 @@
                         <input class="form-control" style="margin-top: 20px;" type="hidden" name="orgID" value="<?=$orgID;?>" readonly>
 
                         <div style="display:flex; margin-top: 30px;" class="col-md-12">
-                            <input class="form-control btn btn-purple" type="submit" name="edit" value="Submit Changes">
+                            <input class="btn btn-purple mr-3" type="submit" name="edit" value="Submit Changes">
+                            <input class="btn btn-purple" type="submit" name="delete" value="Delete Organization">
                             <a class="form-control btn btn-purple mx-3" href="organizations.php?action=Viewer">Go Back</a>
                             <a class="btn btn-purple form-control" href="orgControlPanel.php?action=Landing&orgID=<?= $orgID; ?>">Access Organization Controller</a>
                         </div> 
@@ -399,7 +398,7 @@
                     $zipCode = $organization['zipCode'];
                     $orgCode = $organization['orgCode'];?>
 
-                    <form method="post" action="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>" name="Organization_CRUD">
+                    <form method="post" action="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>" name="Organization_CRUD" class="formContent mt-3">
                         <div style="display: flex;">
                             <div class="col-md-6" style="margin-top: 20px;">
                                 <label>Organization Name</label>
@@ -490,7 +489,6 @@
 
                         <div style="display:flex; margin-top: 30px;" class="col-md-12">
                             <input class="form-control btn btn-purple" type="submit" name="edit" value="Submit Changes">
-                            <a class="form-control btn btn-purple mx-3" href="orgControlPanel.php?action=Landing&ordID=<?= $orgID; ?>">Go Back</a>
                         </div> 
                     </form>
 

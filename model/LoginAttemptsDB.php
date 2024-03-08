@@ -101,17 +101,17 @@ class LoginDB {
     
         $binds = [];
     
-        if($orgID !== '') {
+        if($orgID != '') {
             $sqlString .= " AND users.orgID = :oi";
             $binds[':oi'] = $orgID;
         }
     
-        if($userID !== '') {
+        if($userID != '') {
             $sqlString .= " AND loginattempts.userID = :ui";
             $binds[':ui'] = $userID;
         }
     
-        if($successful !== '') {
+        if($successful != '') {
             $sqlString .= " AND loginattempts.isSuccessful = :s";
             $binds[':s'] = $successful;
         }
@@ -136,7 +136,7 @@ class LoginDB {
     
         $binds = [":ui" => $userID];
     
-        if($successful !== '') {
+        if($successful != '') {
             $sqlString .= " AND loginattempts.isSuccessful = :s";
             $binds[':s'] = $successful;
         }

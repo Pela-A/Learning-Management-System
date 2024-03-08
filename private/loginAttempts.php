@@ -11,17 +11,7 @@
     $userObj = new UserDB();
     $orgObj = new OrganizationDB();
 
-    if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])) {
-        $users = $userObj->getAllUsers();
-        $logins = $loginObj->getAllLogins();
-        $orgs = $orgObj->getAllOrganizations();
-    } elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']){
-        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
-        $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']); 
-        $org = $orgObj->getOrganization($_SESSION['orgID']); 
-    } else {
-        $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']);
-    }
+    
 
     //get action variable
     if(isset($_GET['action'])){
@@ -39,6 +29,18 @@
         $comments = filter_input(INPUT_POST, 'comments');
         $loginID = filter_input(INPUT_POST, 'loginID');
         $loginObj->editComments($loginID, $comments);
+    }
+
+    if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])) {
+        $users = $userObj->getAllUsers();
+        $logins = $loginObj->getAllLogins();
+        $orgs = $orgObj->getAllOrganizations();
+    } elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']){
+        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+        $logins = $loginObj->getAllOrgLogins($_SESSION['orgID']); 
+        $org = $orgObj->getOrganization($_SESSION['orgID']); 
+    } else {
+        $logins = $loginObj->getAllPersonalLogins($_SESSION['userID']);
     }
 
     //if search or coming to first time
@@ -86,7 +88,7 @@
 
         <div class="pageContent container-fluid">
             <?php if($action == "Viewer"): ?>
-                <h3>User Login Attempts</h3>
+                <h2>User Login Attempts</h2>
                 <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): ?>
 
                     <form method="POST" name="search">
@@ -177,8 +179,10 @@
 
                 <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']): ?>
 
-                    <a class="form-control btn btn-purple mb-3" href="orgControlPanel.php?action=Landing&ordID=<?= $_SESSION['orgID']; ?>">Go Back</a>
+                    <?php if($_SESSION['isSiteAdmin']): ?>
+                    <a class="form-control btn btn-purple mb-3" style="display:block;" href="orgControlPanel.php?action=Landing&ordID=<?= $_SESSION['orgID']; ?>">Go Back</a>
 
+                    <?php endif; ?>
                     <form method="POST" name="search">
 
                         <div style="display: flex;" class="mb-3">
@@ -235,8 +239,8 @@
 
                 <?php else: ?>
 
-                    <form method="POST">
-                        <div style="display: flex; justify-content: space-between;" class="mt-2">
+                    <form method="POST" class="">
+                        <div style="display: flex; justify-content: space-between;" class="mt-2 searchContent">
                             <div>
                                 <label>Successful Login: </label>
 
@@ -260,7 +264,6 @@
                                 <th>Successful</th>
                                 <th>Comments</th>
                                 <th>IP Address</th>
-                                <th>Edit</th>
                             </tr>
                         </thead>
 
@@ -272,7 +275,9 @@
                                     <td><?= $l['isSuccessful']==0?"No":"Yes"; ?></td>
                                     <td><?= $l['comments']; ?></td>
                                     <td><?= $l['ipAddress']; ?></td>
-                                    <td><a class="btn btn-purple" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                    <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin']): ?>
+                                        <td><a class="btn btn-purple" href="loginAttempts.php?action=Edit&loginID=<?= $l['loginID']?>">Edit Comments</a></td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -292,10 +297,10 @@
 
                 $userData = $userObj->getUser($userID); ?>
 
-                <h3>Edit Login Comments</h3>
+                <h2>Edit Login Comments</h2>
                 
                 <!--Form for editing -->
-                <form method="post" action="loginAttempts.php?action=Viewer" name="loginAttempts_CRUD">
+                <form method="post" action="loginAttempts.php?action=Viewer" name="loginAttempts_CRUD" class="formContent mt-3">
 
                     <label>Full Name</label>
                     <input class="form-control" type="text" name="name" value='<?=$userData['firstName'] . " " . $userData['lastName']; ?>' disabled>
@@ -307,16 +312,18 @@
                     <input class="form-control" type="text" name="isSuccessful" value='<?=$isSuccessful?>'  disabled>
 
                     <label>Comments</label>
-                    <textarea class="form-control" name="comments" value='<?= $loginData['comments']; ?>' cols="100" rows="4" placeholder="Enter Comments" autofocus></textarea>
+                    <textarea class="form-control" name="comments" value="<?=$comments?>" cols="100" rows="4" placeholder="Enter Comments" autofocus><?php echo($comments);?></textarea>
+                    
 
                     <label>IP Address</label>
                     <input class="form-control" type="text" name="ip" value='<?=$ip?>' disabled>
 
                     <input class="form-control" type="hidden" name="loginID" value="<?=$loginID;?>" readonly>
 
-                    <div style="display: flex;">
-                        <input class="form-control btn btn-purple" type="submit" name="edit" value="Update Login Comments">
-                        <a class="form-control btn btn-purple" href="loginAttempts.php?action=Viewer">Go Back</a>
+                    <div style="display: flex;" class="mt-3">
+                        <input class="btn btn-purple mr-3" type="submit" name="edit" value="Update Login Comments">
+                        
+                        <a class="btn btn-purple" style="display:block;" href="loginAttempts.php?action=Viewer">Go Back</a>
                     </div>
 
                 </form>
