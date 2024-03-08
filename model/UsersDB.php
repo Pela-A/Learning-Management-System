@@ -125,7 +125,7 @@ class UserDB {
             ":siteAdmin" => $isSiteAdmin,
             ":orgAdmin" => $isOrgAdmin,
             ":trainer" => $isTrainer,
-            ":pp" => '\assets\images\profilePhotos\DefaultProfile.png'
+            ":pp" => '..\assets\images\profilePhotos\DefaultProfile.png'
         );
 
         //if our SQL statement returns results, populate our results confirmation string
@@ -156,7 +156,7 @@ class UserDB {
             ":pass" => $password,
             ":org" => $isOrgAdmin,
             ":tr" => $isTrainer,
-            ":pp" => '\assets\images\profilePhotos\DefaultProfile.png',
+            ":pp" => '..\assets\images\profilePhotos\DefaultProfile.png',
         );
 
 
@@ -187,7 +187,7 @@ class UserDB {
             ":g" => $gender,
             ":u" => $this->setUsername($firstName, $lastName, $birthDate),
             ":pass" => $password,
-            ":pp" => '\assets\images\profilePhotos\DefaultProfile.png',
+            ":pp" => '..\assets\images\profilePhotos\DefaultProfile.png',
         );
 
 

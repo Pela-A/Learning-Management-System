@@ -890,65 +890,66 @@
 
                 </div>
                 
-                <div class="accountSettingsInfo row py-4 px-3">
+                <div class="row">
 
-                
-                    <div style="display: flex;">
-                        <p>Username: <?=$account["username"]; ?></p>
+                    <div class="accountSettingsInfo col-3 py-4 px-3">
+
+                        <div style="display: flex;">
+                            <p>Username: <?=$account["username"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Full Name: <?=$account["firstName"] . " " . $account["lastName"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Account Created: <?=$account["letterDate"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Email: <?=$account["email"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Birthdate: <?= $account["birthDate"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Phone Number: <?=$account["phoneNumber"]; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Gender: <?=$account['gender']==0?"Male":"Female"; ?></p>
+                        </div>
+
+                        <?php if($_SESSION['isSiteAdmin']): ?>
+                        <div style="display: flex;">
+                            <p>Website Administrator: <?=$account['isSiteAdmin']==1?"Yes":"No"; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
+                        </div>
+
+                        <?php elseif($_SESSION['isOrgAdmin']): ?>
+                        <div style="display: flex;">
+                            <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
+                        </div>
+
+                        <?php elseif($_SESSION['isTrainer']): ?>
+                        <div style="">
+                            <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
+                        </div>
+                        <?php endif; ?>
                     </div>
-
-                    <div style="display: flex;">
-                        <p>Full Name: <?=$account["firstName"] . " " . $account["lastName"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Account Created: <?=$account["letterDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Email: <?=$account["email"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Birthdate: <?= $account["birthDate"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Phone Number: <?=$account["phoneNumber"]; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Gender: <?=$account['gender']==0?"Male":"Female"; ?></p>
-                    </div>
-
-                    <?php if($_SESSION['isSiteAdmin']): ?>
-                    <div style="display: flex;">
-                        <p>Website Administrator: <?=$account['isSiteAdmin']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <?php elseif($_SESSION['isOrgAdmin']): ?>
-                    <div style="display: flex;">
-                        <p>Organization Administrator: <?=$account['isOrgAdmin']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <div style="display: flex;">
-                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
-                    </div>
-
-                    <?php elseif($_SESSION['isTrainer']): ?>
-                    <div style="display: flex;">
-                        <p>Training Manager: <?=$account['isTrainer']==1?"Yes":"No"; ?></p>
-                    </div>
-                    <?php endif; ?>
-
                 </div>
 
                 
@@ -998,13 +999,6 @@
 
                         <div class="row formContent col-7 mr-4">
                             <h3>User Information</h3>
-                        
-                            <select class="form-control" name="department" type="text" id="depID" name="depID" required>
-                                <option value="">Select Department</option>
-                                <?php foreach($deps as $d): ?>
-                                    <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
 
                             <input class="form-control" type="hidden" value="<?= $userID; ?>" name="userID" required>
                         
@@ -1804,7 +1798,7 @@
                 </script>
             
             <?php elseif($action == 'Validator'): ?>
-                <h3>Validate New Users</h3>
+                <h2>Validate New Users</h2>
                 
                 <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):                 
                     $users = $userObj->getAllUnvalidatedUsersInOrg($_SESSION['orgID']); ?>
@@ -1894,6 +1888,7 @@
                     header('Location: userAccount.php?action=Viewer'); ?>    
                     
                 <?php endif; ?>
+
             <?php endif; ?>
         </div>
     </div>
