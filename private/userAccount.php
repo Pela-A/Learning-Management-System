@@ -366,7 +366,7 @@
                     }
                     ?>
 
-                    <a class="form-control btn btn-purple mb-3" href="userAccount.php?action=createUser">Create New User Account</a>
+                    <a class="form-control btn btn-purple mb-3" href="userAccount.php?action=createUser" style="display: block;">Create New User Account</a>
 
                     <form class="requires-validation searchContent" method="POST" id="searchUsers" name="searchUsers" novalidate>
                         <div style="display: flex;">
