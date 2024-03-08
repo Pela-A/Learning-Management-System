@@ -15,16 +15,16 @@
     $users = "";
     $action = "";
 
-    $entries = $entryObj->getAllTrainingEntries($_SESSION['orgID']);
-    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
-    $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
-
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
 
     if(isset($_GET['entryID'])){
         $entryID = filter_input(INPUT_GET, 'entryID');
+    }
+
+    if(isset($_GET['userID'])){
+        $userID = filter_input(INPUT_GET, 'userID');
     }
 
     if(isset($_POST['searchAllButton'])){
@@ -91,14 +91,18 @@
     }
 
     if(isset($_POST['submitValidation'])) {
-        $entryID = filter_input(INPUT_POST, 'entryID');
+        $entry = filter_input(INPUT_POST, 'entryID');
         $isValidated = filter_input(INPUT_POST, 'isValidated');
-        $validationDate = filter_input(INPUT_POST, 'validationDate');
+        $validateDate = filter_input(INPUT_POST, 'validationDate');
         $validationComments = filter_input(INPUT_POST, 'validationComments');
 
-        $entryObj->validateTrainingEntry($entryID, $isValidated, $validateDate, $validationComments);
+
+        $entryObj->validateTrainingEntry($entry, $isValidated, $validateDate, $validationComments);
     }
 
+    $entries = $entryObj->getAllTrainingEntries($_SESSION['orgID']);
+    $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+    $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
 ?>
 
 <!DOCTYPE html>
@@ -126,91 +130,7 @@
 
                 <h3>Training Entry Viewer</h3>
 
-                <?php if($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
-                    <a class="form-control btn btn-purple" href="trainingEntry.php?action=Create">Create new training entry</a>
-
-                    <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries">
-                        <div style="display: flex;" class="my-2">
-                            <div class="col-md-4">
-                                <input class="form-control" type="text" name="firstName" placeholder="First Name">
-                                <div class="valid-feedback">First name field is valid!</div>
-                                <div class="invalid-feedback">First name field cannot be blank!</div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <input class="form-control" type="text" name="lastName" placeholder="Last Name">
-                                <div class="valid-feedback">Last name field is valid!</div>
-                                <div class="invalid-feedback">Last name field cannot be blank!</div>
-                            </div>
-
-                            <select class="form-control col-md-4" type="text" name="category">
-                                <option value="">Select Category</option>
-                                <?php 
-                                    $uniqueCategories = array();
-                                    foreach($entries as $e): 
-                                        if(!in_array($e['category'], $uniqueCategories)) {
-                                            $uniqueCategories[] = $e['category']; ?>
-                                            <option value="<?= $e['category']; ?>"><?= $e['category']; ?></option>
-                                        <?php 
-                                        } endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div style="display: flex;">
-                            <div class="">
-                                <input class="form-control" type="date" name="entryDate" placeholder="Entry Date">
-                                <div class="valid-feedback">Entry Date field is valid!</div>
-                                <div class="invalid-feedback">EntryDate field cannot be blank!</div>
-                            </div>
-
-                            <div class="">
-                                <input class="form-control" type="date" name="completeDate" placeholder="Completion Date">
-                                <div class="valid-feedback">Completion Date field is valid!</div>
-                                <div class="invalid-feedback">Completion Date field cannot be blank!</div>
-                            </div>
-
-                            <input type="submit" class="btn btn-purple" id="searchAllBtn" name="searchAllButton" value="Search" />
-                        </div>
-                    </form>
-
-                    <table class="table table-striped table-hover table-dark">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Course Name</th>
-                                <th>Entry Date</th>
-                                <th>Completion Date</th>
-                                <th>Validated</th>
-                                <th>Validation Date</th>
-                                <th>Validation Comments</th>
-                                <th>Credit Hours</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($entries as $e): ?>
-                                <tr>                                   
-                                    <td><?= $e['firstName']; ?></td>
-                                    <td><?= $e['lastName']; ?></td>
-                                    <td><?= $e['courseName']; ?></td>
-                                    <td><?= $e['entryDate']; ?></td>
-                                    <td><?= $e['completeDate']; ?></td>
-                                    <td><?= $e['isValidated']==1?"Yes":"No" ?></td>
-                                    <td><?= $e['validateDate'];?></td>
-                                    <td><?= $e['validationComments']; ?></td>
-                                    <td><?= $e['creditHours']; ?></td>
-                                    <td><?= $e['category']; ?></td>
-                                    <td><?= $e['description']; ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-
-                <?php else:
-
+                <?php if(isset($userID)):
                     if(isset($_POST['searchUserButton'])){
                         $courseName = filter_input(INPUT_POST, 'courseName');
                         $category = filter_input(INPUT_POST, 'category');
@@ -222,15 +142,15 @@
                     
                     <a class="btn btn-purple" style="margin-bottom: 10px;" href="trainingEntry.php?action=Create">Create new training entry</a>
 
-                    <form class="requires-validation" method="POST" id="searchEntries" name="searchEntries" novalidate>
+                    <form class="requires-validation mb-3" method="POST" id="searchEntries" name="searchEntries" novalidate>
                         <div style="display: flex;">
-                            <div class="">
+                            <div class="col-md-4">
                                 <input class="form-control" type="text" name="courseName" placeholder="Course Name" required>
                                 <div class="valid-feedback">Course name field is valid!</div>
                                 <div class="invalid-feedback">Course name field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control" type="text" name="category" required>
+                            <select class="form-control col-md-4 mr-2" type="text" name="category" required>
                                 <option value="">Select Category</option>
                                 <?php 
                                     $uniqueCategories = array();
@@ -283,6 +203,79 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                <?php elseif($_SESSION['isSiteAdmin'] || $_SESSION['isOrgAdmin'] || $_SESSION['isTrainer']): ?>
+                    <a class="form-control btn btn-purple mb-3" href="trainingEntry.php?action=Create">Create new training entry</a>
+
+                    <form class="requires-validation mb-3" method="POST" id="searchEntries" name="searchEntries">
+                        <div style="display: flex;">
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name">
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name">
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <select class="form-control col-md-3 mx-3" type="text" name="category">
+                                <option value="">Select Category</option>
+                                <?php 
+                                    $uniqueCategories = array();
+                                    foreach($entries as $e): 
+                                        if(!in_array($e['category'], $uniqueCategories)) {
+                                            $uniqueCategories[] = $e['category']; ?>
+                                            <option value="<?= $e['category']; ?>"><?= $e['category']; ?></option>
+                                        <?php 
+                                        } endforeach; ?>
+                            </select>
+
+                            <input type="submit" class="btn btn-purple" id="searchAllBtn" name="searchAllButton" value="Search" />
+                        </div>
+
+                    </form>
+
+                    <table class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Course Name</th>
+                                <th>Entry Date</th>
+                                <th>Completion Date</th>
+                                <th>Validated</th>
+                                <th>Validation Date</th>
+                                <th>Validation Comments</th>
+                                <th>Credit Hours</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($entries as $e): ?>
+                                <tr>                                   
+                                    <td><?= $e['firstName']; ?></td>
+                                    <td><?= $e['lastName']; ?></td>
+                                    <td><?= $e['courseName']; ?></td>
+                                    <td><?= $e['entryDate']; ?></td>
+                                    <td><?= $e['completeDate']; ?></td>
+                                    <td><?= $e['isValidated']==1?"Yes":"No" ?></td>
+                                    <td><?= $e['validateDate'];?></td>
+                                    <td><?= $e['validationComments']; ?></td>
+                                    <td><?= $e['creditHours']; ?></td>
+                                    <td><?= $e['category']; ?></td>
+                                    <td><?= $e['description']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+
+                    
                 <?php endif; ?>
 
             <?php elseif($action == 'Create'): ?>
@@ -605,7 +598,7 @@
 
                 <form method="POST" action="trainingEntry.php?action=ViewAll">
 
-                    <input type="hidden" name="entryID" value="<?= $entryID; var_dump($entryID); ?>">
+                    <input type="hidden" name="entryID" value="<?= $entryID; ?>">
 
                     <table class="table table-striped table-hover table-dark">
                         <thead>
@@ -620,6 +613,7 @@
                                 <th>Credit Hours</th>
                                 <th>Category</th>
                                 <th>Description</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>

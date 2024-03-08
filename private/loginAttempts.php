@@ -177,6 +177,8 @@
 
                 <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']): ?>
 
+                    <a class="form-control btn btn-purple mb-3" href="orgControlPanel.php?action=Landing&ordID=<?= $_SESSION['orgID']; ?>">Go Back</a>
+
                     <form method="POST" name="search">
 
                         <div style="display: flex;" class="mb-3">

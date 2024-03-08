@@ -209,24 +209,42 @@ class TrainingEntryDB {
         return $results;
     }
 
-    public function validateTrainingEntry($entryID, $isValidated, $validateDate, $validationComments){
+    public function validateTrainingEntry($entryID, $isValidated, $validateDate, $validationComments) {
         $results = [];
         $entryTable = $this->entryData;
-
+    
+        // Prepare the SQL statement
         $sqlString = $entryTable->prepare("UPDATE TrainingEntries SET isValidated = :iv, validateDate = :vd, validationComments = :vc WHERE entryID = :id");
         
-        $binds = array(
-            ":iv" => $isValidated,
-            ":vd" => $validateDate,
-            ":vc" => $validationComments
-        );
-
-        if($sqlString->execute() && $sqlString->rowCount() > 0) {
-            $results = $sqlString->fetchAll(PDO::FETCH_ASSOC);
+        // Bind parameters
+        $sqlString->bindParam(":iv", $isValidated);
+        $sqlString->bindParam(":vd", $validateDate);
+        $sqlString->bindParam(":vc", $validationComments);
+        $sqlString->bindParam(":id", $entryID);
+    
+        // Execute the statement
+        if($sqlString->execute()) {
+            // You don't need to fetch any data as it's an UPDATE query
+            // Check if any rows were affected
+            if($sqlString->rowCount() > 0) {
+                // Rows were affected, update successful
+                // Return a success message or any relevant data
+                $results['success'] = true;
+            } else {
+                // No rows were affected, possibly no changes made
+                // Return an appropriate message
+                $results['success'] = false;
+                $results['message'] = "No changes were made.";
+            }
+        } else {
+            // Query execution failed, handle the error
+            $results['success'] = false;
+            $results['error'] = $sqlString->errorInfo(); // Capture error info for debugging
         }
-
+    
         return $results;
     }
+    
 }
 
 ?>

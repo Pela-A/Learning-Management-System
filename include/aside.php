@@ -81,8 +81,14 @@
                     <img src="..\assets\images\atlasPhotos\CreateTraining.png" alt="Create Training">
                     <a href="trainingModules.php?action=Create">Create New Training Module</a>
                 </li>
-                <li><a href="trainingModules.php?action=ViewAll">Training Modules Viewer</a></li>
-                <li><a href="trainingEntry.php?action=ViewAll">Training Entry Viewer</a></li>
+                <li>
+                    <img src="..\assets\images\atlasPhotos\ModifyOrganization.png" alt="View training modules">
+                    <a href="trainingModules.php?action=ViewAll">Training Modules Viewer</a>
+                </li>
+                <li>
+                    <img src="../assets/images/atlasPhotos/ModifyDepartments.png" alt="View training entries">
+                    <a href="trainingEntry.php?action=ViewAll">Training Entry Viewer</a>
+                </li>
             </ul>
         <?php endif; ?>
 
@@ -99,11 +105,11 @@
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\PastTraining.png" alt="Past Training">
-                    <a href="trainingEntry.php?action=ViewAll">View Past Training</a>
+                    <a href="trainingEntry.php?action=ViewAll&userID=<?= $_SESSION['userID']; ?>">View Past Training</a>
                 </li>
                 <li>
                     <img src="..\assets\images\atlasPhotos\LoginDashboard.png" alt="Login Dashboard">
-                    <a href="loginAttempts.php?action=Viewer">Login Dashboard</a>
+                    <a href="loginAttempts.php?action=Viewer&userID=<?= $_SESSION['userID']; ?>">Login Dashboard</a>
                 </li>
             </ul>
 
