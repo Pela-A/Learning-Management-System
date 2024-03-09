@@ -218,7 +218,7 @@
 
         .navbar {
             position: fixed;
-            background-color: rgb(32, 33, 36, 0.75);
+            background-color: rgb(0, 0, 0, 0.75);
             top: 0;
             left: 0;
             width: 100%;
@@ -312,36 +312,33 @@
 
                         <form name="login_form" method="post" class="">
                             <div class="form-group">
-                                <label class="form-label" >Username</label>
+                                <label class="form-label">Username</label>
                                 <input name="username" type="text" class="form-control" placeholder="Username" value="<?=$username?>" maxlength="50">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Password</label>
+                                <label class="form-label mt-3">Password</label>
                                 <input name="password" type="password" class="form-control" placeholder="Password" value="<?=$password?>" maxlength="50">
                             </div>
             
-                            <input name="login" type="submit" value="Sign in" class="btn btn-block" style="margin-top: 5px;"></input>
+                            <input name="login" type="submit" value="Sign in" class="mt-3 btn btn-block" style="margin-top: 5px;"></input>
                         </form>
                     </div>
 
                     <div class="formContent">
+                        <div class="col-12 mb-3">
+                            <a href="index.php?action=createOrg">
+                                <button style="width: 300px;" class="btn btn-block">
+                                    Register Organization
+                                </button>
+                            </a>
+                        </div>
 
-                            <div class="">
-                                <a href="index.php?action=createOrg">
-                                    <button class="btn btn-block">
-                                        Register Organization
-                                    </button>
-                                </a>
-                            </div>
-
-                            <div class="">
-                                <a href="index.php?action=joinOrg"> 
-                                    <button class="btn btn-block">Join Organization</button>
-                                </a>
-                            </div>
-                                    
+                        <div class="col-12">
+                            <a href="index.php?action=joinOrg"> 
+                                <button style="width: 300px;" class="btn btn-block">Join Organization</button>
+                            </a>
+                        </div>       
                     </div>
-
                 </div>
             <?php elseif($action == 'createOrg'): ?>
 
