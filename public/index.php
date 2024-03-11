@@ -325,26 +325,20 @@
                     </div>
 
                     <div class="formContent">
-                        <div class="col-12 mb-3">
-                            <a href="index.php?action=createOrg">
-                                <button style="width: 300px;" class="btn btn-block">
-                                    Register Organization
-                                </button>
-                            </a>
+                        <div class="mb-3">
+                            <a class="btn btn-purple" style="width: 300px;" href="index.php?action=createOrg">Register Organization</a>
                         </div>
 
-                        <div class="col-12">
-                            <a href="index.php?action=joinOrg"> 
-                                <button style="width: 300px;" class="btn btn-block">Join Organization</button>
-                            </a>
+                        <div class="">
+                            <a class="btn btn-purple" style="width: 300px;" href="index.php?action=joinOrg">Join Organization</a>
                         </div>       
                     </div>
                 </div>
             <?php elseif($action == 'createOrg'): ?>
 
-                <div class="">
+                <div class="col-5 text-light" style="display: flex; flex-direction: column; justify-content: center;">
 
-                    <div class="row formContent pt-4 pb-5">
+                    <div class="formContent">
 
                         <form name="create_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
 
@@ -820,9 +814,9 @@
                 </script>
             <?php elseif($action == 'joinOrg'): ?>
 
-                <div class="">
+                <div class="col-5 text-light" style="display: flex; flex-direction: column; justify-content: center;">
                 
-                    <div class="row formContent pt-4 pb-5">
+                    <div class="formContent">
 
                         <form name="join_org_form" method="post" class="row px-2 pb-2 pt-2 needs-validation" novalidate>
                             <div class="row">
