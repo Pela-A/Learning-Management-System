@@ -42,8 +42,10 @@ class UserDB {
         $userTable = $this->userData;
     
         // Changed prepare statement to use correct table name and added alias
-        $sqlString = $userTable->prepare("SELECT * FROM users 
-                                            INNER JOIN organizations ON users.orgID = organizations.orgID
+        $sqlString = $userTable->prepare("SELECT * FROM (((users 
+                                            INNER JOIN organizations ON users.orgID = organizations.orgID)
+                                            LEFT JOIN depusersbridge ON users.userID = depusersbridge.userID)
+                                            LEFT JOIN departments ON depusersbridge.depID = departments.depID)
                                             WHERE users.orgID = :o
                                             ORDER BY users.lastName");
     
@@ -292,12 +294,15 @@ class UserDB {
         }
     }
 
-    public function searchUsers($firstName, $lastName, $organization, $gender, $isSiteAdmin, $isOrgAdmin, $isTrainer) {
+    public function searchUsers($firstName, $lastName, $organization, $department, $gender, $isSiteAdmin, $isOrgAdmin, $isTrainer) {
         $results = [];
         $userTable = $this->userData;
 
-        $sqlString = "SELECT * FROM users
-                        INNER JOIN organizations ON users.orgID = organizations.orgID
+        $sqlString = "SELECT * FROM (((users
+                        INNER JOIN organizations ON users.orgID = organizations.orgID)
+                        INNER JOIN depusersbridge ON users.userID = depusersbridge.userID)
+                        INNER JOIN departments ON depusersbridge.depID = departments.depID)
+
                         WHERE 1=1";
         $binds = [];
 
@@ -319,6 +324,11 @@ class UserDB {
         if ($organization != '') {
             $sqlString .= " AND organizations.orgName LIKE :organization";
             $binds['organization'] = '%'.$organization.'%';
+        }
+
+        if ($department != '') {
+            $sqlString .= " AND departments.depName LIKE :department";
+            $binds['department'] = '%'.$department.'%';
         }
 
         if ($isSiteAdmin != '') {

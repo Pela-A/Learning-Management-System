@@ -237,8 +237,8 @@
         .carousel-item img {
             width: 100vw;
             height: 100vh;
-            object-fit: cover; /* Ensure the image covers the entire area */
-            object-position: center; /* Center the image within the carousel item */
+            object-fit: contain; /* Ensure the image covers the entire area */
+            object-position: 8% 50%; /* Center the image within the carousel item */
         }
 
     </style>
@@ -264,21 +264,21 @@
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="..\assets\images\atlasPhotos\CarouselImage1.png" class="" alt="...">
+                        <img src="..\assets\images\atlasPhotos\Lovepik_com-450070203-A flat illustration of web developers in modern vector.png" class="" alt="...">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Log in/Sign up</h5>
                             <p>Choose whether you want to create your own organization, or join another!</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="..\assets\images\atlasPhotos\CarouselImage3.png" class="" alt="...">
+                        <img src="..\assets\images\atlasPhotos\52668560_l_normal_none.jpg" class="" alt="...">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Manage your Organization</h5>
                             <p>Accept users into your organization, or modify settings and user access rights for any of its users!</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="..\assets\images\atlasPhotos\CarouselImage2.png" class="" alt="...">
+                        <img src="..\assets\images\atlasPhotos\—Pngtree—modern flat design concept of_5332895.png" class="" alt="...">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Manage Trainings</h5>
                             <p>Enter and track your trainings for your organization! Keep track of Credit Hours.</p>
@@ -320,11 +320,11 @@
                                 <input name="password" type="password" class="form-control" placeholder="Password" value="<?=$password?>" maxlength="50">
                             </div>
             
-                            <input name="login" type="submit" value="Sign in" class="mt-3 btn btn-block" style="margin-top: 5px; width: 300px;"></input>
+                            <input name="login" type="submit" value="Sign in" class="my-3 btn btn-block" style="margin-top: 5px; width: 300px;"></input>
                         </form>
                     </div>
 
-                    <div class="formContent">
+                    <div class="formContent" style="margin-inline: auto;">
                         <div class="mb-3">
                             <a class="btn btn-purple" style="width: 300px;" href="index.php?action=createOrg">Register Organization</a>
                         </div>
@@ -422,7 +422,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn btn-block" type="button" id="continue">Continue</button>
+                                <button class="btn btn-block my-3" style="min-width: 300px; margin:auto;" type="button" id="continue">Continue</button>
 
                             </div>
                             
@@ -521,13 +521,9 @@
                                         Zipcode must be 5 digits!
                                     </div>
                                 </div>
-                                <div class="mb-2">
-                                    <button class="btn btn-block" type="button" id="back">Back</button>
-                                </div>
-                                
-                                <div class="mb-2">
-                                    <input type="submit" id="create" class="btn btn-block"name="create" value="Create Organization">
-                                </div>
+
+                                <button style="min-width: 300px; margin:auto;" class="btn btn-block mt-4 mb-2" type="button" id="back">Go Back</button>
+                                <input type="submit" id="create" style="min-width: 300px; margin:auto;" class="my-2 btn btn-block" name="create" value="Create Organization">
                             </div>
                         </form>
                 
@@ -1136,13 +1132,19 @@
 
             <?php elseif($action == 'notVerified'): ?>
 
-                <div class="">
+                <div class="col-5 text-light" style="display: flex; flex-direction: column; justify-content: center;">
 
-                    <div class="row formContent pt-4 pb-5">
+                    <div class="formContent" style="text-align: center;">
 
-                    <h2>Your account is currently not verified!</h2>
+                        <h2 class="mb-3">Congrats! Your account was successfully created!</h2>
 
-                    <p>Please contact your organization administrator!</p>
+                        <p>Your account just needs to be verfied! Please contact your organization administrator and check back later in order to access your account</p>
+
+                    </div>
+
+                    <div class="formContent" style="margin-inline: auto;">
+
+                        <a class="btn btn-purple btn-block" style="margin: auto; width: 300px;" href="index.php">Go Back</a>
 
                     </div>
 

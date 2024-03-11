@@ -69,14 +69,11 @@
         $password = filter_input(INPUT_POST, 'password');
         $isOrgAdmin = filter_input(INPUT_POST, 'orgAdmin');
         $isTrainer = filter_input(INPUT_POST, 'trainer');
+        $depID = filter_input(INPUT_POST, 'depID');
 
-        //validate input
-        $error = "";
-
-        //if valid input create the new department
-        if($error ==''){
-            $userObj->orgAdminCreateUser($_SESSION['orgID'], $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer);
-        }
+        $userObj->orgAdminCreateUser($_SESSION['orgID'], $firstName, $lastName, $email, $birthDate, $phoneNumber, $gender, $password, $isOrgAdmin, $isTrainer);
+        $u = $userObj->getLastUser();
+        $userDepObj->createRelationship($u[0]['userID'], $depID);
     }
 
     if(isset($_POST['deleteUser'])){
@@ -88,21 +85,17 @@
     if(isset($_POST['searchButton'])){
         $firstName = filter_input(INPUT_POST, 'firstName');
         $lastName = filter_input(INPUT_POST, 'lastName');
-        if($_SESSION['isOrgAdmin']){
+        if(isset($_SESSION['orgID'])) {
             $orgDetails = $orgObj->getOrganization($_SESSION['orgID']);
             $organization = $orgDetails['orgName'];
         }
-        else{
-            $organizationID = filter_input(INPUT_POST, 'organization');
-            $orgDetails = $orgObj->getOrganization($organizationID);
-            $organization = $orgDetails['orgName'];
-        }
+        $department = filter_input(INPUT_POST, 'department');
         $gender = filter_input(INPUT_POST, 'gender');
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
 
-        $users = $userObj->searchUsers($firstName, $lastName, $organization, $gender, $isSiteAdmin, $isOrgAdmin, $isTrainer);
+        $users = $userObj->searchUsers($firstName, $lastName, $organization, $department, $gender, $isSiteAdmin, $isOrgAdmin, $isTrainer);
 
     } else {
         $firstName = '';
@@ -149,13 +142,12 @@
         $isOrgAdmin = filter_input(INPUT_POST, 'isOrgAdmin');
         $isTrainer = filter_input(INPUT_POST, 'isTrainer');
         $profilePicture = filter_input(INPUT_POST, 'profilePhoto');
+        $depID = filter_input(INPUT_POST, 'depID');
         $_SESSION['profilePicture'] = $profilePicture;
 
         $userObj->orgAdminUpdateUser($userID, $firstName, $lastName, $letterDate, $email, $birthDate, $phoneNumber, $gender, $isOrgAdmin, $isTrainer, $profilePicture);
-        
-        header('Location: userAccount.php?action=Viewer');
-
-        
+        $userDepObj->deleteAllUserRelationships($userID);
+        $userDepObj->createRelationship($userID, $depID);
     }
 
     if(isset($_POST['submitUpdateUser'])){
@@ -237,7 +229,7 @@
                     ?>
                     
                     <div style="display: flex;" class="mb-3">
-                        <a class="form-control btn btn-purple mr-2" href="userAccount.php?action=createUser">Create New User Account</a>
+                        <a class="form-control btn btn-purple mr-2" href="userAccount.php?action=createUser&orgID=<?= $orgID; ?>">Create New User Account</a>
                         <a class="form-control btn btn-purple" href="orgControlPanel.php?action=Landing&ordID=<?= $orgID; ?>">Go Back</a>
                     </div>
 
@@ -255,7 +247,7 @@
                                 <div class="invalid-feedback">Last name field cannot be blank!</div>
                             </div>
 
-                            <select class="form-control" type="text" name="organization" required>
+                            <select class="form-control" type="text" name="department" required>
                                 <option value="">Select Department</option>
                                 <?php foreach($deps as $d): ?>
                                     <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -328,7 +320,7 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Gender</th>
-                                <th>Website Admin</th>
+                                <th>Department</th>
                                 <th>Organization Admin</th>
                                 <th>Training Manager</th>
                                 <th>Verified</th>
@@ -350,11 +342,11 @@
                                     <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
                                     <td><?= $u['gender']==0?"Male":"Female" ?></td>
-                                    <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['depName']; ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
-                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $u['userID']; ?>">Edit</a></td>
+                                    <td><a style="font-size: 14px; width: 60px; font-weight: 100px;" class="btn btn-purple" href="userAccount.php?action=updateUser&userID=<?= $u['userID'];?>&orgID=<?= $orgID;?>">Edit</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -489,8 +481,9 @@
                     
                 <?php elseif($_SESSION['isOrgAdmin']):
                     if(!isset($_POST['searchButton'])){
-                        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']); 
+                        $users = $userObj->getAllUsersInOrg($_SESSION['orgID']);
                     }
+
                     $deps = $depObj->getAllDepartments($_SESSION['orgID']); ?>
                     
                     <div style="display: flex;" class="mb-3">
@@ -507,7 +500,7 @@
                                 <input style="width: 300px;" class="form-control mx-2" type="text" name="lastName" placeholder="Last Name" required>
                             </div>
 
-                            <select class="form-control" type="text" name="organization" required>
+                            <select class="form-control" type="text" name="department" required>
                                 <option value="">Select Department</option>
                                 <?php foreach($deps as $d): ?>
                                     <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -567,7 +560,7 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Gender</th>
-                                <th>Website Admin</th>
+                                <th>Department</th>
                                 <th>Organization Admin</th>
                                 <th>Training Manager</th>
                                 <th>Verified</th>
@@ -589,7 +582,7 @@
                                     <td><?= $u['firstName'] . " " . $u['lastName']; ?></td>
                                     <td><?= $u['email']; ?></td>
                                     <td><?= $u['gender']==0?"Male":"Female" ?></td>
-                                    <td><?= $u['isSiteAdmin']==0?"No":"Yes" ?></td>
+                                    <td><?= $u['depName']; ?></td>
                                     <td><?= $u['isOrgAdmin']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isTrainer']==0?"No":"Yes" ?></td>
                                     <td><?= $u['isVerified']==0?"No":"Yes" ?></td>
@@ -605,7 +598,7 @@
                 
                 <h2>Create User Account</h2>
                 
-                <?php if($_SESSION['isSiteAdmin']): 
+                <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])): 
                     $orgs = $orgObj->getAllOrganizations(); ?>
 
                     <form action="userAccount.php?action=Viewer" class="requires-validation formContent mt-3" novalidate method="POST">
@@ -763,7 +756,112 @@
                         });
                     </script>
 
+                <?php elseif($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])): 
+                    $organization = $orgObj->getOrganization($_SESSION['orgID']); 
+                    $deps = $depObj->getAllDepartments($_SESSION['orgID']); ?>
 
+                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation formContent mt-3" novalidate method="POST">
+
+                        <select class="form-control col-md-12" type="text" id="depID" name="depID" required>
+                            <option value="">Select Department</option>
+                            <?php foreach($deps as $d): ?>
+                                <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <div class="row">
+                            <div class="col-6 mt-4 mb-2" >
+                                <input class="form-control" type="text" name="firstName" placeholder="First Name" required>
+                                <div class="valid-feedback">First name field is valid!</div>
+                                <div class="invalid-feedback">First name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-6 mt-4 mb-2" >
+                                <input class="form-control" type="text" name="lastName" placeholder="Last Name" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-6 my-2" >
+                                <input class="form-control" type="email" name="email" placeholder="Email Address" required>
+                                <div class="valid-feedback">Email field is valid!</div>
+                                <div class="invalid-feedback">Email field cannot be blank!</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3 my-2" >
+                                <input class="form-control" type="date" name="birthDate" required>
+                                <div class="valid-feedback">Last name field is valid!</div>
+                                <div class="invalid-feedback">Last name field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-6 my-2" >
+                                <input class="form-control" type="text" name="phoneNumber" placeholder="Phone Number" required>
+                                <div class="valid-feedback">Phone number field is valid!</div>
+                                <div class="invalid-feedback">Phone number field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-6 my-2" >
+                                <input class="form-control" type="password" name="password" placeholder="Enter password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
+
+                            <div class="col-md-6 my-2" >
+                                <input class="form-control" type="password" name="confirmPassword" placeholder="Confirm password" required>
+                                <div class="valid-feedback">Password field is valid!</div>
+                                <div class="invalid-feedback">Password field cannot be blank!</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex;">
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="gender">Gender: </label>
+
+                                <input type="radio" class="btn-check" name="gender" value=0 id="male" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" value=1 id="female" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="female">Female</label>
+
+                                <div class="valid-feedback mv-up">You selected a gender!</div>
+                                <div class="invalid-feedback mv-up">Please select a gender!</div>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="orgAdmin">Organization Admin: </label>
+
+                                <input type="radio" class="btn-check" name="orgAdmin" value=1 id="orgYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="orgAdmin" value=0 id="orgNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="orgNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected a organization admin status!</div>
+                                <div class="invalid-feedback mv-up">Please select a organization admin status!</div>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="mb-3 mr-1" for="trainer">Training Manager: </label>
+
+                                <input type="radio" class="btn-check" name="trainer" value=1 id="trYes" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="trainer" value=0 id="trNo" autocomplete="off" required>
+                                <label class="btn   btn-outline-purple" for="trNo">No</label>
+
+                                <div class="valid-feedback mv-up">You selected a training manager status!</div>
+                                <div class="invalid-feedback mv-up">Please select a training manager status!</div>
+                            </div>
+                        </div>
+
+                        <div class="form-button mt-3">
+                            <button id="submit" name="submitOrgAdminCreateUser" type="submit" class="btn btn-purple">Create New User</button>
+                        </div>
+
+                    </form>
+                
                 <?php elseif($_SESSION['isOrgAdmin']): 
                     $organization = $orgObj->getOrganization($_SESSION['orgID']); 
                     $deps = $depObj->getAllDepartments($_SESSION['orgID']); ?>
@@ -952,15 +1050,11 @@
                     </div>
                 </div>
 
-                
-
-                
-
             <?php elseif($action == 'updateUser'): ?>
 
                 <h2>Update Account Information</h2>
 
-                <?php if($_SESSION['isSiteAdmin']):
+                <?php if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])):
                     $account = $userObj->getUser($userID);
                     $organization = $orgObj->getOrganization($account['orgID']);
 
@@ -1191,7 +1285,7 @@
 
                     </form>
 
-                <?php elseif($_SESSION['isOrgAdmin']):
+                <?php elseif(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']):
                     $account = $userObj->getUser($userID);
                     $organization = $orgObj->getOrganization($_SESSION['orgID']);
                     $deps = $depObj->getAllDepartments($_SESSION['orgID']); 
@@ -1222,17 +1316,10 @@
                         $profilePicture = "";
                     }?>
 
-                    <div style="display: flex;">
-                        <p>Organization: </p>
-                        <p><?= $organization['orgName']; ?></p>
-                    </div>
-
-                    <form action="userAccount.php?action=Viewer" class="requires-validation row" novalidate method="POST">
+                    <form action="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>" class="requires-validation row" novalidate method="POST">
 
                         <div class=" formContent col-7">
-
-                
-                            <select class="form-select col-8" name="department" type="text" id="depID" name="depID" required>
+                            <select class="form-select col-8" type="text" id="depID" name="depID" required>
                                 <option value="">Select Department</option>
                                 <?php foreach($deps as $d): ?>
                                     <option value="<?= $d['depID']; ?>"><?= $d['depName']; ?></option>
@@ -1324,8 +1411,6 @@
 
                         </div>
 
-
-
                         <div class="formContent col-4 ml-2">
                             <h3>Profile Pictures:</h3>
                             
@@ -1404,11 +1489,10 @@
 
                         </div>
 
-
-                        <div class="form-button mt-3">
-                            <button name="submitOrgAdminUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
+                        <div class="formContent mt-2 col-5">
+                            <button style="width: 300px;" name="submitOrgAdminUpdateUser" type="submit" class="btn btn-purple">Update Information</button>
+                            <a style="width: 300px;" class="btn btn-purple ml-3" href="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Go Back</a>
                         </div>
-
                     </form>
 
                 <?php else:
