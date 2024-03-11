@@ -265,23 +265,23 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="..\assets\images\atlasPhotos\Lovepik_com-450070203-A flat illustration of web developers in modern vector.png" class="" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Log in/Sign up</h5>
-                            <p>Choose whether you want to create your own organization, or join another!</p>
+                        <div class="formContent carousel-caption d-none d-md-block">
+                            <h5>Welcome to ATLAS!</h5>
+                            <p>The advanced learning management system for small-to-medium sized organizations. As an LMS, ATLAS provides a comprehensive platform for managing various aspects of learning and development within an organization.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="..\assets\images\atlasPhotos\52668560_l_normal_none.jpg" class="" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
+                        <div class="formContent carousel-caption d-none d-md-block">
                             <h5>Manage your Organization</h5>
-                            <p>Accept users into your organization, or modify settings and user access rights for any of its users!</p>
+                            <p>Accept new users to your organization with open arms, or fine-tune settings and user access rights to ensure optimal functionality and security for every member of your team!</p>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="..\assets\images\atlasPhotos\—Pngtree—modern flat design concept of_5332895.png" class="" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
+                        <div class="formContent carousel-caption d-none d-md-block">
                             <h5>Manage Trainings</h5>
-                            <p>Enter and track your trainings for your organization! Keep track of Credit Hours.</p>
+                            <p>Efficiently manage your organization's training initiatives from start to finish! Utilize our comprehensive platform to input, monitor, and analyze all training activities!</p>
                         </div>
                     </div>
                 </div>
