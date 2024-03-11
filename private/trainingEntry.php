@@ -446,7 +446,7 @@
                                         <select class="form-select mb-3" name="moduleID" aria-label="Default select example">
                                             <option value="">Select Training Module</option>
                                             <?php foreach($modules as $m): ?>
-                                                <option value="<?= $m['moduleID']; ?>"><?= $m['moduleID'] ?></option>
+                                                <option value="<?= $m['moduleID']; ?>"><?= $m['courseName'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
 
