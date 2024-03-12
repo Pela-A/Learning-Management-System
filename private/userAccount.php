@@ -93,9 +93,7 @@
             $organization = $orgDetails['orgName'];
         }
         else{
-            $organizationID = filter_input(INPUT_POST, 'organization');
-            $orgDetails = $orgObj->getOrganization($organizationID);
-            $organization = $orgDetails['orgName'];
+            $organization = filter_input(INPUT_POST,'organization');
         }
         $gender = filter_input(INPUT_POST, 'gender');
         $isSiteAdmin = filter_input(INPUT_POST, 'isSiteAdmin');
@@ -385,7 +383,7 @@
                             <select class="form-control "  type="text" name="organization" required>
                                 <option value="">Select Organization</option>
                                 <?php foreach($orgs as $o): ?>
-                                    <option value="<?= $o['orgID']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
+                                    <option value="<?= $o['orgName']; ?>"><?= $o['orgName'] . ", " . $o['state'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
