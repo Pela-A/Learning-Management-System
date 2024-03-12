@@ -84,8 +84,8 @@
 
         <div class="pageContent container-fluid">
 
-            <div class="formContent mb-3">
-                <h1 style="min-width: 400px;"><?= $organization['orgName']; ?></h1>
+            <div>
+                <h2 style="min-width: 400px;"><?= $organization['orgName']; ?></h2>
                 <h3><?= $organization['address']. ", " . $organization['city'] . ", " . $organization['state']; ?></h3>
             </div>
 
@@ -95,6 +95,7 @@
 
                     <div style="display: flex;" class="mb-3">
                         <a class="form-control btn btn-purple" href="departments.php?action=Add">Create New Department</a>
+                        
                         <a class="form-control btn btn-purple ml-2" href="orgControlPanel.php?action=Landing&ordID=<?= $orgID; ?>">Go Back</a>
                     </div>
 
@@ -197,14 +198,17 @@
 
                     <h3>Add Department</h3>
                     <div class="mb-3" style="display: flex;">
-                        <input class="form-control col-5" type="text" name="name" value='<?=$name?>' placeholder="Department Name">
-                        <input class="form-control ml-3 col-6" type="text" name="email" value='<?=$email?>' placeholder="Department Email">
+                        <input class="form-control col-8" type="text" name="name" value='<?=$name?>' placeholder="Department Name">
+                        <input class="form-control col-8 ml-3" type="text" name="email" value='<?=$email?>' placeholder="Department Email">
+                        <input class="form-control col-2 ml-3 btn btn-purple" type="submit" name="create" value="Create Department">
                     </div>
 
+                    <input class="form-control" type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
+
                     <div style="display: flex;">
-                        <input class="form-control mr-3 btn btn-purple" type="submit" name="create" value="Create Department">
-                        <input class="form-control" type="hidden" name="orgID" value="<?=$_SESSION['orgID'];?>">
+                
                         <a class="form-control btn btn-purple" href="departments.php?action=Viewer">Go Back</a>
+
                     </div>
                 </form>
             <?php endif; ?>

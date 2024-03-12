@@ -44,7 +44,7 @@
             </ul>
         <?php endif; ?>
 
-        <?php if(($_SESSION['isSiteAdmin'] && isset($_SESSION['orgID'])) || $_SESSION['isOrgAdmin']): ?>
+        <?php if($_SESSION['isOrgAdmin']): ?>
             <h4>Org Admin Controller</h4>
             <ul>
                 <li>
