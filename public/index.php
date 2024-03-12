@@ -268,7 +268,6 @@
                         <img src="..\assets\images\atlasPhotos\CarouselImage1.png" class="" alt="...">
 =======
                         <img src="..\assets\images\atlasPhotos\Lovepik_com-450070203-A flat illustration of web developers in modern vector.png" class="" alt="...">
->>>>>>> parent of 99a813e (fixed indexPage)
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Log in/Sign up</h5>
                             <p>Choose whether you want to create your own organization, or join another!</p>
@@ -279,7 +278,6 @@
                         <img src="..\assets\images\atlasPhotos\CarouselImage3.png" class="" alt="...">
 =======
                         <img src="..\assets\images\atlasPhotos\52668560_l_normal_none.jpg" class="" alt="...">
->>>>>>> parent of 99a813e (fixed indexPage)
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Manage your Organization</h5>
                             <p>Accept users into your organization, or modify settings and user access rights for any of its users!</p>
@@ -290,7 +288,6 @@
                         <img src="..\assets\images\atlasPhotos\CarouselImage2.png" class="" alt="...">
 =======
                         <img src="..\assets\images\atlasPhotos\—Pngtree—modern flat design concept of_5332895.png" class="" alt="...">
->>>>>>> parent of 99a813e (fixed indexPage)
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Manage Trainings</h5>
                             <p>Enter and track your trainings for your organization! Keep track of Credit Hours.</p>
