@@ -2,7 +2,9 @@
 
     include __DIR__ . '/../include/header.php';
 
-
+    if($_SESSION['isSiteAdmin'] && !isset($_GET['orgID'])){
+        unset($_SESSION['orgID']);
+    }
 ?>
 
 <!DOCTYPE html>
