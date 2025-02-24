@@ -177,6 +177,10 @@
                     $orgID = filter_input(INPUT_GET, 'orgID');
                     $organization = $orgDB->getOrganization($orgID);
 
+                    if(!$organization){
+                        die("organization not found");
+                    }
+                    
                     $orgName = $organization['orgName'];
                     $address = $organization['address'];
                     $city = $organization['city'];

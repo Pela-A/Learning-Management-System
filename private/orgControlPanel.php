@@ -39,7 +39,6 @@
             <h3>Organization Control Panel</h3>
             <div style="display: flex; flex-direction: column;">
                 <a class="controlPanelWidget" href="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">User Manager</a>
-                <a class="controlPanelWidget" href="departments.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Department Manager</a>
                 <a class="controlPanelWidget" href="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>">Organization Manager</a>
                 <a class="controlPanelWidget" href="loginAttempts.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Login Attempts Manager</a>
                 <a class="controlPanelWidget" href="userAccount.php?action=Validator&orgID=<?= $_SESSION['orgID']; ?>">Validiate New Users</a>

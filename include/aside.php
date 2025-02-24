@@ -4,8 +4,6 @@
 
     if($pageName == 'landingPage') {
         $pageName = 'Landing Page';
-    } elseif($pageName == 'departments') {
-        $pageName = 'Department Manager';
     } elseif($pageName == 'loginAttempts') {
         $pageName = 'Login Manager';
     } elseif($pageName == 'organizations') {
@@ -52,10 +50,6 @@
                     <a href="organizations.php?action=Edit&orgID=<?= $_SESSION['orgID']; ?>">Modify Organization</a>
                 </li>
                 <li>
-                    <img src="..\assets\images\atlasPhotos\ModifyDepartments.png" alt="Modify Organizations">
-                    <a href="departments.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Modify Departments</a>
-                </li>
-                <li>
                     <img src="..\assets\images\atlasPhotos\ModifyExistingUsers.png" alt="Modify Organizations">
                     <a href="userAccount.php?action=Viewer&orgID=<?= $_SESSION['orgID']; ?>">Modify User Accounts</a>
                 </li>
@@ -84,10 +78,6 @@
                 <li>
                     <img src="..\assets\images\atlasPhotos\ModifyOrganization.png" alt="View training modules">
                     <a href="trainingModules.php?action=ViewAll">Training Modules Viewer</a>
-                </li>
-                <li>
-                    <img src="../assets/images/atlasPhotos/ModifyDepartments.png" alt="View training entries">
-                    <a href="trainingEntry.php?action=ViewAll">Training Entry Viewer</a>
                 </li>
             </ul>
         <?php endif; ?>

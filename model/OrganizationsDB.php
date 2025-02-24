@@ -91,6 +91,28 @@ class OrganizationDB {
 
     }
     
+
+    /*
+    CREATE PROCEDURE GetOrgID(IN orgCodeParam VARCHAR(255))
+    BEGIN
+        SELECT orgID FROM Organizations WHERE orgCode = orgCodeParam;
+    END
+    */
+    public function getOrgIDSP($orgCode) {
+        $results = [];
+        $orgTable = $this->orgData;
+    
+        // Call stored procedure
+        $sqlString = $orgTable->prepare("CALL GetOrgID(:o)");
+        $sqlString->bindValue(':o', $orgCode, PDO::PARAM_STR);
+    
+        if ($sqlString->execute() && $sqlString->rowCount() > 0) {
+            $results = $sqlString->fetchAll(PDO::FETCH_COLUMN);
+        }
+    
+        return $results[0] ?? null; // Return the first result or null if no result
+    }
+    
     public function getOrgID ($orgCode){
         $results = [];
         $orgTable = $this->orgData;

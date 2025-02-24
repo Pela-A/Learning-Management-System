@@ -21,10 +21,13 @@
         $username = filter_input(INPUT_POST, 'username'); 
         $password = filter_input(INPUT_POST, 'password');
 
+        // Hash and salt the password using bcrypt (default cost is 10)
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
         try {
             //create user object
             $userDB = new UserDB();
-            $userData = $userDB->login($username, $password);
+            $userData = $userDB->login($username, $hashedPassword);
 
             //if results found create session vars and try to redirect
             if($userData != "No Results Found"){
@@ -72,68 +75,74 @@
         $email = filter_input(INPUT_POST, 'email');
         $birthdate = filter_input(INPUT_POST, 'birthdate');
         $gender = filter_input(INPUT_POST, 'gender');
-        $newPass = filter_input(INPUT_POST, 'newPass');
-        $confirmPass = filter_input(INPUT_POST, 'confirmPass');
+        $newPass = $_POST['newPass']; // Do not filter passwords as it can remove special chars
+        $confirmPass = $_POST['confirmPass'];
 
-        //verifyUserInformation
-    
-        
-        //post entered org information
-        $orgName = filter_input(INPUT_POST, 'orgName');
-        $address = filter_input(INPUT_POST, 'address');
-        $city = filter_input(INPUT_POST, 'city');
-        $state = filter_input(INPUT_POST, 'state');
-        $zipCode = filter_input(INPUT_POST, 'zipcode');
+        try{
+            // Hash and salt the password using Bcrypt
+            $hashedPassword = password_hash($newPass, PASSWORD_BCRYPT);
+                    
+            //post entered org information
+            $orgName = filter_input(INPUT_POST, 'orgName');
+            $address = filter_input(INPUT_POST, 'address');
+            $city = filter_input(INPUT_POST, 'city');
+            $state = filter_input(INPUT_POST, 'state');
+            $zipCode = filter_input(INPUT_POST, 'zipcode');
 
-        $enterOrgCode = "";
+            $enterOrgCode = "";
 
-        
-        
-        //If no errors, create organization and assign user to Org as OrgAdmin
-        if($error == ""){
-            //we want to create orgCodes until the code is not already in the database
-            //this means we need to pull all orgCodes and compare the newly created to them all
-            $tempObj = new OrganizationDB();
-            $codes = $tempObj->getAllOrgCodes();
-            do {
-                //random orgCode creation of length 20
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < 20; $i++) {
-                    $randomString .= $characters[random_int(0, $charactersLength - 1)];
-                }
-                //search for random string using linear search
-                //check at end if another loop needs to happen. if we return zero that means we found that org code in db
-            } while (linear_Search($codes, $randomString));
 
-            //create organization object
-            $organization = new OrganizationDB();
 
-            //code here to create organization
-            //newID represents last inserted record (created organization)
-            $newID = $organization->createOrganization($orgName,$address,$city,$state,$zipCode,$randomString);
+            //If no errors, create organization and assign user to Org as OrgAdmin
+            if($error == ""){
+                //we want to create orgCodes until the code is not already in the database
+                //this means we need to pull all orgCodes and compare the newly created to them all
+                $tempObj = new OrganizationDB();
+                $codes = $tempObj->getAllOrgCodes();
+                do {
+                    //random orgCode creation of length 20
+                    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $charactersLength = strlen($characters);
+                    $randomString = '';
+                    for ($i = 0; $i < 20; $i++) {
+                        $randomString .= $characters[random_int(0, $charactersLength - 1)];
+                    }
+                    //search for random string using linear search
+                    //check at end if another loop needs to happen. if we return zero that means we found that org code in db
+                } while (linear_Search($codes, $randomString));
 
-            //create USER Object and add to data base
-            $makeUser = new UserDB();
-            $newUserID=$makeUser->orgAdminCreateUser($newID, $firstName, $lastName, $email, $birthdate, $phoneNum, $gender, $newPass, 1, 0);
-            $newUserData = $makeUser->getUser($newUserID);
+                //create organization object
+                $organization = new OrganizationDB();
 
-            //call session set function. then redirect to landing page
-            setSessionLogin($newUserData);
+                //code here to create organization
+                //newID represents last inserted record (created organization)
+                $newID = $organization->createOrganization($orgName,$address,$city,$state,$zipCode,$randomString);
 
-            //log their loginAttempt
-            $loginDB = new LoginDB();
-            $loginDate = date('Y-m-d H:i:s');
-            $ip = getenv("REMOTE_ADDR");
-            $loginDB->addLoginAttempt($newUserData['userID'], $loginDate, 1, $ip);
+                //create USER Object and add to data base
+                $makeUser = new UserDB();
+                $newUserID=$makeUser->orgAdminCreateUser($newID, $firstName, $lastName, $email, $birthdate, $phoneNum, $gender, $hashedPassword, 1, 0);
+                $newUserData = $makeUser->getUser($newUserID);
 
+                //call session set function. then redirect to landing page
+                setSessionLogin($newUserData);
+
+                //log their loginAttempt
+                $loginDB = new LoginDB();
+                $loginDate = date('Y-m-d H:i:s');
+                $ip = getenv("REMOTE_ADDR");
+                $loginDB->addLoginAttempt($newUserData['userID'], $loginDate, 1, $ip);
+
+                
+                //redirect to landing page
+                header('Location: ../private/landingPage.php');
+            }
+        }catch(Exception $error){
+            echo "<h2> Failed to create a user. Please try again</h2>";
+            // Stay on page and allow for user to try again.
             
-            //redirect to landing page
-            header('Location: ../private/landingPage.php');
-
         }
 
+        
     //if trying to join organization.
     }elseif(isset($_POST['join'])){
 
@@ -160,10 +169,11 @@
                 //get orgID to join on
                 $joinID = $orgObj -> getOrgID($enterOrgCode);
                 $makeUser = new UserDB();
-        
+                // Hash and salt the password using Bcrypt
+                $hashedPassword = password_hash($newPass, PASSWORD_BCRYPT);
                 //create new user
                 $profilePicture = "";
-                $newUserID = $makeUser->createGeneralUser($joinID,$firstName,$lastName,$email,$birthdate,$phoneNum,$gender,$newPass, $profilePicture);
+                $newUserID = $makeUser->createGeneralUser($joinID,$firstName,$lastName,$email,$birthdate,$phoneNum,$gender,$hashedPassword, $profilePicture);
 
                 //send login attempt and redirect to not verified page
                 $loginDB = new LoginDB();
