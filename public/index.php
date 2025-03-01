@@ -10,7 +10,6 @@
     $action = "";
 
     //used to change visible form
-    //################### ADD NOT VERIFIED PAGE
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');
     }
