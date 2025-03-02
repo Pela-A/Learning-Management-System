@@ -52,7 +52,18 @@
 
     //setting session variables on login/org creation.
     function setSessionLogin($userData) {
-        session_start();
+        session_start([
+            'cookie_lifetime' => 0,  // Destroy when browser closes
+            'cookie_secure' => true, // Ensure cookies are only sent over HTTPS
+            'cookie_httponly' => true, // Prevent JavaScript from accessing the session
+            'use_strict_mode' => true, // Prevent session fixation
+            'use_only_cookies' => true // Force session storage in cookies only
+        ]);
+
+        // Regenerate session ID to prevent session fixation
+        session_regenerate_id(true);
+
+        // Set session variables
         $_SESSION['userID']=$userData['userID'];
         $_SESSION['orgID']=$userData['orgID'];
         $_SESSION['firstName']=$userData['firstName'];
@@ -76,6 +87,12 @@
         } else {
             $_SESSION['isTrainer'] = False;
         }
+
+        // Store session creation time to track expiry
+        $_SESSION['SESSION_CREATED'] = time();
+
+        // Bind session to user agent to prevent session hijacking
+        $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
         
 
     }

@@ -17,6 +17,7 @@
     $error = "";
     $orgID = "";
     $userID = "";
+    $action = "";
 
     if(isset($_GET['action'])){
         $action = filter_input(INPUT_GET, 'action');

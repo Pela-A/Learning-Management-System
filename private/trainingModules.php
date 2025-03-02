@@ -9,6 +9,7 @@
     $entryObj = new TrainingEntryDB();
     $userObj = new UserDB();
 
+    $action = "";
     if(isset($_GET['action'])) {
         $action = filter_input(INPUT_GET, 'action');
     }
@@ -50,7 +51,11 @@
         $modules = $moduleObj->searchTrainingModule($_SESSION['orgID'], $courseName, $category);      
     }
     else{
-        $modules = $moduleObj->getAllTrainingModules($_SESSION['orgID']);
+        if (isset($_SESSION['orgID'])) {
+            $orgID = $_SESSION['orgID'];
+            
+            $modules = $moduleObj->getAllTrainingModules($orgID);
+        }
     }
 
 ?>
