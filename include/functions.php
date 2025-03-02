@@ -52,13 +52,19 @@
 
     //setting session variables on login/org creation.
     function setSessionLogin($userData) {
-        session_start([
-            'cookie_lifetime' => 0,  // Destroy when browser closes
-            'cookie_secure' => true, // Ensure cookies are only sent over HTTPS
-            'cookie_httponly' => true, // Prevent JavaScript from accessing the session
-            'use_strict_mode' => true, // Prevent session fixation
-            'use_only_cookies' => true // Force session storage in cookies only
+        // Set secure cookie parameters
+        session_set_cookie_params([
+            'lifetime' => 0,         // Destroy when browser closes
+            'secure' => true,        // Ensure cookies are only sent over HTTPS
+            'httponly' => true,      // Prevent JavaScript from accessing the session
+            'samesite' => 'Strict'   // Prevent CSRF attacks
         ]);
+
+        // Apply additional security settings
+        ini_set('session.use_strict_mode', 1);  // Prevent session fixation
+        ini_set('session.use_only_cookies', 1); // Disable URL-based sessions (more secure)
+
+        session_start();
 
         // Regenerate session ID to prevent session fixation
         session_regenerate_id(true);
