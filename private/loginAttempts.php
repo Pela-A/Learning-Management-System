@@ -27,8 +27,9 @@
     //if edit comment
     if(isset($_POST['edit'])){        
         $comments = filter_input(INPUT_POST, 'comments');
+        $safe_comment = htmlspecialchars(strip_tags($comments), ENT_QUOTES, 'UTF-8');
         $loginID = filter_input(INPUT_POST, 'loginID');
-        $loginObj->editComments($loginID, $comments);
+        $loginObj->editComments($loginID, $safe_comment);
     }
 
     if($_SESSION['isSiteAdmin'] && !isset($_SESSION['orgID'])) {
